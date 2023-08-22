@@ -36,8 +36,10 @@ STRUCT(node_amp)
 };
 
 #define NODE(POINTER)       ((node_p)(POINTER))
-#define NODE_LABEL(POINTER) ((label_p)(HEAD(POINTER)+1))
-#define NODE_STR(POINTER)   ((str_p)(NO(POINTER)+1))
-#define NODE_AMP(POINTER)   ((amp_p)(NO(POINTER)+1))
+#define NODE_LAB(POINTER)   ((label_p)(LH(POINTER)+1))
+#define NODE_STR(POINTER)   ((str_p)(NODE(POINTER)+1))
+#define NODE_AMP(POINTER)   ((amp_p)(NODE(POINTER)+1))
+
+void node_str_display(node_p ns);
 
 #endif
