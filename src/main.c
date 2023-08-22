@@ -1,12 +1,15 @@
 #include <stdio.h>
 
-#include "../lib/example/header.h"
+#include "../static_utils/struct.h"
+
+STRUCT(node) 
+{
+
+};
 
 int main()
 {
-    printf("\nTemplate repo");
-    hello_example();
-    printf("\n");
+    
 
     printf("\n");
     return 0;
