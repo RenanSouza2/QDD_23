@@ -12,7 +12,6 @@ node_p node_str_create(int cl, int lv)
     ns = malloc(sizeof(node_str_t));
     assert(ns);
 
-
     *ns = (node_str_t){{{{NULL, NULL}, NULL}, {lv, cl}}, {NULL, NULL}};
     return NODE(ns);
 }
