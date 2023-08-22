@@ -16,4 +16,7 @@ STRUCT(list_head)
     list_head_p lh;
 };
 
+#define LB(POINTER)    ((list_body_p)(POINTER))
+#define LH(POINTER)    ((list_head_p)(POINTER))
+
 #endif

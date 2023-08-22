@@ -5,4 +5,6 @@
 
 PLACEHOLDER(node);
 
+node_p node_str_create(int cl, int lv);
+
 #endif

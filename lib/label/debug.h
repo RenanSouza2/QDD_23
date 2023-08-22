@@ -5,7 +5,7 @@
 
 STRUCT(label)
 {
-    int cl, ni;
+    int cl, lv;
 };
 
 #endif

@@ -26,4 +26,6 @@
 
 void exit_program(const char s[]);
 
+#define ASSERT(COND, STRING) if(!(COND)) exit_program(STRING)
+
 #endif
