@@ -1,8 +1,5 @@
-#ifndef __utils_DEBUG_H__
-#define __utils_DEBUG_H__
+#ifndef __UTILS_DEBUG_H__
+#define __UTILS_DEBUG_H__
 
 #include "header.h"
-
-void hello_debug();
-
 #endif
