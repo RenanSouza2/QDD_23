@@ -19,4 +19,7 @@ STRUCT(list_head)
 #define LB(POINTER)    ((list_body_p)(POINTER))
 #define LH(POINTER)    ((list_head_p)(POINTER))
 
+list_body_p list_body_create(node_p n, list_body_p lb_next);
+list_head_p list_head_create(node_p n, list_head_p lh_next);
+
 #endif

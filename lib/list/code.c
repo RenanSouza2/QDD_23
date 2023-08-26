@@ -16,17 +16,23 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
     return lb;
 }
 
-
-
-void free_list_body_item(list_body_p lb)
+list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
-    free(lb);
+    list_head_p lh;
+    lh = malloc(sizeof(list_head_t));
+    assert(lh);
+    
+    *lh = (list_head_t){{n, NULL}, lh_next};
+    return lh;
 }
 
-void free_list_head_item(list_head_p lh)
-{
-    free(lh);
-}
+
+
+// void free_list_body_item(list_body_p lb)
+#define free_list_body_item(lb) free(lb)
+
+// void free_list_head_item(list_head_p lh)
+#define free_list_head_item(lh) free(lh)
 
 
 

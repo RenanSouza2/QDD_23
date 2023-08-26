@@ -6,6 +6,4 @@
 PLACEHOLDER(node);
 PLACEHOLDER(list_body);
 
-list_body_p list_body_create(node_p n, list_body_p lb_next);
-
 #endif

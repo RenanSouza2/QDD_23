@@ -45,3 +45,6 @@ node_p node_amp_create(number_t re, number_t im)
     *na = (node_amp_t){{{{NULL, NULL}, NULL}, {0, 0}}, {re, im}};
     return NODE(na);
 }
+
+// void node_free(node_p n)
+#define node_free(n) free(n)
