@@ -48,3 +48,8 @@ node_p node_amp_create(number_t re, number_t im)
 
 // void node_free(node_p n)
 #define node_free(n) free(n)
+
+label_p node_label(node_p n)
+{
+    return &n->lab;
+}
