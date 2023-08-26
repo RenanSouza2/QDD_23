@@ -5,23 +5,28 @@
 
 #ifdef DEBUG
 
-#include <stdio.h>
+#include "../utils/debug.h"
 
 void node_str_display(node_p ns)
 {
-    printf("\n");
-    printf("\nnode (str) display: %p", ns);
-    printf("\nlabel: %d %d", ns->lab.cl, ns->lab.lv);
-    printf("\n");
+    PRINT("\n");
+    PRINT("\nnode (str) display: %p", ns);
+    PRINT("\nlabel: %d %d", ns->lab.cl, ns->lab.lv);
+    PRINT("\n");
 }
 
 void node_amp_display(node_p na)
 {
-    printf("\n");
-    printf("\nnode (amp) display: %p", na);
-    printf("\nlabel: %d %d", na->lab.cl, na->lab.lv);
-    printf("\nlabel: %.2e %.2e", NODE_AMP(na)->re, NODE_AMP(na)->im);
-    printf("\n");
+    PRINT("\n");
+    PRINT("\nnode (amp) display: %p", na);
+    PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
+    PRINT("\nlabel: %.2e %.2e", NODE_AMP(na)->re, NODE_AMP(na)->im);
+    PRINT("\n");
+}
+
+void str_display(str_p str)
+{
+    PRINT("%p\t\t%p", str->el, str->th);
 }
 
 #endif
