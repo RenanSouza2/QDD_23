@@ -9,4 +9,6 @@
 
 PLACEHOLDER(label);
 
+int label_compare(label_p lab_1, label_p lab_2);
+
 #endif
