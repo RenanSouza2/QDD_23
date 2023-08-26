@@ -5,19 +5,37 @@ void test_label_compare()
 {
     printf("\n\ttest label compare\t\t");
 
-    label_t lab_1 = (label_t){V, 1};
-    int expected[3][3] = {{-1, -1, -1}, {-1, 0, 1}, {1, 1, 1}};
+    label_t lab_1 = (label_t){V, 2};
+    label_t lab_2 = (label_t){C, 1};
+    assert(label_compare(&lab_1, &lab_2) > 0);
+    
+    lab_2 = (label_t){V, 1};
+    assert(label_compare(&lab_1, &lab_2) > 0);
 
-    for(int i=0; i<3; i++)
-    for(int j=0; j<3; j++)
-    {
-        label_t lab_2 = (label_t){j, i};
-        if(label_compare(&lab_2, &lab_1) != expected[i][j])
-        {
-            PRINT("\n\nError in case (i, j): (%d, %d)\n\n", i, j);
-            assert(false);
-        }
-    }
+    lab_2 = (label_t){R, 1};
+    assert(label_compare(&lab_1, &lab_2) > 0);
+
+
+
+    lab_2 = (label_t){C, 2};
+    assert(label_compare(&lab_1, &lab_2) > 0);
+    
+    lab_2 = (label_t){V, 2};
+    assert(label_compare(&lab_1, &lab_2) == 0);
+
+    lab_2 = (label_t){R, 2};
+    assert(label_compare(&lab_1, &lab_2) < 0);
+
+
+
+    lab_2 = (label_t){C, 3};
+    assert(label_compare(&lab_1, &lab_2) < 0);
+    
+    lab_2 = (label_t){V, 3};
+    assert(label_compare(&lab_1, &lab_2) < 0);
+
+    lab_2 = (label_t){R, 3};
+    assert(label_compare(&lab_1, &lab_2) < 0);
 }
 
 void test_label()
