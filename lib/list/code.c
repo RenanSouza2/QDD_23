@@ -5,6 +5,50 @@
 #include "debug.h"
 
 #ifdef DEBUG
+
+#include "../utils/debug.h"
+#include "../label/debug.h"
+#include "../node/debug.h"
+
+void list_body_display_item(list_body_p lb)
+{
+    if(display_header("LIST BODY", lb)) return;
+
+    PRINT("\nnode: %p", lb->n);
+    PRINT("\nlb  : %p", lb->lb);
+    PRINT("\n");
+}
+
+void list_body_display(list_body_p lb)
+{
+    int i;
+    for(i=0; lb != NULL; i++, lb = lb->lb)
+    {
+        PRINT("\n\tnode %3d: %p\t\t", i, lb->n);
+        label_display(node_label(lb->n));
+    }
+}
+
+
+void list_head_display_item(list_head_p lh)
+{
+    if(display_header("LIST HEAD", lh)) return;
+
+    PRINT("\nnode: %p", LB(lh)->n);
+    PRINT("\nlb  : %p", LB(lh)->lb);
+    PRINT("\nlh  : %p", lh->lh);
+
+}
+
+void list_head_display(list_head_p lh)
+{
+   for(; lh; lh = lh->lh)
+    {
+        PRINT("\n");
+        list_body_display(LB(lh));
+    }
+}
+
 #endif
 
 list_body_p list_body_create(node_p n, list_body_p lb_next)
@@ -19,7 +63,7 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
 
 
 
-list_head_p list_head_create_ampty()
+list_head_p list_head_create_empty()
 {
     list_head_p lh;
     lh = malloc(sizeof(list_head_t));
@@ -29,14 +73,14 @@ list_head_p list_head_create_ampty()
 
 list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
-    list_head_p lh = list_head_create_ampty();
+    list_head_p lh = list_head_create_empty();
     *lh = (list_head_t){{n, NULL}, lh_next};
     return lh;
 }
 
 list_head_p list_head_copy(list_head_p lh)
 {
-    list_head_p lh_new = list_head_create_ampty();
+    list_head_p lh_new = list_head_create_empty();
     *lh_new = *lh;
     return lh_new;
 }
@@ -87,7 +131,7 @@ int list_label_compare(label_p lab, list_head_p lh)
 
 
 
-void list_include_node(list_head_p lh, node_p n)
+void list_include(list_head_p lh, node_p n)
 {
     if(LB(lh)->n == NULL)
     {
@@ -111,7 +155,7 @@ void list_include_node(list_head_p lh, node_p n)
         return;
     }
 
-    while(lh->lh && list_label_compare(lab, lh->lh) < 0)
+    while(lh->lh && (list_label_compare(lab, lh->lh) >= 0))
         lh = lh->lh;
 
     if(list_label_compare(lab, lh) != 0)

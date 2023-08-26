@@ -6,12 +6,14 @@
 #ifdef DEBUG
 
 #include "../utils/debug.h"
+#include "../label/debug.h"
 
 void node_str_display(node_p ns)
 {
     PRINT("\n");
     PRINT("\nnode (str) display: %p", ns);
-    PRINT("\nlabel: %d %d", ns->lab.cl, ns->lab.lv);
+    PRINT("\nlabel: ");
+    label_display(node_label(ns));
     PRINT("\n");
 }
 

@@ -4,6 +4,8 @@
 #include "../debug.h"
 #include "../../node/debug.h"
 
+
+
 void test_list_body_create()
 {
     printf("\n\t\ttest list body create\t\t");
@@ -25,17 +27,64 @@ void test_list_head_create()
 
 void test_list_create()
 {
-    printf("\n\ttest lib create\t\t");
+    printf("\n\ttest list create\t\t");
 
     test_list_body_create();
     test_list_head_create();
 }
 
+
+
+void test_list_include()
+{
+    printf("\n\t\ttest list include\t\t");
+
+    list_head_p lh = list_head_create_empty();
+    node_p n = node_str_create(V, 2);
+    list_include(lh, n);
+    assert(LB(lh)->n == n);
+    assert(lh->lh == NULL);
+
+    n = node_str_create(V, 2);
+    list_include(lh, n);
+    assert(LB(lh)->lb);
+    assert(LB(lh)->lb->n == n);
+
+    n = node_str_create(V, 1);
+    list_include(lh, n);
+    assert(LB(lh)->n == n);
+    assert(lh->lh);
+    
+    n = node_str_create(V, 4);
+    list_include(lh, n);
+    assert(lh->lh->lh);
+    assert(LB(lh->lh->lh)->n == n);
+
+    n = node_str_create(V, 4);
+    list_include(lh, n);
+    assert(LB(lh->lh->lh)->lb);
+    assert(LB(lh->lh->lh)->lb->n == n);
+
+    n = node_str_create(V, 3);
+    list_include(lh, n);
+    assert(LB(lh->lh->lh)->n == n);
+}
+
+void test_list_operations()
+{
+    printf("\n\ttest list operations\t\t");
+
+    test_list_include();
+}
+
+
+
 void test_list()
 {
-    printf("\ntest lib library\t\t");
+    printf("\ntest list library\t\t");
 
     test_list_create();
+    test_list_operations();
 }
 
 int main() 
