@@ -86,6 +86,7 @@ list_head_p list_head_copy(list_head_p lh)
 }
 
 
+
 // void list_body_free_item(list_body_p lb)
 #define list_body_free_item(lb) free(lb)
 
@@ -133,8 +134,6 @@ int label_list_compare(label_p lab, list_head_p lh)
 
 void list_insert(list_head_p lh, node_p n)
 {
-    printf("\nHere a\t\t");
-
     if(LB(lh)->n == NULL)
     {
 

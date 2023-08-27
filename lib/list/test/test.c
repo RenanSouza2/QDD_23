@@ -105,12 +105,9 @@ void test_list_head_remove()
 
     list_head_p lh = list_head_create(NULL, NULL);
     for(int i=0; i<6; i++)
-    {
-        printf("\ni: %d\t\t", i);
         list_insert(lh, n[i]);
-    }
 
-    list_head_display(lh);
+    
 }
 
 void test_list_remove()
