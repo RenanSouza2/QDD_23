@@ -96,24 +96,72 @@ void test_list_head_remove()
 
     node_p n[] = {
         node_str_create(V, 1), // 0
-        node_str_create(V, 1), // 2
         node_str_create(V, 1), // 1
-
-        node_str_create(V, 2),
-        node_str_create(V, 2),
-
-        node_str_create(V, 3),
-        node_str_create(V, 3),
-
-        node_str_create(V, 4),
-        node_str_create(V, 4),
+        node_str_create(V, 1), // 2
+        
+        node_str_create(V, 2), // 3
+        node_str_create(V, 2), // 4
+        
+        node_str_create(V, 3), // 5
+        node_str_create(V, 3), // 6
+        node_str_create(V, 3), // 7
+        
+        node_str_create(V, 4), // 8
+        node_str_create(V, 4), // 9
+        node_str_create(V, 4), // 10
     };
 
     list_head_p lh = list_head_create(NULL, NULL);
-    for(int i=0; i<6; i++)
+    for(int i=0; i<11; i++)
         list_head_insert(lh, n[i]);
+        
+    printf("\n\t\t\t\ttest list head remove  1\t\t");
+    list_head_remove(lh, n[2]);
+    assert(LB(lh)->lb->n == n[1]);
+    
+    printf("\n\t\t\t\ttest list head remove  2\t\t");
+    list_head_remove(lh, n[0]);
+    assert(LB(lh)->n  == n[1]);
+    assert(LB(lh)->lb == NULL);
+    
+    printf("\n\t\t\t\ttest list head remove  3\t\t");
+    list_head_remove(lh, n[1]);
+    assert(LB(lh)->n == n[3]);
+    assert(LB(lh)->lb);
+    assert(LB(lh)->lb->n == n[4]);
+    list_head_remove(lh, n[4]);
+    
+    printf("\n\t\t\t\ttest list head remove  4\t\t");
+    list_head_remove(lh, n[7]);
+    assert(LB(lh->lh)->lb->n == n[6]);
+    
+    printf("\n\t\t\t\ttest list head remove  5\t\t");
+    list_head_remove(lh, n[5]);
+    assert(LB(lh->lh)->n  == n[6]);
+    assert(LB(lh->lh)->lb == NULL);
+    
+    printf("\n\t\t\t\ttest list head remove  6\t\t");
+    list_head_remove(lh, n[6]);
+    assert(LB(lh->lh)->n == n[8]);
+    assert(LB(lh->lh)->lb);
+    assert(LB(lh->lh)->lb->n == n[10]);
 
-    list_head_remove(lh, n[1], LB(lh));
+    printf("\n\t\t\t\ttest list head remove  7\t\t");
+    list_head_remove(lh, n[10]);
+    assert(LB(lh->lh)->lb->n == n[9]);
+    
+    printf("\n\t\t\t\ttest list head remove  8\t\t");
+    list_head_remove(lh, n[8]);
+    assert(LB(lh->lh)->n  == n[9]);
+    assert(LB(lh->lh)->lb == NULL);
+
+    printf("\n\t\t\t\ttest list head remove  9\t\t");
+    list_head_remove(lh, n[9]);
+    assert(lh->lh == NULL);
+
+    printf("\n\t\t\t\ttest list head remove 10\t\t");
+    list_head_remove(lh, n[3]);
+    assert(LB(lh)->n == NULL);
 }
 
 void test_list_remove()

@@ -25,7 +25,7 @@ void list_body_display(list_body_p lb)
     for(i=0; lb != NULL; i++, lb = lb->lb)
     {
         PRINT("\n\tnode %3d: %p\t\t", i, lb->n);
-        // label_display(node_label(lb->n));
+        label_display(node_label(lb->n));
     }
 }
 
@@ -181,10 +181,8 @@ void list_body_remove(list_body_p lb, node_p n)
     list_body_free_item(lb_aux);
 }
 
-void list_head_remove(list_head_p lh, node_p n, list_body_p lb_hint)
+void list_head_remove(list_head_p lh, node_p n)
 {
-    if(lb_hint) return list_body_remove(lb_hint, n);
-
     list_head_p lh_aux;
     label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
