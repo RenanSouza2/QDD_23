@@ -35,38 +35,38 @@ void test_list_create()
 
 
 
-void test_list_insert()
+void test_list_head_insert()
 {
-    printf("\n\t\ttest list insert\t\t");
+    printf("\n\t\ttest list head insert\t\t");
 
     list_head_p lh = list_head_create(NULL, NULL);
     node_p n = node_str_create(V, 2);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh == NULL);
 
     n = node_str_create(V, 2);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(LB(lh)->lb);
     assert(LB(lh)->lb->n == n);
 
     n = node_str_create(V, 1);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh);
     
     n = node_str_create(V, 4);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(lh->lh->lh);
     assert(LB(lh->lh->lh)->n == n);
 
     n = node_str_create(V, 4);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(LB(lh->lh->lh)->lb);
     assert(LB(lh->lh->lh)->lb->n == n);
 
     n = node_str_create(V, 3);
-    list_insert(lh, n);
+    list_head_insert(lh, n);
     assert(LB(lh->lh->lh)->n == n);
 }
 
@@ -92,22 +92,28 @@ void test_list_body_remove()
 
 void test_list_head_remove()
 {
-    printf("\n\t\t\ttest list insert\t\t");
+    printf("\n\t\t\ttest list head remove\t\t");
 
     node_p n[] = {
-        node_str_create(V, 1),
-        node_str_create(V, 1),
-        node_str_create(V, 1),
+        node_str_create(V, 1), // 0
+        node_str_create(V, 1), // 2
+        node_str_create(V, 1), // 1
+
         node_str_create(V, 2),
+        node_str_create(V, 2),
+
         node_str_create(V, 3),
         node_str_create(V, 3),
+
+        node_str_create(V, 4),
+        node_str_create(V, 4),
     };
 
     list_head_p lh = list_head_create(NULL, NULL);
     for(int i=0; i<6; i++)
-        list_insert(lh, n[i]);
+        list_head_insert(lh, n[i]);
 
-    
+    list_head_remove(lh, n[1], LB(lh));
 }
 
 void test_list_remove()
@@ -122,7 +128,7 @@ void test_list_operations()
 {
     printf("\n\ttest list operations\t\t");
 
-    test_list_insert();
+    test_list_head_insert();
     test_list_remove();
 }
 

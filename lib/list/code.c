@@ -29,7 +29,6 @@ void list_body_display(list_body_p lb)
     }
 }
 
-
 void list_head_display_item(list_head_p lh)
 {
     if(display_header("LIST HEAD", lh)) return;
@@ -132,7 +131,7 @@ int label_list_compare(label_p lab, list_head_p lh)
 
 
 
-void list_insert(list_head_p lh, node_p n)
+void list_head_insert(list_head_p lh, node_p n)
 {
     if(LB(lh)->n == NULL)
     {
@@ -182,7 +181,7 @@ void list_body_remove(list_body_p lb, node_p n)
     list_body_free_item(lb_aux);
 }
 
-void list_remove(list_head_p lh, node_p n, list_body_p lb_hint)
+void list_head_remove(list_head_p lh, node_p n, list_body_p lb_hint)
 {
     if(lb_hint) return list_body_remove(lb_hint, n);
 
