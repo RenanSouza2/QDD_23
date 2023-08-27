@@ -39,7 +39,7 @@ void test_list_insert()
 {
     printf("\n\t\ttest list insert\t\t");
 
-    list_head_p lh = list_head_create_empty();
+    list_head_p lh = list_head_create(NULL, NULL);
     node_p n = node_str_create(V, 2);
     list_insert(lh, n);
     assert(LB(lh)->n == n);
@@ -70,9 +70,11 @@ void test_list_insert()
     assert(LB(lh->lh->lh)->n == n);
 }
 
-void test_list_remove_body()
+
+
+void test_list_body_remove()
 {
-    printf("\n\t\t\ttest list remove body\t\t");
+    printf("\n\t\t\ttest list body remove\t\t");
 
     list_body_p lb = NULL;
     for(long i=3; i>=0; i--)
@@ -88,23 +90,35 @@ void test_list_remove_body()
     assert(lb->lb == NULL);
 }
 
-void test_list_remove_head()
+void test_list_head_remove()
 {
-    printf("\n\t\t\ttest list remove head\t\t");
+    printf("\n\t\t\ttest list insert\t\t");
 
     node_p n[] = {
         node_str_create(V, 1),
         node_str_create(V, 1),
         node_str_create(V, 1),
         node_str_create(V, 2),
+        node_str_create(V, 3),
+        node_str_create(V, 3),
     };
+
+    list_head_p lh = list_head_create(NULL, NULL);
+    for(int i=0; i<6; i++)
+    {
+        printf("\ni: %d\t\t", i);
+        list_insert(lh, n[i]);
+    }
+
+    list_head_display(lh);
 }
 
 void test_list_remove()
 {
     printf("\n\t\ttest list remove\t\t");
 
-    test_list_remove_body();
+    test_list_body_remove();
+    test_list_head_remove();
 }
 
 void test_list_operations()
@@ -124,6 +138,8 @@ void test_list()
     test_list_create();
     test_list_operations();
 }
+
+
 
 int main() 
 {
