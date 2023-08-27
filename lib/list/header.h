@@ -7,6 +7,6 @@
 PLACEHOLDER(list_body);
 PLACEHOLDER(list_head);
 
-void list_include(list_head_p lh, node_p n);
+void list_insert(list_head_p lh, node_p n);
 
 #endif

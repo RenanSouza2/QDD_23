@@ -35,46 +35,84 @@ void test_list_create()
 
 
 
-void test_list_include()
+void test_list_insert()
 {
-    printf("\n\t\ttest list include\t\t");
+    printf("\n\t\ttest list insert\t\t");
 
     list_head_p lh = list_head_create_empty();
     node_p n = node_str_create(V, 2);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh == NULL);
 
     n = node_str_create(V, 2);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(LB(lh)->lb);
     assert(LB(lh)->lb->n == n);
 
     n = node_str_create(V, 1);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh);
     
     n = node_str_create(V, 4);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(lh->lh->lh);
     assert(LB(lh->lh->lh)->n == n);
 
     n = node_str_create(V, 4);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(LB(lh->lh->lh)->lb);
     assert(LB(lh->lh->lh)->lb->n == n);
 
     n = node_str_create(V, 3);
-    list_include(lh, n);
+    list_insert(lh, n);
     assert(LB(lh->lh->lh)->n == n);
+}
+
+void test_list_remove_body()
+{
+    printf("\n\t\t\ttest list remove body\t\t");
+
+    list_body_p lb = NULL;
+    for(long i=3; i>=0; i--)
+        lb = list_body_create(NODE(i), lb);
+
+    list_body_remove(lb, NODE(3));
+    assert(lb->lb->lb->lb == NULL);
+    
+    list_body_remove(lb, NODE(1));
+    assert(lb->lb->n == NODE(2));
+    
+    list_body_remove(lb, NODE(2));
+    assert(lb->lb == NULL);
+}
+
+void test_list_remove_head()
+{
+    printf("\n\t\t\ttest list remove head\t\t");
+
+    node_p n[] = {
+        node_str_create(V, 1),
+        node_str_create(V, 1),
+        node_str_create(V, 1),
+        node_str_create(V, 2),
+    };
+}
+
+void test_list_remove()
+{
+    printf("\n\t\ttest list remove\t\t");
+
+    test_list_remove_body();
 }
 
 void test_list_operations()
 {
     printf("\n\ttest list operations\t\t");
 
-    test_list_include();
+    test_list_insert();
+    test_list_remove();
 }
 
 
