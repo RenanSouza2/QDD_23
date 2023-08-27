@@ -63,7 +63,7 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
 
 
 
-list_head_p list_head_create_empty()
+list_head_p list_head_create_cold()
 {
     list_head_p lh;
     lh = malloc(sizeof(list_head_t));
@@ -73,14 +73,14 @@ list_head_p list_head_create_empty()
 
 list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
-    list_head_p lh = list_head_create_empty();
+    list_head_p lh = list_head_create_cold();
     *lh = (list_head_t){{n, NULL}, lh_next};
     return lh;
 }
 
 list_head_p list_head_copy(list_head_p lh)
 {
-    list_head_p lh_new = list_head_create_empty();
+    list_head_p lh_new = list_head_create_cold();
     *lh_new = *lh;
     return lh_new;
 }
@@ -133,8 +133,11 @@ int label_list_compare(label_p lab, list_head_p lh)
 
 void list_insert(list_head_p lh, node_p n)
 {
+    printf("\nHere a\t\t");
+
     if(LB(lh)->n == NULL)
     {
+
         LB(lh)->n = n;
         return;
     }

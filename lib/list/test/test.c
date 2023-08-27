@@ -39,7 +39,7 @@ void test_list_insert()
 {
     printf("\n\t\ttest list insert\t\t");
 
-    list_head_p lh = list_head_create_empty();
+    list_head_p lh = list_head_create(NULL, NULL);
     node_p n = node_str_create(V, 2);
     list_insert(lh, n);
     assert(LB(lh)->n == n);
@@ -103,10 +103,10 @@ void test_list_head_remove()
         node_str_create(V, 3),
     };
 
-    list_head_p lh = list_head_create_empty();
+    list_head_p lh = list_head_create(NULL, NULL);
     for(int i=0; i<6; i++)
     {
-        printf("\ni: %d", i);
+        printf("\ni: %d\t\t", i);
         list_insert(lh, n[i]);
     }
 
