@@ -46,6 +46,7 @@ void list_head_display(list_head_p lh)
         PRINT("\n");
         list_body_display(LB(lh));
     }
+    printf("\t\t");
 }
 
 #endif
@@ -213,7 +214,7 @@ void list_head_remove(list_head_p lh, node_p n)
 
     if(lh_aux != lh)
     {
-        *lh = *lh_aux;
+        lh->lh = lh_aux->lh;
         list_head_free_item(lh_aux);
         return;
     }

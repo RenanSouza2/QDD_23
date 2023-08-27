@@ -133,30 +133,37 @@ void test_list_head_remove()
     
     printf("\n\t\t\t\ttest list head remove  4\t\t");
     list_head_remove(lh, n[7]);
+    assert(LB(lh)->n == n[3]);
     assert(LB(lh->lh)->lb->n == n[6]);
     
     printf("\n\t\t\t\ttest list head remove  5\t\t");
     list_head_remove(lh, n[5]);
+    assert(LB(lh)->n == n[3]);
     assert(LB(lh->lh)->n  == n[6]);
     assert(LB(lh->lh)->lb == NULL);
-    
+
     printf("\n\t\t\t\ttest list head remove  6\t\t");
     list_head_remove(lh, n[6]);
+    assert(LB(lh)->n == n[3]);
     assert(LB(lh->lh)->n == n[8]);
     assert(LB(lh->lh)->lb);
     assert(LB(lh->lh)->lb->n == n[10]);
 
     printf("\n\t\t\t\ttest list head remove  7\t\t");
     list_head_remove(lh, n[10]);
+    assert(LB(lh)->n == n[3]);
     assert(LB(lh->lh)->lb->n == n[9]);
     
     printf("\n\t\t\t\ttest list head remove  8\t\t");
     list_head_remove(lh, n[8]);
+    assert(LB(lh)->n == n[3]);
     assert(LB(lh->lh)->n  == n[9]);
     assert(LB(lh->lh)->lb == NULL);
+    assert(LB(lh)->n == n[3]);
 
     printf("\n\t\t\t\ttest list head remove  9\t\t");
     list_head_remove(lh, n[9]);
+    assert(LB(lh)->n == n[3]);
     assert(lh->lh == NULL);
 
     printf("\n\t\t\t\ttest list head remove 10\t\t");
