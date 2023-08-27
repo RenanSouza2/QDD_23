@@ -184,48 +184,47 @@ void list_remove(list_head_p lh, node_p n, list_body_p lb_hint)
 {
     if(lb_hint) return list_body_remove(lb_hint, n);
 
+    list_head_p lh_aux;
     label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
-        if(LB(lh)->n != n) return list_body_remove(LB(lh), n);
-        
-        if(LB(lh)->lb)
-        {
-            list_body_p lb_aux = LB(lh)->lb;
-            *LB(lh) = *lb_aux;
-            list_body_free_item(lb_aux);
-            return;
-        }
-
-        if(lh->lh)
-        {
-            list_head_p lh_aux = lh->lh;
-            *lh = *lh_aux;
-            list_head_free_item(lh);
-            return;
-        }
-
-        LB(lh)->n = NULL;
-        return;
+        lh_aux = lh;
     }
+    else
+    {
+        for(; lh->lh; lh = lh->lh)
+            if(label_list_compare(lab, lh->lh) <= 0)
+                break;
+        
+        assert(lh->lh);
+        assert(label_list_compare(lab, lh->lh) == 0);
 
-    for(; lh->lh; lh = lh->lh)
-        if(label_list_compare(lab, lh->lh) <= 0)
-            break;
-
-    list_head_p lh_aux = lh->lh;
-    assert(label_list_compare(lab, lh_aux) == 0);
+        lh_aux = lh->lh;
+    }
 
     if(LB(lh_aux)->n != n) return list_body_remove(LB(lh_aux), n);
-
+        
     if(LB(lh_aux)->lb)
     {
-        list_body_p lb = LB(lh_aux)->lb;
-        *LB(lh_aux) = *lb;
-        list_body_free_item(lb);
+        list_body_p lb_aux = LB(lh_aux)->lb;
+        *LB(lh_aux) = *lb_aux;
+        list_body_free_item(lb_aux);
         return;
     }
 
-    lh->lh = lh_aux->lh;
-    list_head_free_item(lh_aux);
+    if(lh_aux != lh)
+    {
+        *lh = *lh_aux;
+        list_head_free_item(lh_aux);
+        return;
+    }
+
+    if(lh->lh)
+    {
+        lh_aux = lh->lh;
+        *lh = *lh_aux;
+        return;
+    }
+
+    LB(lh)->n = NULL;
 }
