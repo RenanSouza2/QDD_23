@@ -3,7 +3,9 @@
 
 #include "../debug.h"
 
-void test_create_str()
+
+
+void test_node_create_str()
 {
     printf("\n\t\ttest node create str\t\t");
 
@@ -18,7 +20,7 @@ void test_create_str()
     assert(NODE_STR(ne)->th == NULL);
 }
 
-void test_create_amp()
+void test_node_create_amp()
 {
     printf("\n\t\ttest node create amp\t\t");
 
@@ -33,21 +35,64 @@ void test_create_amp()
     assert(NODE_AMP(ne)->im == 2);
 }
 
-
-void test_create()
+void test_node_create()
 {
     printf("\n\ttest node create\t\t");
 
-    test_create_str();
-    test_create_amp();
+    test_node_create_str();
+    test_node_create_amp();
+}
+
+
+
+void test_node_connection_one()
+{
+    printf("\n\t\ttest node connection one\t\t");
+
+    node_p n = node_str_create(V, 2);
+    
+    node_p n_el = node_str_create(V,1);
+    node_connect(n, n_el, ELSE);
+    assert(NODE_STR(n)->el == n_el);
+    assert(LB(n_el)->n == n);
+    
+    node_p n_th = node_str_create(V,1);
+    node_connect(n, n_th, THEN);
+    assert(NODE_STR(n)->th == n_th);
+    assert(LB(n_th)->n == n);
+}
+
+void test_node_connection_both()
+{
+    printf("\n\t\ttest node connection both\t\t");
+
+    node_p n   = node_str_create(V, 2);
+    node_p n_el = node_str_create(V,1);
+    node_p n_th = node_str_create(V,1);
+    
+    node_connect_both(n, n_el, n_th);
+    assert(NODE_STR(n)->el == n_el);
+    assert(NODE_STR(n)->th == n_th);
+    assert(LB(n_el)->n == n);
+    assert(LB(n_th)->n == n);
+}
+
+void test_node_connection()
+{
+    printf("\n\ttest node connection\t\t");
+
+    test_node_connection_one();
 }
 
 void test_node()
 {
     printf("\ntest node library\t\t");
 
-    test_create();
+    test_node_create();
+    test_node_connection();
 }
+
+
 
 int main() 
 {

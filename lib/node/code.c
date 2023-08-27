@@ -60,3 +60,16 @@ label_p node_label(node_p n)
 {
     return &n->lab;
 }
+
+void node_connect(node_p n1, node_p n2, int side)
+{
+    V_NODE(n1)[side] = n2;
+    list_head_insert(LH(n2), n1);
+}
+
+void node_connect_both(node_p n, node_p n_el, node_p n_th)
+{
+    *NODE_STR(n) = (str_t){n_el, n_th};
+    list_head_insert(LH(n_el), n);
+    list_head_insert(LH(n_th), n);
+}
