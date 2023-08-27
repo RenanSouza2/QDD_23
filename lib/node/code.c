@@ -5,23 +5,30 @@
 
 #ifdef DEBUG
 
-#include <stdio.h>
+#include "../utils/debug.h"
+#include "../label/debug.h"
 
 void node_str_display(node_p ns)
 {
-    printf("\n");
-    printf("\nnode (str) display: %p", ns);
-    printf("\nlabel: %d %d", ns->lab.cl, ns->lab.lv);
-    printf("\n");
+    PRINT("\n");
+    PRINT("\nnode (str) display: %p", ns);
+    PRINT("\nlabel: ");
+    label_display(node_label(ns));
+    PRINT("\n");
 }
 
 void node_amp_display(node_p na)
 {
-    printf("\n");
-    printf("\nnode (amp) display: %p", na);
-    printf("\nlabel: %d %d", na->lab.cl, na->lab.lv);
-    printf("\nlabel: %.2e %.2e", NODE_AMP(na)->re, NODE_AMP(na)->im);
-    printf("\n");
+    PRINT("\n");
+    PRINT("\nnode (amp) display: %p", na);
+    PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
+    PRINT("\nlabel: %.2e %.2e", NODE_AMP(na)->re, NODE_AMP(na)->im);
+    PRINT("\n");
+}
+
+void str_display(str_p str)
+{
+    PRINT("%p\t\t%p", str->el, str->th);
 }
 
 #endif
@@ -44,4 +51,12 @@ node_p node_amp_create(number_t re, number_t im)
 
     *na = (node_amp_t){{{{NULL, NULL}, NULL}, {0, 0}}, {re, im}};
     return NODE(na);
+}
+
+// void node_free(node_p n)
+#define node_free(n) free(n)
+
+label_p node_label(node_p n)
+{
+    return &n->lab;
 }
