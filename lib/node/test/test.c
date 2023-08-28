@@ -47,7 +47,7 @@ void test_node_create()
 
 void test_node_connect_one()
 {
-    printf("\n\t\t\ttest node connection one\t\t");
+    printf("\n\t\t\ttest node connect one\t\t");
 
     node_p n = node_str_create(V, 2);
     
@@ -64,7 +64,7 @@ void test_node_connect_one()
 
 void test_node_connect_both()
 {
-    printf("\n\t\t\ttest node connection both\t\t");
+    printf("\n\t\t\ttest node connect both\t\t");
 
     node_p n   = node_str_create(V, 2);
     node_p n_el = node_str_create(V,1);
@@ -87,11 +87,56 @@ void test_node_connect()
 
 
 
+void test_node_disconnect_one()
+{
+    printf("\n\t\t\ttest node disconnect one\t\t");
+
+    node_p n   = node_str_create(V, 2);
+    node_p n_el = node_str_create(V,1);
+    node_p n_th = node_str_create(V,1);
+    node_connect_both(n, n_el, n_th);
+
+    node_disconnect(n, n_el);
+    assert(NODE_STR(n)->el == NULL);
+    assert(LB(n_el)->n == NULL);
+    
+    node_disconnect(n, n_th);
+    assert(NODE_STR(n)->th == NULL);
+    assert(LB(n_th)->n == NULL);
+}
+
+void test_node_disconnect_both()
+{
+    printf("\n\t\t\ttest node disconnect both\t\t");
+
+    node_p n   = node_str_create(V, 2);
+    node_p n_el = node_str_create(V,1);
+    node_p n_th = node_str_create(V,1);
+    node_connect_both(n, n_el, n_th);
+
+    node_disconnect_both(n);
+    assert(NODE_STR(n)->el == NULL);
+    assert(NODE_STR(n)->th == NULL);
+    assert(LB(n_el)->n == NULL);
+    assert(LB(n_th)->n == NULL);
+}
+
+void test_node_disconnect()
+{
+    printf("\n\t\ttest node disconnect\t\t");
+
+    test_node_disconnect_one();
+    test_node_disconnect_both();
+}
+
+
+
 void test_node_connection()
 {
     printf("\n\ttest node connection\t\t");
 
     test_node_connect();
+    test_node_disconnect();
 }
 
 

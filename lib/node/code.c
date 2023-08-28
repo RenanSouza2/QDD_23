@@ -79,9 +79,20 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th)
 
 void node_disconnect(node_p n1, node_p n2)
 {
-    int side = LADO(n1,n2);
+    int side = SIDE(n1,n2);
     assert(V_STR(n1)[side] == n2);
     V_STR(n1)[side] = NULL;
 
     list_head_remove(LH(n2), n1);
+}
+
+void node_disconnect_both(node_p n)
+{
+    node_p n_el = NODE_STR(n)->el;
+    node_p n_th = NODE_STR(n)->th;
+    assert(n_el);
+    assert(n_th);
+    list_head_remove(LH(n_el), n);
+    list_head_remove(LH(n_th), n);
+    *NODE_STR(n) = (str_t){NULL, NULL};
 }
