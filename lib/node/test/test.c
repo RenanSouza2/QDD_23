@@ -24,7 +24,8 @@ void test_node_create_amp()
 {
     printf("\n\t\ttest node create amp\t\t");
 
-    node_p ne = node_amp_create(1, 2);
+    amp_t amp = (amp_t){1, 2};
+    node_p ne = node_amp_create(&amp);
     
     assert(LB(ne)->n  == NULL);
     assert(LB(ne)->lb == NULL);

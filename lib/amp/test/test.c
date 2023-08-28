@@ -6,14 +6,11 @@
 void test_hello()
 {
     printf("\n\ttest hello\t\t");
-
-    hello_debug();
-    hello_example();
 }
 
-void test_example()
+void test_amp()
 {
-    printf("\ntest example library\t\t");
+    printf("\ntest amp library\t\t");
 
     test_hello();
 }
@@ -22,7 +19,7 @@ void test_example()
 int main() 
 {
     setbuf(stdout, NULL);
-    test_example();
+    test_amp();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }
