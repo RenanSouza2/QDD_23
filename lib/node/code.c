@@ -63,13 +63,25 @@ label_p node_label(node_p n)
 
 void node_connect(node_p n1, node_p n2, int side)
 {
-    V_NODE(n1)[side] = n2;
+    assert(V_STR(n1)[side] == NULL);
+    V_STR(n1)[side] = n2;
     list_head_insert(LH(n2), n1);
 }
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
 {
+    assert(NODE_STR(n)->el == NULL);
+    assert(NODE_STR(n)->th == NULL);
     *NODE_STR(n) = (str_t){n_el, n_th};
     list_head_insert(LH(n_el), n);
     list_head_insert(LH(n_th), n);
+}
+
+void node_disconnect(node_p n1, node_p n2)
+{
+    int side = LADO(n1,n2);
+    assert(V_STR(n1)[side] == n2);
+    V_STR(n1)[side] = NULL;
+
+    list_head_remove(LH(n2), n1);
 }

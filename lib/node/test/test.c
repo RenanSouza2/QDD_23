@@ -45,9 +45,9 @@ void test_node_create()
 
 
 
-void test_node_connection_one()
+void test_node_connect_one()
 {
-    printf("\n\t\ttest node connection one\t\t");
+    printf("\n\t\t\ttest node connection one\t\t");
 
     node_p n = node_str_create(V, 2);
     
@@ -62,9 +62,9 @@ void test_node_connection_one()
     assert(LB(n_th)->n == n);
 }
 
-void test_node_connection_both()
+void test_node_connect_both()
 {
-    printf("\n\t\ttest node connection both\t\t");
+    printf("\n\t\t\ttest node connection both\t\t");
 
     node_p n   = node_str_create(V, 2);
     node_p n_el = node_str_create(V,1);
@@ -77,12 +77,24 @@ void test_node_connection_both()
     assert(LB(n_th)->n == n);
 }
 
+void test_node_connect()
+{
+    printf("\n\t\ttest node connect\t\t");
+
+    test_node_connect_one();
+    test_node_connect_both();
+}
+
+
+
 void test_node_connection()
 {
     printf("\n\ttest node connection\t\t");
 
-    test_node_connection_one();
+    test_node_connect();
 }
+
+
 
 void test_node()
 {
