@@ -32,6 +32,4 @@ list_body_p list_body_create(node_p n, list_body_p lb_next);
 list_head_p list_head_create_cold();
 list_head_p list_head_create(node_p n, list_head_p lh_next);
 
-void list_body_remove(list_body_p lb, node_p n);
-
 #endif

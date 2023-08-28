@@ -114,7 +114,7 @@ void test_list_head_remove()
     list_head_p lh = list_head_create(NULL, NULL);
     for(int i=0; i<11; i++)
         list_head_insert(lh, n[i]);
-        
+
     printf("\n\t\t\t\ttest list head remove  1\t\t");
     list_head_remove(lh, n[2]);
     assert(LB(lh)->lb->n == n[1]);

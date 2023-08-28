@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <assert.h>
 
 #include "../label/header.h"
@@ -132,18 +133,53 @@ int label_list_compare(label_p lab, list_head_p lh)
 
 
 
+void list_body_insert(list_body_p lb, node_p n)
+{
+    if(lb->n) lb->lb = list_body_create(n, lb->lb);
+    else      lb->n = n;
+}
+
+// return value: true if empty
+int list_body_remove(list_body_p lb, node_p n)
+{
+    if(lb->n == n)
+    {
+        list_body_p lb_aux = lb->lb;
+        if(lb_aux == NULL)
+        {
+            lb->n = NULL;
+            return true;
+        }
+
+        *lb = *lb_aux;
+        list_body_free_item(lb_aux);
+        return false;
+    }
+
+    for(; lb->lb; lb = lb->lb)
+        if(lb->lb->n == n)
+            break;
+
+    assert(lb->lb);
+    
+    list_body_p lb_aux = lb->lb;
+    lb->lb = lb_aux->lb;
+    list_body_free_item(lb_aux);
+    return false;
+}
+
+
+
 void list_head_insert(list_head_p lh, node_p n)
 {
     if(LB(lh)->n == NULL)
     {
-
         LB(lh)->n = n;
         return;
     }
 
     label_p lab;
     lab = node_label(n);
-
     if(label_list_compare(lab, lh) == 0)
     {
         LB(lh)->lb = list_body_create(n, LB(lh)->lb);
@@ -157,8 +193,9 @@ void list_head_insert(list_head_p lh, node_p n)
         return;
     }
 
-    while(lh->lh && (label_list_compare(lab, lh->lh) >= 0))
-        lh = lh->lh;
+    for(;lh->lh; lh = lh->lh)
+        if(label_list_compare(lab, lh->lh) < 0)
+            break;
 
     if(label_list_compare(lab, lh) != 0)
     {
@@ -169,62 +206,29 @@ void list_head_insert(list_head_p lh, node_p n)
     LB(lh)->lb = list_body_create(n, LB(lh)->lb);
 }
 
-void list_body_remove(list_body_p lb, node_p n)
-{
-    for(; lb->lb; lb = lb->lb)
-        if(lb->lb->n == n)
-            break;
-
-    assert(lb->lb);
-    
-    list_body_p lb_aux = lb->lb;
-    lb->lb = lb_aux->lb;
-    list_body_free_item(lb_aux);
-}
-
 void list_head_remove(list_head_p lh, node_p n)
 {
-    list_head_p lh_aux;
     label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
-        lh_aux = lh;
-    }
-    else
-    {
-        for(; lh->lh; lh = lh->lh)
-            if(label_list_compare(lab, lh->lh) <= 0)
-                break;
+        list_head_p lh_aux = lh->lh;
+        if(!list_body_remove(LB(lh), n) || lh_aux == NULL) return;
         
-        assert(lh->lh);
-        assert(label_list_compare(lab, lh->lh) == 0);
-
-        lh_aux = lh->lh;
-    }
-
-    if(LB(lh_aux)->n != n) return list_body_remove(LB(lh_aux), n);
-        
-    if(LB(lh_aux)->lb)
-    {
-        list_body_p lb_aux = LB(lh_aux)->lb;
-        *LB(lh_aux) = *lb_aux;
-        list_body_free_item(lb_aux);
-        return;
-    }
-
-    if(lh_aux != lh)
-    {
-        lh->lh = lh_aux->lh;
+        *lh = *lh_aux;
         list_head_free_item(lh_aux);
         return;
     }
 
-    if(lh->lh)
-    {
-        lh_aux = lh->lh;
-        *lh = *lh_aux;
-        return;
-    }
+    for(; lh->lh; lh = lh->lh)
+        if(label_list_compare(lab, lh->lh) <= 0)
+            break;
 
-    LB(lh)->n = NULL;
+    list_head_p lh_aux = lh->lh;
+    assert(lh_aux);
+    assert(label_list_compare(lab, lh_aux) == 0);
+
+    if(!list_body_remove(LB(lh_aux), n)) return;
+
+    lh->lh = lh_aux->lh;
+    list_head_free_item(lh_aux);
 }
