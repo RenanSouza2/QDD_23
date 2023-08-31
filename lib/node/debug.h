@@ -2,9 +2,9 @@
 #define __NODE_DEBUG_H__
 
 #include "header.h"
-#include "../list/debug.h"
-#include "../label/debug.h"
-#include "../amp/debug.h"
+#include "../list/struct.h"
+#include "../label/struct.h"
+#include "../amp/struct.h"
 
 STRUCT(node)
 {
