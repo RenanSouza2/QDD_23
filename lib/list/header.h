@@ -4,8 +4,17 @@
 #include "../../static_utils/struct.h"
 #include "../node/header.h"
 
-PLACEHOLDER(list_body);
-PLACEHOLDER(list_head);
+STRUCT(list_body)
+{
+    node_p n;
+    list_body_p lb;
+};
+
+STRUCT(list_head)
+{
+    list_body_t lb;
+    list_head_p lh;
+};
 
 void list_body_insert(list_body_p lb, node_p n);
 int  list_body_remove(list_body_p lb, node_p n);

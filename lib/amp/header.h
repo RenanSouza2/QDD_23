@@ -3,7 +3,12 @@
 
 #include "../../static_utils/struct.h"
 
-PLACEHOLDER(amp);
+typedef double number_t;
+
+STRUCT(amp)
+{
+    number_t re, im;
+};
 
 typedef double number_t;
 
