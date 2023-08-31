@@ -62,6 +62,16 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
     return lb;
 }
 
+list_body_p list_body_copy(list_body_p lb)
+{
+    list_body_p lb_new;
+    lb_new = malloc(sizeof(list_body_t));
+    assert(lb_new);
+
+    *lb_new = *lb;
+    return lb_new;
+}
+
 
 
 list_head_p list_head_create_cold()
@@ -88,14 +98,6 @@ list_head_p list_head_copy(list_head_p lh)
 
 
 
-// void list_body_free_item(list_body_p lb)
-#define list_body_free_item(lb) free(lb)
-
-// void list_head_free_item(list_head_p lh)
-#define list_head_free_item(lh) free(lh)
-
-
-
 void free_list_body(list_body_p lb)
 {
     while(lb != NULL)
@@ -103,7 +105,7 @@ void free_list_body(list_body_p lb)
         list_body_p lb_aux = lb;
         lb = lb->lb;
 
-        list_body_free_item(lb_aux);
+        free(lb_aux);
     }
 }
 
@@ -115,10 +117,16 @@ void free_list_head(list_head_p lh)
         lh = lh->lh;
 
         free_list_body(LB(lh_aux)->lb);
-        list_head_free_item(lh_aux);
+        free(lh_aux);
     }
 }
 
+list_head_p list_head_pop(list_head_p lh)
+{
+    list_head_p lh_aux = lh->lh;
+    free(lh);
+    return lh_aux;
+}
 
 
 label_p list_label(list_head_p lh)
@@ -129,6 +137,11 @@ label_p list_label(list_head_p lh)
 int label_list_compare(label_p lab, list_head_p lh)
 {
     return label_compare(lab, list_label(lh));
+}
+
+int list_compare(list_head_p lh_1, list_head_p lh_2)
+{
+    return label_compare(list_label(lh_1), list_label(lh_2));
 }
 
 
@@ -152,7 +165,7 @@ int list_body_remove(list_body_p lb, node_p n)
         }
 
         *lb = *lb_aux;
-        list_body_free_item(lb_aux);
+        free(lb_aux);
         return false;
     }
 
@@ -164,8 +177,14 @@ int list_body_remove(list_body_p lb, node_p n)
     
     list_body_p lb_aux = lb->lb;
     lb->lb = lb_aux->lb;
-    list_body_free_item(lb_aux);
+    free(lb_aux);
     return false;
+}
+
+void list_body_merge(list_body_p lb_1, list_body_p lb_2)
+{
+    for(; lb_1->lb; lb_1 = lb_1);
+    lb_1->lb = list_body_copy(lb_2);
 }
 
 
@@ -215,7 +234,7 @@ void list_head_remove(list_head_p lh, node_p n)
         if(!list_body_remove(LB(lh), n) || lh_aux == NULL) return;
         
         *lh = *lh_aux;
-        list_head_free_item(lh_aux);
+        free(lh_aux);
         return;
     }
 
@@ -230,78 +249,51 @@ void list_head_remove(list_head_p lh, node_p n)
     if(!list_body_remove(LB(lh_aux), n)) return;
 
     lh->lh = lh_aux->lh;
-    list_head_free_item(lh_aux);
+    free(lh_aux);
 }
 
 void list_head_merge(list_head_p lh_1, list_head_p lh_2)
 {
-    if(label_list_compare(L_LABEL(lh_2), lh_1) < 0)
+    if(list_compare(lh_2, lh_1) < 0)
     {
-        DEBUG(DEBUG_TRANSFERE,"\nTrocando");
-
-        lista_head lh;
-        COPY_STRUCT(&lh, n1,lista_head);
-        COPY_STRUCT( n1, n2,lista_head);
-        COPY_STRUCT( n2,&lh,lista_head);
+        list_head_t lh;
+         lh   = *lh_1;
+        *lh_1 = *lh_2;
+        *lh_2 =  lh;
     }
 
-    DEBUG(DEBUG_TRANSFERE,"\nBuscando posicao para inserir n2");
-    lista_head *lh, *lh_1, *lh_2;
-    label *lab;
-    lab = NLABEL(n2);
-    for(lh = HEAD(n1), lh_1 = lh->lh; lh_1 != NULL; lh = lh_1, lh_1 = lh->lh)
-        if(COMPARE_LABEL(lab,<, NLABEL(lh_1)))
+    if(list_compare(lh_1, lh_2) == 0)
+    {
+        list_body_merge(LB(lh_1), LB(lh_2));
+        lh_2 = list_head_pop(lh_2);
+    }
+
+    list_head_p lh = lh_1;
+    lh_1 = lh->lh;
+
+    while(lh_1 && lh_2)
+    {
+        switch (list_compare(lh_1, lh_2))
+        {
+            case -1:
+            lh = lh->lh = lh_1;
+            lh_1 = lh_1->lh;
+            break;
+        
+            case 0:
+            lh = lh->lh = lh_1;
+            list_body_merge(LB(lh), LB(lh_2));
+
+            lh_1 = lh_1->lh;
+            lh_2 = list_head_pop(lh_2);
             break;
 
-    DEBUG(DEBUG_TRANSFERE,"\nInserindo n2");
-    lh_2 = HEAD(n2)->lh;
-    if(COMPARE_LABEL(lab,==,NLABEL(lh)))
-    {
-        lista_body *lb;
-        for(lb = BODY(n2); lb->lb != NULL; lb = lb->lb);
-        lb->lb = BODY(lh)->lb;
-        BODY(lh)->lb = cria_lista_body_copia(BODY(n2));
-    }
-    else
-    {
-        lh->lh = cria_lista_head_copia(HEAD(n2));
-        lh = lh->lh;
-    }
-    LIBERA(libera_no,n2);
-
-    while(lh_1 != NULL & lh_2 != NULL)
-    {
-        if(COMPARE_LABEL(NLABEL(lh_1), <, NLABEL(lh_2)))
-        {
-            lh->lh = lh_1;
-            lh     = lh->lh;
-            lh_1   = lh_1->lh;
-            continue;
-        }
-
-        lh->lh = lh_2;
-        lh     = lh->lh;
-        lh_2   = lh_2->lh;
-
-        if(COMPARE_LABEL(NLABEL(lh_1), ==, NLABEL(lh)))
-        {
-            lista_body *lb, *lb_next;
-            for(lb = BODY(lh), lb_next = lb->lb; lb_next != NULL; lb = lb_next, lb_next = lb->lb);
-            lb->lb = cria_lista_body_copia(BODY(lh_1));
-
-            lista_head *lh_aux;
-            lh_aux = lh_1;
-            lh_1   = lh_1->lh;
-            LIBERA(libera_lista_head_item,lh_aux);
-
-            continue;
+            case 1:
+            lh = lh->lh = lh_2;
+            lh_2 = lh_2->lh;
+            break;
         }
     }
 
-    if(lh_1 != NULL)
-        lh->lh = lh_1;
-    else if(lh_2 != NULL)
-        lh->lh = lh_2;
-
-    DEBUG(DEBUG_TRANSFERE,"\nSAINDO TRANSFERENCIA");
+    lh->lh = (list_head_p)((long)lh_1 | (long)lh_2);
 }

@@ -12,7 +12,6 @@ void list_head_display(list_head_p lh);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 #define LH(POINTER)    ((list_head_p)(POINTER))
-#define L_LABEL(POINTER) (&(LB(POINTER)->n->lab))
 
 list_body_p list_body_create(node_p n, list_body_p lb_next);
 
