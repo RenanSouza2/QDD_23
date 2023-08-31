@@ -3,11 +3,6 @@
 
 #include "header.h"
 
-STRUCT(label)
-{
-    int cl, lv;
-};
-
 void label_display(label_p lab);
 
 #endif
