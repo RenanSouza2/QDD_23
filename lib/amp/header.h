@@ -5,10 +5,7 @@
 
 typedef double number_t;
 
-STRUCT(amp)
-{
-    number_t re, im;
-};
+PLACEHOLDER(amp);
 
 int amp_compare(amp_p amp_1, amp_p amp_2);
 

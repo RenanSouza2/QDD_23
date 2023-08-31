@@ -7,10 +7,7 @@
 #define V 1
 #define C 0
 
-STRUCT(label)
-{
-    int cl, lv;
-};
+PLACEHOLDER(label);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 #define LH(POINTER)    ((list_head_p)(POINTER))
