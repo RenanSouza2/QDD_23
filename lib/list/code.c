@@ -232,3 +232,76 @@ void list_head_remove(list_head_p lh, node_p n)
     lh->lh = lh_aux->lh;
     list_head_free_item(lh_aux);
 }
+
+void list_head_merge(list_head_p lh_1, list_head_p lh_2)
+{
+    if(label_list_compare(L_LABEL(lh_2), lh_1) < 0)
+    {
+        DEBUG(DEBUG_TRANSFERE,"\nTrocando");
+
+        lista_head lh;
+        COPY_STRUCT(&lh, n1,lista_head);
+        COPY_STRUCT( n1, n2,lista_head);
+        COPY_STRUCT( n2,&lh,lista_head);
+    }
+
+    DEBUG(DEBUG_TRANSFERE,"\nBuscando posicao para inserir n2");
+    lista_head *lh, *lh_1, *lh_2;
+    label *lab;
+    lab = NLABEL(n2);
+    for(lh = HEAD(n1), lh_1 = lh->lh; lh_1 != NULL; lh = lh_1, lh_1 = lh->lh)
+        if(COMPARE_LABEL(lab,<, NLABEL(lh_1)))
+            break;
+
+    DEBUG(DEBUG_TRANSFERE,"\nInserindo n2");
+    lh_2 = HEAD(n2)->lh;
+    if(COMPARE_LABEL(lab,==,NLABEL(lh)))
+    {
+        lista_body *lb;
+        for(lb = BODY(n2); lb->lb != NULL; lb = lb->lb);
+        lb->lb = BODY(lh)->lb;
+        BODY(lh)->lb = cria_lista_body_copia(BODY(n2));
+    }
+    else
+    {
+        lh->lh = cria_lista_head_copia(HEAD(n2));
+        lh = lh->lh;
+    }
+    LIBERA(libera_no,n2);
+
+    while(lh_1 != NULL & lh_2 != NULL)
+    {
+        if(COMPARE_LABEL(NLABEL(lh_1), <, NLABEL(lh_2)))
+        {
+            lh->lh = lh_1;
+            lh     = lh->lh;
+            lh_1   = lh_1->lh;
+            continue;
+        }
+
+        lh->lh = lh_2;
+        lh     = lh->lh;
+        lh_2   = lh_2->lh;
+
+        if(COMPARE_LABEL(NLABEL(lh_1), ==, NLABEL(lh)))
+        {
+            lista_body *lb, *lb_next;
+            for(lb = BODY(lh), lb_next = lb->lb; lb_next != NULL; lb = lb_next, lb_next = lb->lb);
+            lb->lb = cria_lista_body_copia(BODY(lh_1));
+
+            lista_head *lh_aux;
+            lh_aux = lh_1;
+            lh_1   = lh_1->lh;
+            LIBERA(libera_lista_head_item,lh_aux);
+
+            continue;
+        }
+    }
+
+    if(lh_1 != NULL)
+        lh->lh = lh_1;
+    else if(lh_2 != NULL)
+        lh->lh = lh_2;
+
+    DEBUG(DEBUG_TRANSFERE,"\nSAINDO TRANSFERENCIA");
+}
