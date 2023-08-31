@@ -5,6 +5,8 @@
 
 PLACEHOLDER(amp);
 
+typedef double number_t;
+
 int amp_compare(amp_p amp_1, amp_p amp_2);
 
 #endif
