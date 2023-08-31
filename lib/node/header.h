@@ -3,10 +3,9 @@
 
 #include "../../static_utils/struct.h"
 #include "../label/header.h"
+#include "../amp/header.h"
 
 PLACEHOLDER(node);
-
-typedef double number_t;
 
 #define LABEL(POINTER)
 
@@ -16,7 +15,7 @@ typedef double number_t;
 label_p node_label(node_p n);
 
 node_p node_str_create(int cl, int lv);
-node_p node_amp_create(number_t re, number_t im);
+node_p node_amp_create(amp_p amp);
 
 void node_connect(node_p n1, node_p n2, int side);
 void node_connect_both(node_p n, node_p n_el, node_p n_th);

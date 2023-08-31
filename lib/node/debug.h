@@ -4,6 +4,7 @@
 #include "header.h"
 #include "../list/debug.h"
 #include "../label/debug.h"
+#include "../amp/debug.h"
 
 STRUCT(node)
 {
@@ -14,11 +15,6 @@ STRUCT(node)
 STRUCT(str)
 {
     node_p el, th;
-};
-
-STRUCT(amp)
-{
-    number_t re, im;
 };
 
 STRUCT(node_str)

@@ -43,23 +43,27 @@ node_p node_str_create(int cl, int lv)
     return NODE(ns);
 }
 
-node_p node_amp_create(number_t re, number_t im)
+node_p node_amp_create(amp_p amp)
 {
     node_amp_p na;
     na = malloc(sizeof(node_amp_t));
     assert(na);
 
-    *na = (node_amp_t){{{{NULL, NULL}, NULL}, {0, 0}}, {re, im}};
+    *na = (node_amp_t){{{{NULL, NULL}, NULL}, {0, 0}}, *amp};
     return NODE(na);
 }
 
 // void node_free(node_p n)
 #define node_free(n) free(n)
 
+
+
 label_p node_label(node_p n)
 {
     return &n->lab;
 }
+
+
 
 void node_connect(node_p n1, node_p n2, int side)
 {
