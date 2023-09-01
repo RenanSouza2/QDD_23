@@ -136,14 +136,29 @@ void test_list_head_remove()
     assert(LB(lh)->n == NULL);
 }
 
+void test_list_head_merge()
+{
+    printf("\n\t\ttest list head merge\t\t");
+
+    list_head_p lh_1 = list_head_create(NULL, NULL);
+    list_head_p lh_2 = list_head_create(NULL, NULL);
+    
+    list_head_p lh_3 = (list_head_p)((long)lh_1 | (long)lh_2);
+    int res = lh_1 && lh_2;
+    printf("\n%p", lh_1);
+    printf("\n%p", lh_2);
+    printf("\n%p", lh_3);
+    printf("\n%d", res);
+}
+
 void test_list_head_operations()
 {
     printf("\n\ttest list head operations\t\t");
 
     test_list_head_insert();
     test_list_head_remove();
+    test_list_head_merge();
 }
-
 
 
 
