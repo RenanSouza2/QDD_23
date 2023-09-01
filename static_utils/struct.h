@@ -10,6 +10,8 @@
     typedef struct _##NAME * NAME##_p;      \
     typedef struct _##NAME const * NAME##_c \
 
-typedef void *handler_p;
+typedef void * handler_p;
+
+typedef void const * handler_c;
 
 #endif

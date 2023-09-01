@@ -36,8 +36,8 @@ void label_display(label_c const lab)
 
 int label_compare(label_c const lab_1, label_c const lab_2)
 {
-    long l1 = LONG(lab_1);
-    long l2 = LONG(lab_2);
+    long const l1 = LONG(lab_1);
+    long const l2 = LONG(lab_2);
     if(l1 < l2) return -1;
     if(l1 > l2) return  1;
     return 0;

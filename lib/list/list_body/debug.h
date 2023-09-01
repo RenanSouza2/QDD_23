@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-void list_body_display(list_body_p lb);
+void list_body_display(list_body_c const lb);
 
 #endif
 
