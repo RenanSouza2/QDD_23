@@ -53,26 +53,19 @@ list_head_p list_head_copy(list_head_p lh)
     return lh_new;
 }
 
-
-
-void list_head_free(list_head_p lh)
-{
-    while(lh != NULL)
-    {
-        list_head_p lh_aux = lh;
-        lh = lh->lh;
-
-        list_body_free(LB(lh_aux)->lb);
-        free(lh_aux);
-    }
-}
-
 list_head_p list_head_pop(list_head_p lh)
 {
     list_head_p lh_aux = lh->lh;
     free(lh);
     return lh_aux;
 }
+
+void list_head_free(list_head_p lh)
+{
+    while(lh)
+        lh = list_head_pop(lh);
+}
+
 
 
 label_p list_label(list_head_p lh)
@@ -115,7 +108,7 @@ void list_head_insert(list_head_p lh, node_p n)
         return;
     }
 
-    for(;lh->lh; lh = lh->lh)
+    for(; lh->lh; lh = lh->lh)
         if(label_list_compare(lab, lh->lh) < 0)
             break;
 

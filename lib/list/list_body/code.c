@@ -50,16 +50,20 @@ list_body_p list_body_copy(list_body_p lb)
     return lb_new;
 }
 
+list_body_p list_body_pop(list_body_p lb)
+{
+    list_body_p lb_aux = lb->lb;
+    free(lb);
+    return lb_aux;
+}
+
 void list_body_free(list_body_p lb)
 {
-    while(lb != NULL)
-    {
-        list_body_p lb_aux = lb;
-        lb = lb->lb;
-
-        free(lb_aux);
-    }
+    while(lb)
+        lb = list_body_pop(lb);
 }
+
+
 
 void list_body_insert(list_body_p lb, node_p n)
 {
@@ -89,10 +93,7 @@ int list_body_remove(list_body_p lb, node_p n)
             break;
 
     assert(lb->lb);
-    
-    list_body_p lb_aux = lb->lb;
-    lb->lb = lb_aux->lb;
-    free(lb_aux);
+    lb->lb = list_body_pop(lb->lb);
     return false;
 }
 
