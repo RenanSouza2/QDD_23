@@ -2,7 +2,7 @@
 #define __NODE_STRUCT_H__
 
 #include "header.h"
-#include "../list/struct.h"
+#include "../list/list_head/struct.h"
 #include "../label/struct.h"
 #include "../amp/struct.h"
 
