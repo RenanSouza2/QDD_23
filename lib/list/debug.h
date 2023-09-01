@@ -1,21 +1,7 @@
-#ifndef __EXAMPLE_DEBUG_H__
-#define __EXAMPLE_DEBUG_H__
+#ifndef __LIST_DEBUG_H__
+#define __LIST_DEBUG_H__
 
-#include "struct.h"
-
-#ifdef DEBUG
-
-void list_body_display(list_body_p lb);
-void list_head_display(list_head_p lh);
-
-#endif
-
-#define LB(POINTER)    ((list_body_p)(POINTER))
-#define LH(POINTER)    ((list_head_p)(POINTER))
-
-list_body_p list_body_create(node_p n, list_body_p lb_next);
-
-list_head_p list_head_create_cold();
-list_head_p list_head_create(node_p n, list_head_p lh_next);
+#include "./list_body/debug.h"
+#include "./list_head/debug.h"
 
 #endif
