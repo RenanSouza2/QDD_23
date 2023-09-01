@@ -5,14 +5,13 @@
 
 #ifdef DEBUG
 
-void list_head_display(list_head_p lh);
+void list_head_display(list_head_c const lh);
 
 #endif
 
-#define LH(POINTER)    ((list_head_p)(POINTER))
-#define L_LABEL(POINTER) (&(LB(POINTER)->n->lab))
+#define LH(POINTER) ((list_head_p)(POINTER))
 
 list_head_p list_head_create_cold();
-list_head_p list_head_create(node_p n, list_head_p lh_next);
+list_head_p list_head_create(node_p const n, list_head_p const lh_next);
 
 #endif

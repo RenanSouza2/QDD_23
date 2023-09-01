@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdbool.h>
 #include <assert.h>
 
 #include "debug.h"
@@ -9,7 +8,7 @@
 #include "../../utils/debug.h"
 #include "../../label/debug.h" 
 
-void list_body_display_item(list_body_p lb)
+void list_body_display_item(list_body_c const lb)
 {
     if(display_header("LIST BODY", lb)) return;
 
@@ -18,10 +17,10 @@ void list_body_display_item(list_body_p lb)
     PRINT("\n");
 }
 
-void list_body_display(list_body_p lb)
+void list_body_display(list_body_c lb)
 {
     int i;
-    for(i=0; lb != NULL; i++, lb = lb->lb)
+    for(i=0; lb; i++, lb = lb->lb)
     {
         PRINT("\n\tnode %3d: %p\t\t", i, lb->n);
         label_display(node_label(lb->n));
@@ -30,29 +29,30 @@ void list_body_display(list_body_p lb)
 
 #endif
 
-list_body_p list_body_create(node_p n, list_body_p lb_next)
+list_body_p list_body_create_cold()
 {
-    list_body_p lb;
-    lb = malloc(sizeof(list_body_t));
+    list_body_p const lb = malloc(sizeof(list_body_t));
     assert(lb);
+    return lb;
+}
 
+list_body_p list_body_create(node_p const n, list_body_p const lb_next)
+{
+    list_body_p const lb = list_body_create_cold();
     *lb = (list_body_t){n, lb_next};
     return lb;
 }
 
-list_body_p list_body_copy(list_body_p lb)
+list_body_p list_body_copy(list_body_c const lb)
 {
-    list_body_p lb_new;
-    lb_new = malloc(sizeof(list_body_t));
-    assert(lb_new);
-
+    list_body_p const lb_new = list_body_create_cold();
     *lb_new = *lb;
     return lb_new;
 }
 
-list_body_p list_body_pop(list_body_p lb)
+list_body_p list_body_pop(list_body_p const lb)
 {
-    list_body_p lb_aux = lb->lb;
+    list_body_p const lb_aux = lb->lb;
     free(lb);
     return lb_aux;
 }
@@ -65,17 +65,17 @@ void list_body_free(list_body_p lb)
 
 
 
-void list_body_insert(list_body_p lb, node_p n)
+void list_body_insert(list_body_p const lb, node_p const n)
 {
     if(lb->n) lb->lb = list_body_create(n, lb->lb);
     else      lb->n = n;
 }
 
-int list_body_remove(list_body_p lb, node_p n)
+bool list_body_remove(list_body_p lb, node_c const n)
 {
     if(lb->n == n)
     {
-        list_body_p lb_aux = lb->lb;
+        list_body_p const lb_aux = lb->lb;
         if(lb_aux == NULL)
         {
             lb->n = NULL;
@@ -96,7 +96,7 @@ int list_body_remove(list_body_p lb, node_p n)
     return true;
 }
 
-void list_body_merge(list_body_p lb_1, list_body_p lb_2)
+void list_body_merge(list_body_p lb_1, list_body_p const lb_2)
 {
     for(; lb_1->lb; lb_1 = lb_1);
     lb_1->lb = list_body_copy(lb_2);
