@@ -9,7 +9,7 @@
 
 PLACEHOLDER(label);
 
-int label_compare(label_p lab_1, label_p lab_2);
-int label_is_amp(label_p lab);
+int label_compare(label_c const lab_1, label_c const lab_2);
+int label_is_amp(label_c const lab);
 
 #endif
