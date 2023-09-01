@@ -71,7 +71,6 @@ void list_body_insert(list_body_p lb, node_p n)
     else      lb->n = n;
 }
 
-// return value: true if empty
 int list_body_remove(list_body_p lb, node_p n)
 {
     if(lb->n == n)
@@ -80,12 +79,12 @@ int list_body_remove(list_body_p lb, node_p n)
         if(lb_aux == NULL)
         {
             lb->n = NULL;
-            return true;
+            return false;
         }
 
         *lb = *lb_aux;
         free(lb_aux);
-        return false;
+        return true;
     }
 
     for(; lb->lb; lb = lb->lb)
@@ -94,7 +93,7 @@ int list_body_remove(list_body_p lb, node_p n)
 
     assert(lb->lb);
     lb->lb = list_body_pop(lb->lb);
-    return false;
+    return true;
 }
 
 void list_body_merge(list_body_p lb_1, list_body_p lb_2)

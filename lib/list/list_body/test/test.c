@@ -44,17 +44,17 @@ void test_list_body_remove()
     for(long i=4; i>=1; i--)
         lb = list_body_create(NODE(i), lb);
 
-    assert(list_body_remove(lb, NODE(4)) == false);
+    assert(list_body_remove(lb, NODE(4)) == true);
     assert(lb->lb->lb->lb == NULL);
     
-    list_body_remove(lb, NODE(2));
+    assert(list_body_remove(lb, NODE(2)) == true);
     assert(lb->lb->n == NODE(3));
     
-    list_body_remove(lb, NODE(1));
+    assert(list_body_remove(lb, NODE(1)) == true);
     assert(lb->n  == NODE(3));
     assert(lb->lb == NULL);
     
-    list_body_remove(lb, NODE(3));
+    assert(list_body_remove(lb, NODE(3)) == false);
     assert(lb->n  == NULL);
 }
 

@@ -127,7 +127,7 @@ void list_head_remove(list_head_p lh, node_p n)
     if(label_list_compare(lab, lh) == 0)
     {
         list_head_p lh_aux = lh->lh;
-        if(!list_body_remove(LB(lh), n) || lh_aux == NULL) return;
+        if(list_body_remove(LB(lh), n) || lh_aux == NULL) return;
         
         *lh = *lh_aux;
         free(lh_aux);
@@ -142,7 +142,7 @@ void list_head_remove(list_head_p lh, node_p n)
     assert(lh_aux);
     assert(label_list_compare(lab, lh_aux) == 0);
 
-    if(!list_body_remove(LB(lh_aux), n)) return;
+    if(list_body_remove(LB(lh_aux), n)) return;
 
     lh->lh = lh_aux->lh;
     free(lh_aux);
