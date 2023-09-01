@@ -71,7 +71,7 @@ void list_head_free(list_head_p lh)
 
 
 
-label_p list_label(list_head_c const lh)
+label_c list_label(list_head_c const lh)
 {
     return node_label(LB(lh)->n);
 }
@@ -91,7 +91,7 @@ void list_head_insert(list_head_p lh, node_p const n)
         return;
     }
 
-    label_p const lab = node_label(n);
+    label_c const lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
         LB(lh)->lb = list_body_create(n, LB(lh)->lb);
@@ -120,7 +120,7 @@ void list_head_insert(list_head_p lh, node_p const n)
 
 void list_head_remove(list_head_p lh, node_p const n)
 {
-    label_p const lab = node_label(n);
+    label_c const lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
         list_head_p const lh_aux = lh->lh;
