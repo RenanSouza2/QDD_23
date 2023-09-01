@@ -1,21 +1,39 @@
-FLAGS = -c -Wall -Werror -Wfatal-errors
+DIRS := $(wildcard */.)
 
-LIB_ROOT = ..
+LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
+DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
 
 build: lib.o
 
-lib.o: code.c
-	gcc -o $@ $^ $(FLAGS)
 
-debug.o: code.c
-	gcc -o $@ $^ $(FLAGS) -D DEBUG
 
+lib.o: $(LIB_FILES)
+	ld -r -o $@ $^
+	
+debug.o: $(DGB_FILES)
+	ld -r -o $@ $^
+
+
+
+.PHONY: $(LIB_FILES)
+$(LIB_FILES):
+	$(MAKE) --directory=$(dir $@)
+
+.PHONY: $(DGB_FILES)
+$(DGB_FILES):
+	$(MAKE) debug.o --directory=$(dir $@)
+
+
+
+.PHONY: clean
 clean:
-	rm -f *.o
-	$(MAKE) clean --directory=test
+	rm -rf *.o
+	for DIR in $(DIRS) ; do \
+		( $(MAKE) clean --directory=$$DIR ) || exit $$? ; \
+	done
 
 .PHONY: test
 test:
-	$(MAKE) --directory=test
-
-export
+	for DIR in $(DIRS) ; do \
+		( $(MAKE) test --directory=$$DIR ) || exit $$? ; \
+	done
