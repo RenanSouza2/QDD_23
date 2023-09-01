@@ -2,14 +2,12 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#include "../../label/header.h"
 #include "debug.h"
 
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
-#include "../../label/debug.h"
-#include "../../node/debug.h"
+#include "../../label/debug.h" 
 
 void list_body_display_item(list_body_p lb)
 {

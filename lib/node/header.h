@@ -7,8 +7,6 @@
 
 PLACEHOLDER(node);
 
-#define LABEL(POINTER)
-
 #define ELSE 0
 #define THEN 1
 

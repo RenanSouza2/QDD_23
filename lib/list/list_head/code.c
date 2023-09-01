@@ -3,14 +3,10 @@
 #include <assert.h>
 
 #include "debug.h"
-#include "../../label/header.h"
-#include "../list_body/header.h"
 
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
-#include "../../label/debug.h"
-#include "../../node/debug.h"
 #include "../list_body/debug.h"
 
 void list_head_display_item(list_head_p lh)
