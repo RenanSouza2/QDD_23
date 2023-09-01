@@ -11,6 +11,4 @@ void list_body_display(list_body_p lb);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 
-list_body_p list_body_create(node_p n, list_body_p lb_next);
-
 #endif

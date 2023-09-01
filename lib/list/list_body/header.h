@@ -9,6 +9,7 @@ PLACEHOLDER(list_head);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 
+list_body_p list_body_create(node_p n, list_body_p lb_next);
 void list_body_free(list_body_p lb);
 
 void list_body_insert(list_body_p lb, node_p n);
