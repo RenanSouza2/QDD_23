@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdbool.h>
 #include <assert.h>
 
 #include "../../label/header.h"
@@ -67,7 +66,7 @@ void list_body_insert(list_body_p const lb, node_p const n)
     else      lb->n = n;
 }
 
-int list_body_remove(list_body_p lb, node_c const n)
+bool list_body_remove(list_body_p lb, node_c const n)
 {
     if(lb->n == n)
     {
