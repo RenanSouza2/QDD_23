@@ -1,11 +1,14 @@
 #ifndef STRUCT
 
-#define STRUCT(NAME)                    \
-    typedef struct _##NAME NAME##_t;    \
-    typedef NAME##_t *NAME##_p;         \
+#define STRUCT(NAME)                            \
+    typedef struct _##NAME NAME##_t;            \
+    typedef struct _##NAME * NAME##_p;          \
+    typedef struct _##NAME const * NAME##_c;    \
     struct _##NAME
 
-#define PLACEHOLDER(NAME) typedef struct _##NAME *NAME##_p
+#define PLACEHOLDER(NAME)                   \
+    typedef struct _##NAME * NAME##_p;      \
+    typedef struct _##NAME const * NAME##_c \
 
 typedef void *handler_p;
 
