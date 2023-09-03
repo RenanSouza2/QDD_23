@@ -7,7 +7,6 @@
 #include "../../node/header.h"
 
 PLACEHOLDER(list_body);
-PLACEHOLDER(list_head);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 

@@ -68,7 +68,7 @@ void list_body_free(list_body_p lb)
 void list_body_insert(list_body_p const lb, node_p const n)
 {
     if(lb->n) lb->lb = list_body_create(n, lb->lb);
-    else      lb->n = n;
+    else      lb->n  = n;
 }
 
 bool list_body_remove(list_body_p lb, node_c const n)

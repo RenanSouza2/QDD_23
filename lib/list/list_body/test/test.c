@@ -5,7 +5,14 @@
 #include "../debug.h"
 #include "../../../node/debug.h"
 
+list_body_p list_body_create_test(int init, int max)
+{
+    list_body_p lb = NULL;
+    for(long i=max; i>=init; i--)
+        lb = list_body_create(NODE(i), lb);
 
+    return lb;
+}
 
 void test_list_body_create()
 {
@@ -40,9 +47,7 @@ void test_list_body_remove()
 {
     printf("\n\t\ttest list body remove\t\t");
 
-    list_body_p lb = NULL;
-    for(long i=4; i>=1; i--)
-        lb = list_body_create(NODE(i), lb);
+    list_body_p lb = list_body_create_test(1, 4);
 
     assert(list_body_remove(lb, NODE(4)) == true);
     assert(lb->lb->lb->lb == NULL);
@@ -58,12 +63,22 @@ void test_list_body_remove()
     assert(lb->n  == NULL);
 }
 
+void test_list_body_merge()
+{
+    printf("\n\t\ttest list body merge\t\t");
+
+    list_body_p lb_1 = list_body_create_test(1, 2);
+    list_body_p lb_2 = list_body_create_test(3, 4);
+    list_body_merge(lb_1, lb_2);
+}
+
 void test_list_body_operations()
 {
     printf("\n\ttest list body operations\t\t");
 
     test_list_body_insert();
     test_list_body_remove();
+    test_list_body_merge();
 }
 
 
