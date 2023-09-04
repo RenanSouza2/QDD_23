@@ -98,6 +98,6 @@ bool list_body_remove(list_body_p lb, node_c const n)
 
 void list_body_merge(list_body_p lb_1, list_body_p const lb_2)
 {
-    for(; lb_1->lb; lb_1 = lb_1);
+    for(; lb_1->lb; lb_1 = lb_1->lb);
     lb_1->lb = list_body_copy(lb_2);
 }
