@@ -5,6 +5,7 @@ test: test.o
 	./test.o 
 
 test.o: test.c $(DEBUG_FILE)
+	echo "Building $(DIR) test"
 	gcc -o $@ $^ $(FLAGS) -D DEBUG
 
 .PHONY: $(DEBUG_FILE)
