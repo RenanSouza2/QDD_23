@@ -31,6 +31,13 @@ void str_display(str_c const str)
     PRINT("%p\t\t%p", str->el, str->th);
 }
 
+
+node_p node_str_create_test(int const cl, int const lv)
+{
+    label_t const lab = (label_t){cl, lv};
+    return node_str_create(&lab);
+}
+
 #endif
 
 node_p node_str_create(label_c const lab)

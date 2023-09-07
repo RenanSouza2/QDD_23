@@ -9,7 +9,7 @@
 
 
 
-node_p* node_create(int tot, ...)
+node_p* node_create_vector(int tot, ...)
 {
     node_p *N = malloc(tot * sizeof(node_p));
     assert(N);
@@ -21,6 +21,7 @@ node_p* node_create(int tot, ...)
         label_t lab = va_arg(args, label_t);
         N[i] = node_str_create(&lab);
     }
+    return N;
 }
 
 
@@ -43,32 +44,32 @@ void test_list_head_insert()
     printf("\n\t\ttest list head insert\t\t");
 
     list_head_p lh = list_head_create(NULL, NULL);
-    node_p n = node_str_create(V, 2);
+    node_p n = node_str_create_test(V, 2);
     list_head_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh == NULL);
 
-    n = node_str_create(V, 2);
+    n = node_str_create_test(V, 2);
     list_head_insert(lh, n);
     assert(LB(lh)->lb);
     assert(LB(lh)->lb->n == n);
 
-    n = node_str_create(V, 1);
+    n = node_str_create_test(V, 1);
     list_head_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh);
     
-    n = node_str_create(V, 4);
+    n = node_str_create_test(V, 4);
     list_head_insert(lh, n);
     assert(lh->lh->lh);
     assert(LB(lh->lh->lh)->n == n);
 
-    n = node_str_create(V, 4);
+    n = node_str_create_test(V, 4);
     list_head_insert(lh, n);
     assert(LB(lh->lh->lh)->lb);
     assert(LB(lh->lh->lh)->lb->n == n);
 
-    n = node_str_create(V, 3);
+    n = node_str_create_test(V, 3);
     list_head_insert(lh, n);
     assert(LB(lh->lh->lh)->n == n);
 }
@@ -78,20 +79,20 @@ void test_list_head_remove()
     printf("\n\t\ttest list head remove\t\t");
 
     node_p n[] = {
-        node_str_create(V, 1), // 0
-        node_str_create(V, 1), // 1
-        node_str_create(V, 1), // 2
+        node_str_create_test(V, 1), // 0
+        node_str_create_test(V, 1), // 1
+        node_str_create_test(V, 1), // 2
         
-        node_str_create(V, 2), // 3
-        node_str_create(V, 2), // 4
+        node_str_create_test(V, 2), // 3
+        node_str_create_test(V, 2), // 4
         
-        node_str_create(V, 3), // 5
-        node_str_create(V, 3), // 6
-        node_str_create(V, 3), // 7
+        node_str_create_test(V, 3), // 5
+        node_str_create_test(V, 3), // 6
+        node_str_create_test(V, 3), // 7
         
-        node_str_create(V, 4), // 8
-        node_str_create(V, 4), // 9
-        node_str_create(V, 4), // 10
+        node_str_create_test(V, 4), // 8
+        node_str_create_test(V, 4), // 9
+        node_str_create_test(V, 4), // 10
     };
 
     list_head_p lh = list_head_create(NULL, NULL);
@@ -156,52 +157,52 @@ void test_list_head_remove()
 
 void test_list_head_merge()
 {
-    // printf("\n\t\ttest list head merge\t\t");
+    printf("\n\t\ttest list head merge\t\t");
 
-    // node_p n1 = node_str_create(V, 1);
-    // list_head_p lh_1 = list_head_create(n1, NULL);
+    node_p n1 = node_str_create_test(V, 1);
+    list_head_p lh_1 = list_head_create(n1, NULL);
 
-    // node_p n2 = node_str_create(V, 1);
-    // list_head_p lh_2 = list_head_create(n2, NULL);
+    node_p n2 = node_str_create_test(V, 1);
+    list_head_p lh_2 = list_head_create(n2, NULL);
 
-    // list_head_merge(lh_1, lh_2);
-    // assert(lh_1->lh == NULL);
-    // assert(LB(lh_1)->n == n1);
-    // assert(LB(lh_1)->lb);
-    // assert(LB(lh_1)->lb->n  == n2);
-    // assert(LB(lh_1)->lb->lb == NULL);
-
-
-
-    // n1 = node_str_create(V, 1);
-    // lh_1 = list_head_create(n1, NULL);
-
-    // n2 = node_str_create(V, 2);
-    // lh_2 = list_head_create(n2, NULL);
-
-    // list_head_merge(lh_1, lh_2);
-    // assert(LB(lh_1)->n  == n1);
-    // assert(LB(lh_1)->lb == NULL);
-    // assert(lh_1->lh);
-    // assert(lh_1->lh->lh == NULL);
-    // assert(LB(lh_1->lh)->n  == n2);
-    // assert(LB(lh_1->lh)->lb == NULL);
+    list_head_merge(lh_1, lh_2);
+    assert(lh_1->lh == NULL);
+    assert(LB(lh_1)->n == n1);
+    assert(LB(lh_1)->lb);
+    assert(LB(lh_1)->lb->n  == n2);
+    assert(LB(lh_1)->lb->lb == NULL);
 
 
 
-    // n1 = node_str_create(V, 2);
-    // lh_1 = list_head_create(n1, NULL);
+    n1 = node_str_create_test(V, 1);
+    lh_1 = list_head_create(n1, NULL);
 
-    // n2 = node_str_create(V, 1);
-    // lh_2 = list_head_create(n2, NULL);
+    n2 = node_str_create_test(V, 2);
+    lh_2 = list_head_create(n2, NULL);
 
-    // list_head_merge(lh_1, lh_2);
-    // assert(LB(lh_1)->n  == n2);
-    // assert(LB(lh_1)->lb == NULL);
-    // assert(lh_1->lh);
-    // assert(lh_1->lh->lh == NULL);
-    // assert(LB(lh_1->lh)->n  == n1);
-    // assert(LB(lh_1->lh)->lb == NULL);
+    list_head_merge(lh_1, lh_2);
+    assert(LB(lh_1)->n  == n1);
+    assert(LB(lh_1)->lb == NULL);
+    assert(lh_1->lh);
+    assert(lh_1->lh->lh == NULL);
+    assert(LB(lh_1->lh)->n  == n2);
+    assert(LB(lh_1->lh)->lb == NULL);
+
+
+
+    n1 = node_str_create_test(V, 2);
+    lh_1 = list_head_create(n1, NULL);
+
+    n2 = node_str_create_test(V, 1);
+    lh_2 = list_head_create(n2, NULL);
+
+    list_head_merge(lh_1, lh_2);
+    assert(LB(lh_1)->n  == n2);
+    assert(LB(lh_1)->lb == NULL);
+    assert(lh_1->lh);
+    assert(lh_1->lh->lh == NULL);
+    assert(LB(lh_1->lh)->n  == n1);
+    assert(LB(lh_1->lh)->lb == NULL);
 
     
 }

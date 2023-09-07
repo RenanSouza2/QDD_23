@@ -4,12 +4,6 @@
 #include "../debug.h"
 
 
-node_p node_str_create_test(int const cl, int const lv)
-{
-    label_t const lab = (label_t){cl, lv};
-    return node_str_create(&lab);
-}
-
 
 void test_node_create_str()
 {
