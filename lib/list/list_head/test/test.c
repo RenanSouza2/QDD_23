@@ -1,9 +1,27 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #include "../debug.h"
 #include "../../../node/debug.h"
+
+
+
+node_p* node_create(int tot, ...)
+{
+    node_p *N = malloc(tot * sizeof(node_p));
+    assert(N);
+    
+    va_list args;
+    va_start(args, tot);
+    for(int i=0;i<tot; i++)
+    {
+        label_t lab = va_arg(args, label_t);
+        N[i] = node_str_create(&lab);
+    }
+}
 
 
 
@@ -138,17 +156,54 @@ void test_list_head_remove()
 
 void test_list_head_merge()
 {
-    printf("\n\t\ttest list head merge\t\t");
+    // printf("\n\t\ttest list head merge\t\t");
 
-    list_head_p lh_1 = list_head_create(NULL, NULL);
-    list_head_p lh_2 = list_head_create(NULL, NULL);
+    // node_p n1 = node_str_create(V, 1);
+    // list_head_p lh_1 = list_head_create(n1, NULL);
+
+    // node_p n2 = node_str_create(V, 1);
+    // list_head_p lh_2 = list_head_create(n2, NULL);
+
+    // list_head_merge(lh_1, lh_2);
+    // assert(lh_1->lh == NULL);
+    // assert(LB(lh_1)->n == n1);
+    // assert(LB(lh_1)->lb);
+    // assert(LB(lh_1)->lb->n  == n2);
+    // assert(LB(lh_1)->lb->lb == NULL);
+
+
+
+    // n1 = node_str_create(V, 1);
+    // lh_1 = list_head_create(n1, NULL);
+
+    // n2 = node_str_create(V, 2);
+    // lh_2 = list_head_create(n2, NULL);
+
+    // list_head_merge(lh_1, lh_2);
+    // assert(LB(lh_1)->n  == n1);
+    // assert(LB(lh_1)->lb == NULL);
+    // assert(lh_1->lh);
+    // assert(lh_1->lh->lh == NULL);
+    // assert(LB(lh_1->lh)->n  == n2);
+    // assert(LB(lh_1->lh)->lb == NULL);
+
+
+
+    // n1 = node_str_create(V, 2);
+    // lh_1 = list_head_create(n1, NULL);
+
+    // n2 = node_str_create(V, 1);
+    // lh_2 = list_head_create(n2, NULL);
+
+    // list_head_merge(lh_1, lh_2);
+    // assert(LB(lh_1)->n  == n2);
+    // assert(LB(lh_1)->lb == NULL);
+    // assert(lh_1->lh);
+    // assert(lh_1->lh->lh == NULL);
+    // assert(LB(lh_1->lh)->n  == n1);
+    // assert(LB(lh_1->lh)->lb == NULL);
+
     
-    list_head_p lh_3 = (list_head_p)((long)lh_1 | (long)lh_2);
-    int res = lh_1 && lh_2;
-    printf("\n%p", lh_1);
-    printf("\n%p", lh_2);
-    printf("\n%p", lh_3);
-    printf("\n%d", res);
 }
 
 void test_list_head_operations()

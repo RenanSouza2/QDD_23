@@ -148,18 +148,18 @@ void list_head_remove(list_head_p lh, node_p const n)
 
 void list_head_merge(list_head_p lh_1, list_head_p lh_2)
 {
-    if(list_compare(lh_2, lh_1) < 0)
+    switch(list_compare(lh_1, lh_2))
     {
-        list_head_t lh;
-         lh   = *lh_1;
-        *lh_1 = *lh_2;
-        *lh_2 =  lh;
-    }
-
-    if(list_compare(lh_1, lh_2) == 0)
-    {
+        case 0:
         list_body_merge(LB(lh_1), LB(lh_2));
         lh_2 = list_head_pop(lh_2);
+        break;
+
+        case 1:;
+        list_head_t lh = *lh_1;
+        *lh_1 = *lh_2;
+        *lh_2 =  lh;
+        break;
     }
 
     list_head_p lh = lh_1;
