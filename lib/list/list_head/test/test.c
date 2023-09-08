@@ -59,6 +59,54 @@ bool list_head_vector(list_head_p lh, int tot, ...)
     return false;
 }
 
+bool list_head_vector_ci(list_head_p lh, int tot_h, ...)
+{
+    va_list args;
+    va_start(args, tot_h);
+
+    int i=0;
+    for(; lh && (i<tot_h); i++, lh = lh->lh)
+    {
+        int tot_b = va_arg(args, int);
+        int j = 0;
+        list_body_p lb = LB(lh);
+        for(; lb && (j<tot_b); j++, lb = lb->lb)
+        {
+            node_p n = va_arg(args, node_p);
+            if(lb->n == n) continue;
+
+            PRINT("\nERROR 1 | %d %d\t\t", i, j);
+            return false;
+        }
+
+        if(lb)
+        {
+            PRINT("\nERROR 2 | %d %d\t\t", i, tot_b);
+            return false;
+        }
+
+        if(j < tot_b)
+        {
+            PRINT("\nERROR 3 | %d %d %d\t\t", i, j, tot_b);
+            return false;
+        }
+    }
+
+    if(lh)
+    {
+        PRINT("\nERROR 4 | %d\t\t", tot_h);
+        return false;
+    }
+
+    if(i < tot_h)
+    {
+        PRINT("\nERROR 5 | %d %d\t\t", i, tot_h);
+        return false;
+    }
+
+    return true;
+}
+
 
 
 void test_list_head_create()
