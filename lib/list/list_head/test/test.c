@@ -24,6 +24,22 @@ node_p* node_create_vector(int tot, ...)
     return N;
 }
 
+bool list_head_vector(list_head_p lh, int tot, ...)
+{
+    va_list args;
+    va_start(args, tot);
+    int i = 0;
+    for(; lh; lh = lh->lh)
+    for(list_body_p lb = LB(lh); lb; lb = lb->lb, i++)
+    {
+        if(i == tot) return false;
+
+        node_p n = va_arg(args, node_p);
+        if(lb->n != n) return false;
+    }
+    return !lh;
+}
+
 
 
 void test_list_head_create()
@@ -44,17 +60,15 @@ void test_list_head_insert()
     printf("\n\t\ttest list head insert\t\t");
 
     list_head_p lh = list_head_create(NULL, NULL);
-    node_p n = node_str_create_test(V, 2);
-    list_head_insert(lh, n);
-    assert(LB(lh)->n == n);
-    assert(lh->lh == NULL);
+    node_p n1 = node_str_create_test(V, 2);
+    list_head_insert(lh, n1);
+    assert(list_head_vector(lh, 1, n1));
 
-    n = node_str_create_test(V, 2);
-    list_head_insert(lh, n);
-    assert(LB(lh)->lb);
-    assert(LB(lh)->lb->n == n);
+    node_p n2 = node_str_create_test(V, 2);
+    list_head_insert(lh, n2);
+    assert(list_head_vector(lh, 2, n1, n2));
 
-    n = node_str_create_test(V, 1);
+    node_p n = node_str_create_test(V, 1);
     list_head_insert(lh, n);
     assert(LB(lh)->n == n);
     assert(lh->lh);
@@ -155,6 +169,8 @@ void test_list_head_remove()
     assert(LB(lh)->n == NULL);
 }
 
+#include "../../../node/debug.h"
+
 void test_list_head_merge()
 {
     printf("\n\t\ttest list head merge\t\t");
@@ -204,7 +220,12 @@ void test_list_head_merge()
     assert(LB(lh_1->lh)->n  == n1);
     assert(LB(lh_1->lh)->lb == NULL);
 
-    
+    int tot = 1;
+    node_p const * const N = node_create_vector(tot, 
+        (label_t){V, 1}
+    );
+    for(int i=0; i<tot; i++)
+        node_str_display(N[i]);
 }
 
 void test_list_head_operations()
