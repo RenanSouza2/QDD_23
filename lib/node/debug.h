@@ -7,6 +7,7 @@
 
 void node_str_display(node_c const ns);
 void node_amp_display(node_c const na);
+node_p node_str_create_test(int const cl, int const lv);
 
 #endif
 

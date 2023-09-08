@@ -2,7 +2,6 @@
 #include <assert.h>
 
 #include "../debug.h"
-#include "../../list/debug.h"
 
 
 
@@ -10,7 +9,7 @@ void test_node_create_str()
 {
     printf("\n\t\ttest node create str\t\t");
 
-    node_p ne = node_str_create(V, 2);
+    node_p ne = node_str_create_test(V, 2);
 
     assert(LB(ne)->n  == NULL);
     assert(LB(ne)->lb == NULL);
@@ -51,14 +50,14 @@ void test_node_connect_one()
 {
     printf("\n\t\t\ttest node connect one\t\t");
 
-    node_p n = node_str_create(V, 2);
+    node_p n = node_str_create_test(V, 2);
     
-    node_p n_el = node_str_create(V,1);
+    node_p n_el = node_str_create_test(V,1);
     node_connect(n, n_el, ELSE);
     assert(NODE_STR(n)->el == n_el);
     assert(LB(n_el)->n == n);
     
-    node_p n_th = node_str_create(V,1);
+    node_p n_th = node_str_create_test(V,1);
     node_connect(n, n_th, THEN);
     assert(NODE_STR(n)->th == n_th);
     assert(LB(n_th)->n == n);
@@ -68,9 +67,9 @@ void test_node_connect_both()
 {
     printf("\n\t\t\ttest node connect both\t\t");
 
-    node_p n   = node_str_create(V, 2);
-    node_p n_el = node_str_create(V,1);
-    node_p n_th = node_str_create(V,1);
+    node_p n   = node_str_create_test(V, 2);
+    node_p n_el = node_str_create_test(V,1);
+    node_p n_th = node_str_create_test(V,1);
     
     node_connect_both(n, n_el, n_th);
     assert(NODE_STR(n)->el == n_el);
@@ -93,9 +92,9 @@ void test_node_disconnect_one()
 {
     printf("\n\t\t\ttest node disconnect one\t\t");
 
-    node_p n   = node_str_create(V, 2);
-    node_p n_el = node_str_create(V,1);
-    node_p n_th = node_str_create(V,1);
+    node_p n   = node_str_create_test(V, 2);
+    node_p n_el = node_str_create_test(V,1);
+    node_p n_th = node_str_create_test(V,1);
     node_connect_both(n, n_el, n_th);
 
     node_disconnect(n, n_el);
@@ -111,9 +110,9 @@ void test_node_disconnect_both()
 {
     printf("\n\t\t\ttest node disconnect both\t\t");
 
-    node_p n   = node_str_create(V, 2);
-    node_p n_el = node_str_create(V,1);
-    node_p n_th = node_str_create(V,1);
+    node_p n   = node_str_create_test(V, 2);
+    node_p n_el = node_str_create_test(V,1);
+    node_p n_th = node_str_create_test(V,1);
     node_connect_both(n, n_el, n_th);
 
     node_disconnect_both(n);

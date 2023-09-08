@@ -3,14 +3,10 @@
 #include <assert.h>
 
 #include "debug.h"
-#include "../../label/header.h"
-#include "../list_body/header.h"
 
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
-#include "../../label/debug.h"
-#include "../../node/debug.h"
 #include "../list_body/debug.h"
 
 void list_head_display_item(list_head_c const lh)
@@ -25,6 +21,8 @@ void list_head_display_item(list_head_c const lh)
 
 void list_head_display(list_head_c lh)
 {
+    if(lh == NULL) PRINT("\nnull list");
+
    for(; lh; lh = lh->lh)
     {
         PRINT("\n");
@@ -81,6 +79,11 @@ int label_list_compare(label_c const lab, list_head_c const lh)
     return label_compare(lab, list_label(lh));
 }
 
+int list_compare(list_head_p lh_1, list_head_p lh_2)
+{
+    return label_compare(list_label(lh_1), list_label(lh_2));
+}
+
 
 
 void list_head_insert(list_head_p lh, node_p const n)
@@ -124,7 +127,7 @@ void list_head_remove(list_head_p lh, node_p const n)
     if(label_list_compare(lab, lh) == 0)
     {
         list_head_p const lh_aux = lh->lh;
-        if(!list_body_remove(LB(lh), n) || lh_aux == NULL) return;
+        if(list_body_remove(LB(lh), n) || lh_aux == NULL) return;
         
         *lh = *lh_aux;
         free(lh_aux);
@@ -139,8 +142,54 @@ void list_head_remove(list_head_p lh, node_p const n)
     assert(lh_aux);
     assert(label_list_compare(lab, lh_aux) == 0);
 
-    if(!list_body_remove(LB(lh_aux), n)) return;
+    if(list_body_remove(LB(lh_aux), n)) return;
 
     lh->lh = lh_aux->lh;
     free(lh_aux);
+}
+
+void list_head_merge(list_head_p lh_1, list_head_p lh_2)
+{
+    switch(list_compare(lh_1, lh_2))
+    {
+        case 0:
+        list_body_merge(LB(lh_1), LB(lh_2));
+        lh_2 = list_head_pop(lh_2);
+        break;
+
+        case 1:;
+        list_head_t lh = *lh_1;
+        *lh_1 = *lh_2;
+        *lh_2 =  lh;
+        break;
+    }
+
+    list_head_p lh = lh_1;
+    lh_1 = lh->lh;
+
+    while(lh_1 && lh_2)
+    {
+        switch (list_compare(lh_1, lh_2))
+        {
+            case -1:
+            lh = lh->lh = lh_1;
+            lh_1 = lh_1->lh;
+            break;
+        
+            case 0:
+            lh = lh->lh = lh_1;
+            list_body_merge(LB(lh), LB(lh_2));
+
+            lh_1 = lh_1->lh;
+            lh_2 = list_head_pop(lh_2);
+            break;
+
+            case 1:
+            lh = lh->lh = lh_2;
+            lh_2 = lh_2->lh;
+            break;
+        }
+    }
+
+    lh->lh = (list_head_p)((long)lh_1 | (long)lh_2);
 }

@@ -3,8 +3,6 @@
 
 #include "header.h"
 
-#include "../../node/header.h"
-
 STRUCT(list_body)
 {
     node_p n;

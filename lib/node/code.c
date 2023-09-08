@@ -31,14 +31,21 @@ void str_display(str_c const str)
     PRINT("%p\t\t%p", str->el, str->th);
 }
 
+
+node_p node_str_create_test(int const cl, int const lv)
+{
+    label_t const lab = (label_t){cl, lv};
+    return node_str_create(&lab);
+}
+
 #endif
 
-node_p node_str_create(int const cl, int const lv)
+node_p node_str_create(label_c const lab)
 {
     node_str_p const ns = malloc(sizeof(node_str_t));
     assert(ns);
 
-    *ns = (node_str_t){{{{NULL, NULL}, NULL}, {cl, lv}}, {NULL, NULL}};
+    *ns = (node_str_t){{{{NULL, NULL}, NULL}, *lab}, {NULL, NULL}};
     return NODE(ns);
 }
 

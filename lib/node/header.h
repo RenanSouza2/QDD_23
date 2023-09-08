@@ -12,7 +12,7 @@ PLACEHOLDER(node);
 
 label_c node_label(node_c const n);
 
-node_p node_str_create(int const cl, int const lv);
+node_p node_str_create(label_c const lab);
 node_p node_amp_create(amp_c const amp);
 
 void node_connect(node_p const n1, node_p const n2, int const side);
