@@ -6,6 +6,7 @@
 #ifdef DEBUG
 
 void list_body_display(list_body_c const lb);
+bool list_body_vector(list_body_p lb, int tot_b, node_p n[]);
 
 #endif
 

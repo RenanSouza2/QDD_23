@@ -27,6 +27,32 @@ void list_body_display(list_body_c lb)
     }
 }
 
+bool list_body_vector(list_body_p lb, int tot_b, node_p n[])
+{
+    int i = 0;
+    for(; lb && (i<tot_b); i++, lb = lb->lb)
+    {
+        if(lb->n == n[i]) continue;
+
+        PRINT("\nERROR LIST BODY VECTOR 1 | %d\t\t", i);
+        return false;
+    }
+
+    if(lb)
+    {
+        PRINT("\nERROR LIST BODY VECTOR 2 | %d\t\t", tot_b);
+        return false;
+    }
+
+    if(i < tot_b)
+    {
+        PRINT("\nERROR LIST BODY VECTOR 3 | %d %d\t\t", i, tot_b);
+        return false;
+    }
+
+    return true;
+}
+
 #endif
 
 list_body_p list_body_create_cold()

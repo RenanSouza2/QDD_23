@@ -123,12 +123,14 @@ void test_list_head_create()
 
 void test_list_head_insert()
 {
+
+
     printf("\n\t\ttest list head insert\t\t");
 
     list_head_p lh = list_head_create(NULL, NULL);
     node_p n1 = node_str_create_test(V, 2);
     list_head_insert(lh, n1);
-    assert(list_head_vector(lh, 1, n1));
+    assert(list_head_vector_ci(lh, 1, 1, n1));
 
     node_p n2 = node_str_create_test(V, 2);
     list_head_insert(lh, n2);
