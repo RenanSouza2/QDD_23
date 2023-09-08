@@ -5,6 +5,7 @@
 #include <assert.h>
  
 #include "../debug.h"
+#include "../../list_body/debug.h"
 #include "../../../utils/debug.h"
 #include "../../../node/debug.h"
 
@@ -68,39 +69,24 @@ bool list_head_vector_ci(list_head_p lh, int tot_h, ...)
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
         int tot_b = va_arg(args, int);
-        int j = 0;
-        list_body_p lb = LB(lh);
-        for(; lb && (j<tot_b); j++, lb = lb->lb)
-        {
-            node_p n = va_arg(args, node_p);
-            if(lb->n == n) continue;
+        node_p N[tot_b];
+        for(int j=0; j<tot_b; j++)
+            N[j] = va_arg(args, node_p);
 
-            PRINT("\nERROR 1 | %d %d\t\t", i, j);
-            return false;
-        }
-
-        if(lb)
-        {
-            PRINT("\nERROR 2 | %d %d\t\t", i, tot_b);
-            return false;
-        }
-
-        if(j < tot_b)
-        {
-            PRINT("\nERROR 3 | %d %d %d\t\t", i, j, tot_b);
-            return false;
-        }
+        if(list_body_vector(LB(lh), tot_b, N)) continue;
+        PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
+        return false;
     }
 
     if(lh)
     {
-        PRINT("\nERROR 4 | %d\t\t", tot_h);
+        PRINT("\nERROR LIST HEAD VECTOR 2 | LIST LONGER | %d\t\t", tot_h);
         return false;
     }
 
     if(i < tot_h)
     {
-        PRINT("\nERROR 5 | %d %d\t\t", i, tot_h);
+        PRINT("\nERROR LIST HEAD VECTOR | LIST SHORTER | %d %d\t\t", i, tot_h);
         return false;
     }
 
@@ -134,7 +120,7 @@ void test_list_head_insert()
 
     node_p n2 = node_str_create_test(V, 2);
     list_head_insert(lh, n2);
-    assert(list_head_vector(lh, 2, n1, n2));
+    assert(list_head_vector_ci(lh, 1, 2, n1, n2));
 
     node_p n3 = node_str_create_test(V, 1);
     list_head_insert(lh, n3);
