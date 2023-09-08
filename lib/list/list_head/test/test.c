@@ -11,6 +11,15 @@
 
 
 
+list_head_p list_head_create_vector(int tot, node_p N[])
+{
+    list_head_p lh = list_head_create(NULL, NULL);
+    for(int i=0; i<tot; i++)
+        list_head_insert(lh, N[i]);
+
+    return lh;
+}
+
 bool list_head_vector(list_head_p lh, int tot_h, ...)
 {
     va_list args;
@@ -111,9 +120,7 @@ void test_list_head_remove()
         node_str_create_test(V, 4), // 10
     };
 
-    list_head_p lh = list_head_create(NULL, NULL);
-    for(int i=0; i<11; i++)
-        list_head_insert(lh, N[i]);
+    list_head_p lh = list_head_create_vector(11, N);
     assert(list_head_vector(lh, 4, 
         3, N[0], N[2], N[1], 
         2, N[3], N[4], 
@@ -234,6 +241,31 @@ void test_list_head_merge()
 
     list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 1, n2, 1, n1));
+
+
+    node_p N1[] = {
+        node_str_create_test(V, 1),
+        node_str_create_test(V, 3),
+        node_str_create_test(V, 5),
+    };
+    lh_1 = list_head_create_vector(3, N1);
+
+    node_p N2[] = {
+        node_str_create_test(V, 1),
+        node_str_create_test(V, 2),
+        node_str_create_test(V, 3),
+        node_str_create_test(V, 4),
+    };
+    lh_2 = list_head_create_vector(4, N2);
+
+    list_head_merge(lh_1, lh_2);
+    assert(list_head_vector(lh_1, 5,
+        2, N1[0], N2[0],
+        1, N2[1],
+        2, N1[1], N2[2],
+        1, N2[3],
+        1, N1[2]
+    ));
 }
 
 void test_list_head_operations()
