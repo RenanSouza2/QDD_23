@@ -21,6 +21,8 @@ void list_head_display_item(list_head_c const lh)
 
 void list_head_display(list_head_c lh)
 {
+    if(lh == NULL) PRINT("\nnull list");
+
    for(; lh; lh = lh->lh)
     {
         PRINT("\n");

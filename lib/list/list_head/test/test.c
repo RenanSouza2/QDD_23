@@ -30,26 +30,26 @@ bool list_head_vector(list_head_p lh, int tot, ...)
     va_list args;
     va_start(args, tot);
     int i = 0;
+
+    printf("\n");
     for(; lh; lh = lh->lh)
     for(list_body_p lb = LB(lh); lb; lb = lb->lb, i++)
     {
-        if(i == tot) 
+        if(i == tot)
         {
-            PRINT("\n\nHere 1\t\t");
+            PRINT("\n\nHere 1 | %d\t\t", i);
             return false;
         };
 
         node_p n = va_arg(args, node_p);
         if(lb->n != n) 
         {
-            PRINT("\n\nHere 2\t\t");
+            PRINT("\n\nHere 2 | %d\t\t", i);
             return false;
         };
     }
 
-    if(lh) return true;
-
-    list_head_display(lh);
+    if(!lh) return true;
 
     PRINT("\n\nHere 3\t\t");
     return false;
@@ -89,16 +89,15 @@ void test_list_head_insert()
     
     node_p n4 = node_str_create_test(V, 4);
     list_head_insert(lh, n4);
-    assert(list_head_vector(lh, 3, n3, n1, n2, n4));
+    assert(list_head_vector(lh, 4, n3, n1, n2, n4));
 
-    node_p n = node_str_create_test(V, 4);
-    list_head_insert(lh, n);
-    assert(LB(lh->lh->lh)->lb);
-    assert(LB(lh->lh->lh)->lb->n == n);
+    node_p n5 = node_str_create_test(V, 4);
+    list_head_insert(lh, n5);
+    assert(list_head_vector(lh, 5, n3, n1, n2, n4, n5));
 
-    n = node_str_create_test(V, 3);
-    list_head_insert(lh, n);
-    assert(LB(lh->lh->lh)->n == n);
+    node_p n6 = node_str_create_test(V, 3);
+    list_head_insert(lh, n6);
+    assert(list_head_vector(lh, 6, n3, n1, n2, n6, n4, n5));
 }
 
 void test_list_head_remove()
