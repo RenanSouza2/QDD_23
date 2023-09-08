@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../../utils/debug.h"
 #include "../../../node/debug.h"
 
 
@@ -32,12 +33,26 @@ bool list_head_vector(list_head_p lh, int tot, ...)
     for(; lh; lh = lh->lh)
     for(list_body_p lb = LB(lh); lb; lb = lb->lb, i++)
     {
-        if(i == tot) return false;
+        if(i == tot) 
+        {
+            PRINT("\n\nHere 1\t\t");
+            return false;
+        };
 
         node_p n = va_arg(args, node_p);
-        if(lb->n != n) return false;
+        if(lb->n != n) 
+        {
+            PRINT("\n\nHere 2\t\t");
+            return false;
+        };
     }
-    return !lh;
+
+    if(lh) return true;
+
+    list_head_display(lh);
+
+    PRINT("\n\nHere 3\t\t");
+    return false;
 }
 
 
@@ -68,17 +83,15 @@ void test_list_head_insert()
     list_head_insert(lh, n2);
     assert(list_head_vector(lh, 2, n1, n2));
 
-    node_p n = node_str_create_test(V, 1);
-    list_head_insert(lh, n);
-    assert(LB(lh)->n == n);
-    assert(lh->lh);
+    node_p n3 = node_str_create_test(V, 1);
+    list_head_insert(lh, n3);
+    assert(list_head_vector(lh, 3, n3, n1, n2));
     
-    n = node_str_create_test(V, 4);
-    list_head_insert(lh, n);
-    assert(lh->lh->lh);
-    assert(LB(lh->lh->lh)->n == n);
+    node_p n4 = node_str_create_test(V, 4);
+    list_head_insert(lh, n4);
+    assert(list_head_vector(lh, 3, n3, n1, n2, n4));
 
-    n = node_str_create_test(V, 4);
+    node_p n = node_str_create_test(V, 4);
     list_head_insert(lh, n);
     assert(LB(lh->lh->lh)->lb);
     assert(LB(lh->lh->lh)->lb->n == n);
