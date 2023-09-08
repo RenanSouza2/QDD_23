@@ -67,7 +67,7 @@ void test_list_body_remove()
     assert(list_body_vector(lb, 1, (node_p[]){NODE(3)}));
     
     assert(list_body_remove(lb, NODE(3)) == false);
-    assert(lb->n  == NULL);
+    assert(list_body_vector(lb, 1, (node_p[]){NULL}));
 }
 
 void test_list_body_merge()
