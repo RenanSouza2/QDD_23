@@ -14,6 +14,7 @@ label_c node_label(node_c const n);
 
 node_p node_str_create(label_c const lab);
 node_p node_amp_create(amp_c const amp);
+void node_free(node_p n);
 
 void node_connect(node_p const n1, node_p const n2, int const side);
 void node_connect_both(node_p const n, node_p const n_el, node_p const n_th);

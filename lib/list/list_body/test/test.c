@@ -5,7 +5,7 @@
 
 #include "../debug.h"
 #include "../../../node/debug.h"
-
+#include "../../../../static_utils/mem_report/bin/header.h"
 
 
 list_body_p list_body_create_test(int init, int max)
@@ -30,6 +30,11 @@ void test_list_body_create()
     list_body_p lb_1 = list_body_copy(lb);
     assert(lb_1->n  == NODE(1));
     assert(lb_1->lb == LB(2));
+
+    free(lb);
+    free(lb_1);
+
+    assert(mem_empty());
 }
 
 
@@ -48,6 +53,9 @@ void test_list_body_insert()
     
     list_body_insert(lb, NODE(3));
     assert(list_body_vector(lb, 3, (node_p[]){NODE(1), NODE(3), NODE(2)}));
+
+    list_body_free(lb);
+    assert(mem_empty());
 }
 
 void test_list_body_remove()
@@ -68,6 +76,9 @@ void test_list_body_remove()
     
     assert(list_body_remove(lb, NODE(3)) == false);
     assert(list_body_vector(lb, 1, (node_p[]){NULL}));
+
+    free(lb);
+    assert(mem_empty());
 }
 
 void test_list_body_merge()
@@ -78,21 +89,31 @@ void test_list_body_merge()
     list_body_p lb_2 = list_body_create_test(3, 4);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 4, (node_p[]){NODE(1), NODE(2), NODE(3), NODE(4)}));
+    list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create_test(1, 2);
     lb_2 = list_body_create(NODE(3), NULL);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 3, (node_p[]){NODE(1), NODE(2), NODE(3)}));
+    list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create(NODE(1), NULL);
     lb_2 = list_body_create_test(2, 3);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 3, (node_p[]){NODE(1), NODE(2), NODE(3)}));
+    list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create(NODE(1), NULL);
     lb_2 = list_body_create(NODE(2), NULL);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 2, (node_p[]){NODE(1), NODE(2)}));
+    list_body_free(lb_1);
+    free(lb_2);
+
+    assert(mem_empty());
 }
 
 void test_list_body_operations()
@@ -102,6 +123,8 @@ void test_list_body_operations()
     test_list_body_insert();
     test_list_body_remove();
     test_list_body_merge();
+
+    assert(mem_empty());
 }
 
 
@@ -112,6 +135,8 @@ void test_list_body()
 
     test_list_body_create();
     test_list_body_operations();
+
+    assert(mem_empty());
 }
 
 
