@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../../static_utils/mem_report/header.h"
 
 
 
@@ -18,6 +19,9 @@ void test_node_create_str()
     assert(ne->lab.lv == 2);
     assert(NODE_STR(ne)->el == NULL);
     assert(NODE_STR(ne)->th == NULL);
+
+    free(ne);
+    assert(mem_empty());
 }
 
 void test_node_create_amp()
@@ -25,15 +29,18 @@ void test_node_create_amp()
     printf("\n\t\ttest node create amp\t\t");
 
     amp_t amp = (amp_t){1, 2};
-    node_p ne = node_amp_create(&amp);
+    node_p na = node_amp_create(&amp);
     
-    assert(LB(ne)->n  == NULL);
-    assert(LB(ne)->lb == NULL);
-    assert(LH(ne)->lh == NULL);
-    assert(ne->lab.cl == 0);
-    assert(ne->lab.lv == 0);
-    assert(NODE_AMP(ne)->re == 1);
-    assert(NODE_AMP(ne)->im == 2);
+    assert(LB(na)->n  == NULL);
+    assert(LB(na)->lb == NULL);
+    assert(LH(na)->lh == NULL);
+    assert(na->lab.cl == 0);
+    assert(na->lab.lv == 0);
+    assert(NODE_AMP(na)->re == 1);
+    assert(NODE_AMP(na)->im == 2);
+
+    free(na);
+    assert(mem_empty());
 }
 
 void test_node_create()
@@ -42,6 +49,8 @@ void test_node_create()
 
     test_node_create_str();
     test_node_create_amp();
+
+    assert(mem_empty());
 }
 
 
@@ -61,6 +70,11 @@ void test_node_connect_one()
     node_connect(n, n_th, THEN);
     assert(NODE_STR(n)->th == n_th);
     assert(LB(n_th)->n == n);
+
+    free(n_el);
+    free(n_th);
+    free(n);
+    assert(mem_empty());
 }
 
 void test_node_connect_both()
@@ -76,6 +90,11 @@ void test_node_connect_both()
     assert(NODE_STR(n)->th == n_th);
     assert(LB(n_el)->n == n);
     assert(LB(n_th)->n == n);
+
+    free(n_el);
+    free(n_th);
+    free(n);
+    assert(mem_empty());
 }
 
 void test_node_connect()
@@ -84,6 +103,8 @@ void test_node_connect()
 
     test_node_connect_one();
     test_node_connect_both();
+
+    assert(mem_empty());
 }
 
 
@@ -104,6 +125,11 @@ void test_node_disconnect_one()
     node_disconnect(n, n_th);
     assert(NODE_STR(n)->th == NULL);
     assert(LB(n_th)->n == NULL);
+
+    free(n_el);
+    free(n_th);
+    free(n);
+    assert(mem_empty());
 }
 
 void test_node_disconnect_both()
@@ -120,6 +146,11 @@ void test_node_disconnect_both()
     assert(NODE_STR(n)->th == NULL);
     assert(LB(n_el)->n == NULL);
     assert(LB(n_th)->n == NULL);
+
+    free(n_el);
+    free(n_th);
+    free(n);
+    assert(mem_empty());
 }
 
 void test_node_disconnect()
@@ -128,6 +159,8 @@ void test_node_disconnect()
 
     test_node_disconnect_one();
     test_node_disconnect_both();
+
+    assert(mem_empty());
 }
 
 
@@ -138,6 +171,8 @@ void test_node_connection()
 
     test_node_connect();
     test_node_disconnect();
+
+    assert(mem_empty());
 }
 
 
@@ -148,6 +183,8 @@ void test_node()
 
     test_node_create();
     test_node_connection();
+
+    assert(mem_empty());
 }
 
 

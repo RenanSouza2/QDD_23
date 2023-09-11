@@ -60,6 +60,12 @@ node_p node_amp_create(amp_c const amp)
     return NODE(na);
 }
 
+void node_free(node_p n)
+{
+    list_body_free(LB(n)->lb);
+    list_head_free(LH(n)->lh);
+    free(n);
+}
 
 
 label_c node_label(node_c const n)
