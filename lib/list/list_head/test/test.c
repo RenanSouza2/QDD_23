@@ -54,6 +54,11 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     return true;
 }
 
+void node_vector_free(int len, node_p N[])
+{
+    for(int i=0; i<len; i++)
+        free(N[i]);
+}
 
 
 void test_list_head_create()
@@ -109,6 +114,7 @@ void test_list_head_insert()
     assert(list_head_vector(lh, 4, 1, N[2], 2, N[0], N[1], 1, N[5], 2, N[3], N[4]));
 
     list_head_free(lh);
+    node_vector_free(6, N);
     assert(mem_empty());
 }
 
@@ -220,6 +226,7 @@ void test_list_head_remove()
     assert(list_head_vector(lh, 1, 1, NULL));
 
     free(lh);
+    node_vector_free(11, N);
     assert(mem_empty());
 }
 
@@ -239,6 +246,8 @@ void test_list_head_merge()
 
     list_head_free(lh_1);
     free(lh_2);
+    free(n1);
+    free(n2);
     assert(mem_empty());
 
 
@@ -255,6 +264,8 @@ void test_list_head_merge()
 
     list_head_free(lh_1);
     free(lh_2);
+    free(n1);
+    free(n2);
     assert(mem_empty());
 
 
@@ -271,6 +282,8 @@ void test_list_head_merge()
 
     list_head_free(lh_1);
     free(lh_2);
+    free(n1);
+    free(n2);
     assert(mem_empty());
 
 
@@ -301,6 +314,8 @@ void test_list_head_merge()
     ));
 
     list_head_free(lh_1);
+    node_vector_free(3, N1);
+    node_vector_free(4, N2);
     free(lh_2);
     assert(mem_empty());
 }
