@@ -2,7 +2,7 @@
 #include <assert.h>
 
 #include "../debug.h"
-#include "../../../static_utils/mem_report/header.h"
+#include "../../../static_utils/mem_report/bin/header.h"
 
 
 

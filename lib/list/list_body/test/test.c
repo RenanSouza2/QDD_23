@@ -5,7 +5,7 @@
 
 #include "../debug.h"
 #include "../../../node/debug.h"
-#include "../../../../static_utils/mem_report/header.h"
+#include "../../../../static_utils/mem_report/bin/header.h"
 
 
 list_body_p list_body_create_test(int init, int max)

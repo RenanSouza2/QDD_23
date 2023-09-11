@@ -7,7 +7,7 @@
 
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
-#include "../../../static_utils/mem_report/header.h"
+#include "../../../static_utils/mem_report/bin/header.h"
 
 void list_body_display_item(list_body_c const lb)
 {
