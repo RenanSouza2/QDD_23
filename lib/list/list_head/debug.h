@@ -13,5 +13,6 @@ void list_head_display(list_head_c const lh);
 
 list_head_p list_head_create_cold();
 list_head_p list_head_create(node_p const n, list_head_p const lh_next);
+void list_head_free(list_head_p lh);
 
 #endif

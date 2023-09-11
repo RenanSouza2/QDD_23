@@ -6,8 +6,9 @@
 
 #ifdef DEBUG
 
-#include "../../utils/debug.h"
 #include "../list_body/debug.h"
+#include "../../utils/debug.h"
+#include "../../../static_utils/mem_report/header.h"
 
 void list_head_display_item(list_head_c const lh)
 {
@@ -63,8 +64,8 @@ list_head_p list_head_pop(list_head_p const lh)
 
 void list_head_free(list_head_p lh)
 {
-    while(lh)
-        lh = list_head_pop(lh);
+    for(; lh; lh = list_head_pop(lh))
+        list_body_free(LB(lh)->lb);
 }
 
 
@@ -148,7 +149,7 @@ void list_head_remove(list_head_p lh, node_p const n)
     free(lh_aux);
 }
 
-void list_head_merge(list_head_p lh_1, list_head_p lh_2)
+void list_head_merge_1(list_head_p lh_1, list_head_p lh_2)
 {
     switch(list_compare(lh_1, lh_2))
     {
@@ -192,4 +193,10 @@ void list_head_merge(list_head_p lh_1, list_head_p lh_2)
     }
 
     lh->lh = (list_head_p)((long)lh_1 | (long)lh_2);
+}
+
+void list_head_merge(list_head_p lh_1, list_head_p lh_2)
+{
+    list_head_p lh_2_aux = list_head_copy(lh_2);
+    list_head_merge_1(lh_1, lh_2_aux);
 }

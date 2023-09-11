@@ -8,6 +8,7 @@
 #include "../../list_body/debug.h"
 #include "../../../utils/debug.h"
 #include "../../../node/debug.h"
+#include "../../../../static_utils/mem_report/header.h"
 
 
 
@@ -63,6 +64,9 @@ void test_list_head_create()
     assert(LB(lh)->n  == NODE(1));
     assert(LB(lh)->lb == NULL);
     assert(lh->lh == LH(2));
+    free(lh);
+
+    assert(mem_empty());
 }
 
 
@@ -73,30 +77,39 @@ void test_list_head_insert()
 
     printf("\n\t\ttest list head insert\t\t");
 
+    node_p N[] = {
+        node_str_create_test(V, 2),
+        node_str_create_test(V, 2),
+
+        node_str_create_test(V, 1),
+
+        node_str_create_test(V, 4),
+        node_str_create_test(V, 4),
+
+        node_str_create_test(V, 3),
+    };
+
     list_head_p lh = list_head_create(NULL, NULL);
-    node_p n1 = node_str_create_test(V, 2);
-    list_head_insert(lh, n1);
-    assert(list_head_vector(lh, 1, 1, n1));
+    list_head_insert(lh, N[0]);
+    assert(list_head_vector(lh, 1, 1, N[0]));
 
-    node_p n2 = node_str_create_test(V, 2);
-    list_head_insert(lh, n2);
-    assert(list_head_vector(lh, 1, 2, n1, n2));
+    list_head_insert(lh, N[1]);
+    assert(list_head_vector(lh, 1, 2, N[0], N[1]));
 
-    node_p n3 = node_str_create_test(V, 1);
-    list_head_insert(lh, n3);
-    assert(list_head_vector(lh, 2, 1, n3, 2, n1, n2));
+    list_head_insert(lh, N[2]);
+    assert(list_head_vector(lh, 2, 1, N[2], 2, N[0], N[1]));
     
-    node_p n4 = node_str_create_test(V, 4);
-    list_head_insert(lh, n4);
-    assert(list_head_vector(lh, 3, 1, n3, 2, n1, n2, 1, n4));
+    list_head_insert(lh, N[3]);
+    assert(list_head_vector(lh, 3, 1, N[2], 2, N[0], N[1], 1, N[3]));
 
-    node_p n5 = node_str_create_test(V, 4);
-    list_head_insert(lh, n5);
-    assert(list_head_vector(lh, 3, 1, n3, 2, n1, n2, 2, n4, n5));
+    list_head_insert(lh, N[4]);
+    assert(list_head_vector(lh, 3, 1, N[2], 2, N[0], N[1], 2, N[3], N[4]));
 
-    node_p n6 = node_str_create_test(V, 3);
-    list_head_insert(lh, n6);
-    assert(list_head_vector(lh, 4, 1, n3, 2, n1, n2, 1, n6, 2, n4, n5));
+    list_head_insert(lh, N[5]);
+    assert(list_head_vector(lh, 4, 1, N[2], 2, N[0], N[1], 1, N[5], 2, N[3], N[4]));
+
+    list_head_free(lh);
+    assert(mem_empty());
 }
 
 void test_list_head_remove()
@@ -205,12 +218,16 @@ void test_list_head_remove()
     printf("\n\t\t\ttest list head remove 10\t\t");
     list_head_remove(lh, N[3]);
     assert(list_head_vector(lh, 1, 1, NULL));
+
+    free(lh);
+    assert(mem_empty());
 }
 
 void test_list_head_merge()
 {
     printf("\n\t\ttest list head merge\t\t");
 
+    printf("\n\t\t\ttest list head merge 1\t\t");
     node_p n1 = node_str_create_test(V, 1);
     list_head_p lh_1 = list_head_create(n1, NULL);
 
@@ -220,8 +237,13 @@ void test_list_head_merge()
     list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 1, 2, n1, n2));
 
+    list_head_free(lh_1);
+    free(lh_2);
+    assert(mem_empty());
 
 
+
+    printf("\n\t\t\ttest list head merge 2\t\t");
     n1 = node_str_create_test(V, 1);
     lh_1 = list_head_create(n1, NULL);
 
@@ -231,8 +253,13 @@ void test_list_head_merge()
     list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 1, n1, 1, n2));
 
+    list_head_free(lh_1);
+    free(lh_2);
+    assert(mem_empty());
 
 
+
+    printf("\n\t\t\ttest list head merge 3\t\t");
     n1 = node_str_create_test(V, 2);
     lh_1 = list_head_create(n1, NULL);
 
@@ -242,7 +269,13 @@ void test_list_head_merge()
     list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 1, n2, 1, n1));
 
+    list_head_free(lh_1);
+    free(lh_2);
+    assert(mem_empty());
 
+
+
+    printf("\n\t\t\ttest list head merge 4\t\t");
     node_p N1[] = {
         node_str_create_test(V, 1),
         node_str_create_test(V, 3),
@@ -266,6 +299,10 @@ void test_list_head_merge()
         1, N2[3],
         1, N1[2]
     ));
+
+    list_head_free(lh_1);
+    free(lh_2);
+    assert(mem_empty());
 }
 
 void test_list_head_operations()
@@ -275,6 +312,8 @@ void test_list_head_operations()
     test_list_head_insert();
     test_list_head_remove();
     test_list_head_merge();
+
+    assert(mem_empty());
 }
 
 
@@ -285,6 +324,8 @@ void test_list_head()
 
     test_list_head_create();
     test_list_head_operations();
+
+    assert(mem_empty());
 }
 
 
