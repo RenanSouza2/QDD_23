@@ -90,24 +90,28 @@ void test_list_body_merge()
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 4, (node_p[]){NODE(1), NODE(2), NODE(3), NODE(4)}));
     list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create_test(1, 2);
     lb_2 = list_body_create(NODE(3), NULL);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 3, (node_p[]){NODE(1), NODE(2), NODE(3)}));
     list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create(NODE(1), NULL);
     lb_2 = list_body_create_test(2, 3);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 3, (node_p[]){NODE(1), NODE(2), NODE(3)}));
     list_body_free(lb_1);
+    free(lb_2);
 
     lb_1 = list_body_create(NODE(1), NULL);
     lb_2 = list_body_create(NODE(2), NULL);
     list_body_merge(lb_1, lb_2);
     assert(list_body_vector(lb_1, 2, (node_p[]){NODE(1), NODE(2)}));
     list_body_free(lb_1);
+    free(lb_2);
 
     assert(mem_empty());
 }
