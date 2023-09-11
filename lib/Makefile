@@ -2,6 +2,7 @@ DIRS := $(wildcard */.)
 
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
+DGB_MEM = ../static_utils/mem_report/lib.o
 
 build: lib.o
 
@@ -10,7 +11,7 @@ build: lib.o
 lib.o: $(LIB_FILES)
 	ld -r -o $@ $^
 	
-debug.o: $(DGB_FILES)
+debug.o: $(DGB_FILES) $(DGB_MEM)
 	ld -r -o $@ $^
 
 

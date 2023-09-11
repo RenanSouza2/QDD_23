@@ -6,7 +6,8 @@
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
-#include "../../label/debug.h" 
+#include "../../label/debug.h"
+#include "../../../static_utils/mem_report/header.h"
 
 void list_body_display_item(list_body_c const lb)
 {
@@ -85,8 +86,7 @@ list_body_p list_body_pop(list_body_p const lb)
 
 void list_body_free(list_body_p lb)
 {
-    while(lb)
-        lb = list_body_pop(lb);
+    while(lb) lb = list_body_pop(lb);
 }
 
 
@@ -126,4 +126,5 @@ void list_body_merge(list_body_p lb_1, list_body_p const lb_2)
 {
     for(; lb_1->lb; lb_1 = lb_1->lb);
     lb_1->lb = list_body_copy(lb_2);
+    free(lb_2);
 }
