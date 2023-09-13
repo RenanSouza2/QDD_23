@@ -4,6 +4,7 @@
 #include "../debug.h"
 #include "../../node/debug.h"
 #include "../../list/list_head/debug.h"
+#include "../../../static_utils/mem_report/bin/header.h"
 
 void test_create()
 {
@@ -13,8 +14,18 @@ void test_create()
     assert(LB(q)->n == NODE(1));
     assert(LB(q)->lb == LB(2));
     assert(q->qbits == 3);
+    free(q);
 
+    assert(mem_empty());
+}
 
+void test_vector()
+{
+    printf("\n\t%s\t\t", __func__);
+    
+    qdd_p q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+
+    assert(mem_empty());
 }
 
 void test_qdd()
@@ -22,6 +33,9 @@ void test_qdd()
     printf("\n%s\t\t", __func__);
 
     test_create();
+    test_vector();
+
+    assert(mem_empty());
 }
 
 
