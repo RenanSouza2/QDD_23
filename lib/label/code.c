@@ -11,7 +11,7 @@
 #define V 1
 #define C 0
 
-void label_display(label_c const lab)
+void label_display(label_p lab)
 {
     if(label_is_amp(lab))
     {
@@ -34,16 +34,16 @@ void label_display(label_c const lab)
 
 #define LONG(LABEL) (*((long*)(LABEL)))
 
-int label_compare(label_c const lab_1, label_c const lab_2)
+int label_compare(label_p lab_1, label_p lab_2)
 {
-    long const l1 = LONG(lab_1);
-    long const l2 = LONG(lab_2);
+    long l1 = LONG(lab_1);
+    long l2 = LONG(lab_2);
     if(l1 < l2) return -1;
     if(l1 > l2) return  1;
     return 0;
 }
 
-int label_is_amp(label_c const lab)
+int label_is_amp(label_p lab)
 {
     return LONG(lab) == 0;
 }

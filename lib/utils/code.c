@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-int display_header(char s[], handler_c const p)
+int display_header(char s[], handler_p p)
 {
     PRINT("\nAddress (%s): %p", s, p);
     return p == NULL;
