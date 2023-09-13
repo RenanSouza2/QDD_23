@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #include "debug.h"
@@ -30,6 +31,39 @@ void list_head_display(list_head_p lh)
         list_body_display(LB(lh));
     }
     printf("\t\t");
+}
+
+bool list_head_vector(list_head_p lh, int tot_h, ...)
+{
+    va_list args;
+    va_start(args, tot_h);
+
+    int i=0;
+    for(; lh && (i<tot_h); i++, lh = lh->lh)
+    {
+        int tot_b = va_arg(args, int);
+        node_p N[tot_b];
+        for(int j=0; j<tot_b; j++)
+            N[j] = va_arg(args, node_p);
+
+        if(list_body_vector(LB(lh), tot_b, N)) continue;
+        PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
+        return false;
+    }
+
+    if(lh)
+    {
+        PRINT("\nERROR LIST HEAD VECTOR 2 | LIST LONGER | %d\t\t", tot_h);
+        return false;
+    }
+
+    if(i < tot_h)
+    {
+        PRINT("\nERROR LIST HEAD VECTOR | LIST SHORTER | %d %d\t\t", i, tot_h);
+        return false;
+    }
+
+    return true;
 }
 
 #endif

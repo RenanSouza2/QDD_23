@@ -6,6 +6,7 @@
 #ifdef DEBUG
 
 void list_head_display(list_head_p lh);
+bool list_head_vector(list_head_p lh, int tot_h, ...);
 
 #endif
 
