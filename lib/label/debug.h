@@ -3,6 +3,6 @@
 
 #include "struct.h"
 
-void label_display(label_c const lab);
+void label_display(label_p lab);
 
 #endif
