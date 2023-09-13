@@ -10,7 +10,7 @@
 #include "../../utils/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
-void list_head_display_item(list_head_c const lh)
+void list_head_display_item(list_head_p lh)
 {
     if(display_header("LIST HEAD", lh)) return;
 
@@ -20,7 +20,7 @@ void list_head_display_item(list_head_c const lh)
 
 }
 
-void list_head_display(list_head_c lh)
+void list_head_display(list_head_p lh)
 {
     if(lh == NULL) PRINT("\nnull list");
 
@@ -36,28 +36,28 @@ void list_head_display(list_head_c lh)
 
 list_head_p list_head_create_cold()
 {
-    list_head_p const lh = malloc(sizeof(list_head_t));
+    list_head_p lh = malloc(sizeof(list_head_t));
     assert(lh);
     return lh;
 }
 
-list_head_p list_head_create(node_p const n, list_head_p const lh_next)
+list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
-    list_head_p const lh = list_head_create_cold();
+    list_head_p lh = list_head_create_cold();
     *lh = (list_head_t){{n, NULL}, lh_next};
     return lh;
 }
 
-list_head_p list_head_copy(list_head_c const lh)
+list_head_p list_head_copy(list_head_p lh)
 {
-    list_head_p const lh_new = list_head_create_cold();
+    list_head_p lh_new = list_head_create_cold();
     *lh_new = *lh;
     return lh_new;
 }
 
-list_head_p list_head_pop(list_head_p const lh)
+list_head_p list_head_pop(list_head_p lh)
 {
-    list_head_p const lh_aux = lh->lh;
+    list_head_p lh_aux = lh->lh;
     free(lh);
     return lh_aux;
 }
@@ -70,12 +70,12 @@ void list_head_free(list_head_p lh)
 
 
 
-label_c list_label(list_head_c const lh)
+label_p list_label(list_head_p lh)
 {
     return node_label(LB(lh)->n);
 }
 
-int label_list_compare(label_c const lab, list_head_c const lh)
+int label_list_compare(label_p lab, list_head_p lh)
 {
     return label_compare(lab, list_label(lh));
 }
@@ -87,7 +87,7 @@ int list_compare(list_head_p lh_1, list_head_p lh_2)
 
 
 
-void list_head_insert(list_head_p lh, node_p const n)
+void list_head_insert(list_head_p lh, node_p n)
 {
     if(LB(lh)->n == NULL)
     {
@@ -95,7 +95,7 @@ void list_head_insert(list_head_p lh, node_p const n)
         return;
     }
 
-    label_c const lab = node_label(n);
+    label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
         LB(lh)->lb = list_body_create(n, LB(lh)->lb);
@@ -104,7 +104,7 @@ void list_head_insert(list_head_p lh, node_p const n)
 
     if(label_list_compare(lab, lh) < 0)
     {
-        list_head_p const lh_aux = list_head_copy(lh);
+        list_head_p lh_aux = list_head_copy(lh);
         *lh = (list_head_t){{n, NULL}, lh_aux};
         return;
     }
@@ -122,12 +122,12 @@ void list_head_insert(list_head_p lh, node_p const n)
     LB(lh)->lb = list_body_create(n, LB(lh)->lb);
 }
 
-void list_head_remove(list_head_p lh, node_p const n)
+void list_head_remove(list_head_p lh, node_p n)
 {
-    label_c const lab = node_label(n);
+    label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
-        list_head_p const lh_aux = lh->lh;
+        list_head_p lh_aux = lh->lh;
         if(list_body_remove(LB(lh), n) || lh_aux == NULL) return;
         
         *lh = *lh_aux;
@@ -139,7 +139,7 @@ void list_head_remove(list_head_p lh, node_p const n)
         if(label_list_compare(lab, lh->lh) <= 0)
             break;
 
-    list_head_p const lh_aux = lh->lh;
+    list_head_p lh_aux = lh->lh;
     assert(lh_aux);
     assert(label_list_compare(lab, lh_aux) == 0);
 

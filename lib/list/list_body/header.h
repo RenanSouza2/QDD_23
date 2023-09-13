@@ -10,12 +10,12 @@ PLACEHOLDER(list_body);
 
 #define LB(POINTER)    ((list_body_p)(POINTER))
 
-list_body_p list_body_create(node_p const n, list_body_p const lb_next);
-list_body_p list_body_copy(list_body_c const lb);
+list_body_p list_body_create(node_p n, list_body_p lb_next);
+list_body_p list_body_copy(list_body_p lb);
 void list_body_free(list_body_p lb);
 
-void list_body_insert(list_body_p const lb, node_p const n);
-bool list_body_remove(list_body_p lb, node_c const n);
-void list_body_merge(list_body_p lb_1, list_body_p const lb_2);
+void list_body_insert(list_body_p lb, node_p n);
+bool list_body_remove(list_body_p lb, node_p n);
+void list_body_merge(list_body_p lb_1, list_body_p lb_2);
 
 #endif

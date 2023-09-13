@@ -7,7 +7,7 @@
 
 #include "../../static_utils/struct.h"
 
-int display_header(char s[], handler_c const p);
+int display_header(char s[], handler_p p);
 
 #endif
 
