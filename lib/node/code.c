@@ -73,6 +73,24 @@ label_p node_label(node_p n)
     return &n->lab;
 }
 
+bool node_is_amp(node_p n)
+{
+    label_p lab = node_label(n);
+    return label_is_amp(lab);
+}
+
+str_p node_str(node_p n)
+{
+    assert(!node_is_amp(n));
+    return NODE_STR(n);
+}
+
+amp_p node_amp(node_p n)
+{
+    assert(node_is_amp(n));
+    return NODE_AMP(n);
+}
+
 
 
 void node_connect(node_p n1, node_p n2, int side)
