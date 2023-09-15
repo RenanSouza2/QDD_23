@@ -97,9 +97,10 @@ void node_connect(node_p n1, node_p n2, int side)
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
 {
-    assert(NODE_STR(n)->el == NULL);
-    assert(NODE_STR(n)->th == NULL);
-    *NODE_STR(n) = (str_t){n_el, n_th};
+    str_p str = node_str(n);
+    assert(str->el == NULL);
+    assert(str->th == NULL);
+    *str = (str_t){n_el, n_th};
     list_head_insert(LH(n_el), n);
     list_head_insert(LH(n_th), n);
 }

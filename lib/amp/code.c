@@ -12,7 +12,7 @@ void set_eps(number_t _eps)
     eps = _eps;
 }
 
-int amp_compare(amp_p amp_1, amp_p amp_2)
+bool amp_compare(amp_p amp_1, amp_p amp_2)
 {
     number_t re = amp_1->re - amp_2->re;
     if(re < -eps || re > eps) return false;
