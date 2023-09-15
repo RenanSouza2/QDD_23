@@ -4,6 +4,9 @@
 #include "struct.h"
 
 #ifdef DEBUG
+
+void tree_display(node_p n);
+
 #endif
 
 #endif

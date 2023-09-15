@@ -7,6 +7,13 @@
 
 #include "../../static_utils/mem_report/bin/header.h"
 
+void tree_display(node_p n)
+{
+    list_head_p lh = tree_enlist(n);
+    lh = list_head_invert(lh);
+    list_head_display(lh);
+}
+
 #endif
 
 void tree_free(node_p n)
