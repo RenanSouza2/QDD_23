@@ -212,7 +212,6 @@ void test_list_head_merge()
     assert(list_head_vector(lh_1, 1, 2, n1, n2));
 
     list_head_free(lh_1);
-    free(lh_2);
     free(n1);
     free(n2);
     assert(mem_empty());
@@ -230,7 +229,6 @@ void test_list_head_merge()
     assert(list_head_vector(lh_1, 2, 1, n1, 1, n2));
 
     list_head_free(lh_1);
-    free(lh_2);
     free(n1);
     free(n2);
     assert(mem_empty());
@@ -248,7 +246,6 @@ void test_list_head_merge()
     assert(list_head_vector(lh_1, 2, 1, n2, 1, n1));
 
     list_head_free(lh_1);
-    free(lh_2);
     free(n1);
     free(n2);
     assert(mem_empty());
@@ -283,7 +280,6 @@ void test_list_head_merge()
     list_head_free(lh_1);
     node_vector_free(3, N1);
     node_vector_free(4, N2);
-    free(lh_2);
     assert(mem_empty());
 }
 
