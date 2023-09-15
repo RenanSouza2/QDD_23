@@ -67,62 +67,96 @@ void qdd_free(qdd_p q)
 
 
 
-void list_body_reduce(list_body_p lb)
+list_head_p list_body_amp_reduce(list_body_p lb)
 {
+    list_head_p lh = list_head_create(NULL, NULL);
     for(; lb->lb; lb = lb->lb)
     {
-        string_ass
+        node_p n1 = lb->n;
+        bool insert = false;
+        for(list_body_p lb_c = lb; lb_c->lb; )
+        {
+            list_body_p lb_aux = lb_c->lb;
+            node_p n2 = lb_aux->n;
+            if(!amp_compare(node_amp(n1), node_amp(n2))) 
+            {
+                lb_c = lb_aux;
+                continue;
+            }
+
+            insert = true;
+            node_merge(n1, n2);
+            free(lb_aux);
+        }
+        
+        if(insert)
+            list_head_insert(lh, n1);
+    }
+    return lh;
+}
+
+void list_body_str_reduce(list_body_p lb, node_p n)
+{
+    while(lb->lb)
+    {
+        node_p n1 = lb->lb->n;
+        str_p str = node_str(n1);
+        if(str->el != str->th)
+        {
+            lb = lb->lb;
+            break;
+        }
+
+        node_disconnect_both(n1);
+        node_merge(n, n1);
     }
 }
 
 void qdd_reduce(qdd_p q)
 {
-    list_head_p lh = list_head_create(NULL, NULL);
+    list_head_p lh = list_body_amp_reduce(LB(q)->lb);
 
-    for(list_body_p lb_1 = LB(q)->lb; lb_1->lb; lb_1 = lb_1->lb)
+    for(node_p n = LB(lh)->n; n; n = LB(lh)->n)
     {
-        node_p n1 = lb_1->n;
-        bool insert = false;
-        for(list_body_p lb_2 = lb_1     ; lb_2->lb; lb_2 = lb_2->lb)
-        {
-            list_body_p lb_aux = lb_2->lb;
-            node_p n2 = lb_aux->n;
-            if(!amp_compare(node_amp(n1), node_amp(n2))) 
-                continue;
-
-            insert = true;
-            node_merge(n1, n2);
-        }
-        if(!insert) continue;
-
-        list_head_insert(lh, n1);
-    }
-
-    if(LB(lh)->n == NULL)
-    {
-        free(lh);
-        return;
-    }
-
-    for(; lh; lh = lh->lh)
-    for(list_body_p lb = LB(lh); lb; lb = lb->lb)
-    {
-        node_p n = lb->n;
-        node_p n1;
-        while((n1 = LB(n)->n))
+        // first position
+        for(node_p n1 = LB(n)->n; n1; n1 = LB(n)->n)
         {
             str_p str = node_str(n1);
-            if(str->el != str->th) continue;
+            if(str->el != str->th)
+                break;
 
             node_disconnect_both(n1);
             node_merge(n, n1);
         }
 
-        if(LB(n)->n == NULL) 
+        // early scape
+        if(LB(n)->n == NULL)
         {
-            // TODO
+            LB(q)->n = n;
+            free(lh);
+            return;
         }
 
+        // first row
+        list_body_str_reduce(LB(n), n);
 
+        //other rows
+        for(list_head_p lh = LH(n); lh->lh; )
+        {
+            //first
+            for(node_p n1 = LB(lh->lh)->n; n1; n1 = LB(lh->lh)->n)
+            {
+                str_p str = node_str(n1);
+                if(str->el != str->th)
+                    break;
+
+                node_disconnect_both(n1);
+                node_merge(n, n1);
+            }
+
+            lh = lh->lh;
+            list_body_str_reduce(LB(lh), n);
+        }
+        list_head_remove(lh, n);
     }
 }
