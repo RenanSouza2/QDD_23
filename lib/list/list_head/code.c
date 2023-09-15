@@ -18,7 +18,6 @@ void list_head_display_item(list_head_p lh)
     PRINT("\nnode: %p", LB(lh)->n);
     PRINT("\nlb  : %p", LB(lh)->lb);
     PRINT("\nlh  : %p", lh->lh);
-
 }
 
 void list_head_display(list_head_p lh)
@@ -64,6 +63,22 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     }
 
     return true;
+}
+
+list_head_p list_head_invert(list_head_p lh)
+{
+    list_head_p lh_new = NULL;
+
+    while(lh)
+    {
+        list_head_p lh_aux = lh->lh;
+
+        lh->lh = lh_new;
+        lh_new = lh;
+
+        lh = lh_aux;
+    }
+    return lh_new;
 }
 
 #endif
@@ -231,6 +246,9 @@ void list_head_merge_1(list_head_p lh_1, list_head_p lh_2)
 
 void list_head_merge(list_head_p lh_1, list_head_p lh_2)
 {
+    assert(lh_1);
+    assert(lh_2);
+
     list_head_p lh_2_aux = list_head_copy(lh_2);
     list_head_merge_1(lh_1, lh_2_aux);
 }

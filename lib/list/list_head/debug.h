@@ -5,8 +5,12 @@
 
 #ifdef DEBUG
 
+void list_head_display_item(list_head_p lh);
 void list_head_display(list_head_p lh);
+
 bool list_head_vector(list_head_p lh, int tot_h, ...);
+
+list_head_p list_head_invert(list_head_p lh);
 
 #endif
 
