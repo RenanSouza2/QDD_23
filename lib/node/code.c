@@ -33,14 +33,9 @@ void str_display(str_p str)
     PRINT("%p\t\t%p", str->el, str->th);
 }
 
-
-node_p node_str_create_test(int cl, int lv)
-{
-    label_t lab = (label_t){cl, lv};
-    return node_str_create(&lab);
-}
-
 #endif
+
+
 
 node_p node_str_create(label_p lab)
 {
@@ -129,3 +124,35 @@ void node_disconnect_both(node_p n)
     list_head_remove(LH(n_th), n);
     *NODE_STR(n) = (str_t){NULL, NULL};
 }
+
+
+
+void node_merge(node_p n1, node_p n2)
+{
+    assert(n1);
+    assert(n2);
+    
+    if(LB(n2)->n == NULL)
+    {
+        free(n2);
+        return;
+    }
+
+    for(list_head_p lh = LH(n2); lh; lh = lh->lh)
+    for(list_body_p lb = LB(lh); lb; lb = lb->lb)
+    {
+        str_p str = node_str(lb->n);
+        if(str->el == n2) str->el = n1;
+        if(str->th == n2) str->th = n1;
+    }
+
+    if(LB(n1)->n == NULL)
+    {
+        *LH(n1) = *LH(n2);
+        free(n2);
+        return;
+    }
+
+    list_head_merge(LH(n1), LH(n2));
+}
+
