@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "debug.h"
 #include "../node/struct.h"
@@ -6,6 +6,7 @@
 #ifdef DEBUG
 
 #include "../../static_utils/mem_report/bin/header.h"
+#include "../list/list_head/debug.h"
 
 void tree_display(node_p n)
 {
