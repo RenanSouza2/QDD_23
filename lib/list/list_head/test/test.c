@@ -50,15 +50,15 @@ void test_list_head_insert()
     printf("\n\t\t%s\t\t", __func__);
 
     node_p N[] = {
-        node_str_create_test(V, 2),
-        node_str_create_test(V, 2),
+        node_str_create(&(label_t){V, 2}),
+        node_str_create(&(label_t){V, 2}),
 
-        node_str_create_test(V, 1),
+        node_str_create(&(label_t){V, 1}),
 
-        node_str_create_test(V, 4),
-        node_str_create_test(V, 4),
+        node_str_create(&(label_t){V, 4}),
+        node_str_create(&(label_t){V, 4}),
 
-        node_str_create_test(V, 3),
+        node_str_create(&(label_t){V, 3}),
     };
 
     list_head_p lh = list_head_create(NULL, NULL);
@@ -90,20 +90,20 @@ void test_list_head_remove()
     printf("\n\t\t%s\t\t", __func__);
 
     node_p N[] = {
-        node_str_create_test(V, 1), // 0
-        node_str_create_test(V, 1), // 1
-        node_str_create_test(V, 1), // 2
+        node_str_create(&(label_t){V, 1}), // 0
+        node_str_create(&(label_t){V, 1}), // 1
+        node_str_create(&(label_t){V, 1}), // 2
         
-        node_str_create_test(V, 2), // 3
-        node_str_create_test(V, 2), // 4
+        node_str_create(&(label_t){V, 2}), // 3
+        node_str_create(&(label_t){V, 2}), // 4
         
-        node_str_create_test(V, 3), // 5
-        node_str_create_test(V, 3), // 6
-        node_str_create_test(V, 3), // 7
+        node_str_create(&(label_t){V, 3}), // 5
+        node_str_create(&(label_t){V, 3}), // 6
+        node_str_create(&(label_t){V, 3}), // 7
         
-        node_str_create_test(V, 4), // 8
-        node_str_create_test(V, 4), // 9
-        node_str_create_test(V, 4), // 10
+        node_str_create(&(label_t){V, 4}), // 8
+        node_str_create(&(label_t){V, 4}), // 9
+        node_str_create(&(label_t){V, 4}), // 10
     };
 
     list_head_p lh = list_head_create_vector(11, N);
@@ -202,10 +202,10 @@ void test_list_head_merge()
     printf("\n\t\t%s\t\t", __func__);
 
     printf("\n\t\t\t%s 1\t\t", __func__);
-    node_p n1 = node_str_create_test(V, 1);
+    node_p n1 = node_str_create(&(label_t){V, 1});
     list_head_p lh_1 = list_head_create(n1, NULL);
 
-    node_p n2 = node_str_create_test(V, 1);
+    node_p n2 = node_str_create(&(label_t){V, 1});
     list_head_p lh_2 = list_head_create(n2, NULL);
 
     list_head_merge(lh_1, lh_2);
@@ -219,10 +219,10 @@ void test_list_head_merge()
 
 
     printf("\n\t\t\t%s 2\t\t", __func__);
-    n1 = node_str_create_test(V, 1);
+    n1 = node_str_create(&(label_t){V, 1});
     lh_1 = list_head_create(n1, NULL);
 
-    n2 = node_str_create_test(V, 2);
+    n2 = node_str_create(&(label_t){V, 2});
     lh_2 = list_head_create(n2, NULL);
 
     list_head_merge(lh_1, lh_2);
@@ -236,10 +236,10 @@ void test_list_head_merge()
 
 
     printf("\n\t\t\t%s 3\t\t", __func__);
-    n1 = node_str_create_test(V, 2);
+    n1 = node_str_create(&(label_t){V, 2});
     lh_1 = list_head_create(n1, NULL);
 
-    n2 = node_str_create_test(V, 1);
+    n2 = node_str_create(&(label_t){V, 1});
     lh_2 = list_head_create(n2, NULL);
 
     list_head_merge(lh_1, lh_2);
@@ -254,17 +254,17 @@ void test_list_head_merge()
 
     printf("\n\t\t\t%s 4\t\t", __func__);
     node_p N1[] = {
-        node_str_create_test(V, 1),
-        node_str_create_test(V, 3),
-        node_str_create_test(V, 5),
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 3}),
+        node_str_create(&(label_t){V, 5}),
     };
     lh_1 = list_head_create_vector(3, N1);
 
     node_p N2[] = {
-        node_str_create_test(V, 1),
-        node_str_create_test(V, 2),
-        node_str_create_test(V, 3),
-        node_str_create_test(V, 4),
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 2}),
+        node_str_create(&(label_t){V, 3}),
+        node_str_create(&(label_t){V, 4}),
     };
     lh_2 = list_head_create_vector(4, N2);
 

@@ -2,15 +2,16 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
 
 
 void test_node_create_str()
 {
-    printf("\n\t\ttest node create str\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
-    node_p ne = node_str_create_test(V, 2);
+    node_p ne = node_str_create(&(label_t){V, 2});
 
     assert(LB(ne)->n  == NULL);
     assert(LB(ne)->lb == NULL);
@@ -26,7 +27,7 @@ void test_node_create_str()
 
 void test_node_create_amp()
 {
-    printf("\n\t\ttest node create amp\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
     amp_t amp = (amp_t){1, 2};
     node_p na = node_amp_create(&amp);
@@ -45,7 +46,7 @@ void test_node_create_amp()
 
 void test_node_create()
 {
-    printf("\n\ttest node create\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     test_node_create_str();
     test_node_create_amp();
@@ -57,16 +58,16 @@ void test_node_create()
 
 void test_node_connect_one()
 {
-    printf("\n\t\t\ttest node connect one\t\t");
+    printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n = node_str_create_test(V, 2);
+    node_p n = node_str_create(&(label_t){V, 2});
     
-    node_p n_el = node_str_create_test(V,1);
+    node_p n_el = node_str_create(&(label_t){V, 1});
     node_connect(n, n_el, ELSE);
     assert(NODE_STR(n)->el == n_el);
     assert(LB(n_el)->n == n);
     
-    node_p n_th = node_str_create_test(V,1);
+    node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect(n, n_th, THEN);
     assert(NODE_STR(n)->th == n_th);
     assert(LB(n_th)->n == n);
@@ -79,11 +80,11 @@ void test_node_connect_one()
 
 void test_node_connect_both()
 {
-    printf("\n\t\t\ttest node connect both\t\t");
+    printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n   = node_str_create_test(V, 2);
-    node_p n_el = node_str_create_test(V,1);
-    node_p n_th = node_str_create_test(V,1);
+    node_p n    = node_str_create(&(label_t){V, 2});
+    node_p n_el = node_str_create(&(label_t){V, 1});
+    node_p n_th = node_str_create(&(label_t){V, 1});
     
     node_connect_both(n, n_el, n_th);
     assert(NODE_STR(n)->el == n_el);
@@ -99,7 +100,7 @@ void test_node_connect_both()
 
 void test_node_connect()
 {
-    printf("\n\t\ttest node connect\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
     test_node_connect_one();
     test_node_connect_both();
@@ -111,11 +112,11 @@ void test_node_connect()
 
 void test_node_disconnect_one()
 {
-    printf("\n\t\t\ttest node disconnect one\t\t");
+    printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n   = node_str_create_test(V, 2);
-    node_p n_el = node_str_create_test(V,1);
-    node_p n_th = node_str_create_test(V,1);
+    node_p n    = node_str_create(&(label_t){V, 2});
+    node_p n_el = node_str_create(&(label_t){V, 1});
+    node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect_both(n, n_el, n_th);
 
     node_disconnect(n, n_el);
@@ -134,11 +135,11 @@ void test_node_disconnect_one()
 
 void test_node_disconnect_both()
 {
-    printf("\n\t\t\ttest node disconnect both\t\t");
+    printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n   = node_str_create_test(V, 2);
-    node_p n_el = node_str_create_test(V,1);
-    node_p n_th = node_str_create_test(V,1);
+    node_p n    = node_str_create(&(label_t){V, 2});
+    node_p n_el = node_str_create(&(label_t){V, 1});
+    node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect_both(n, n_el, n_th);
 
     node_disconnect_both(n);
@@ -155,7 +156,7 @@ void test_node_disconnect_both()
 
 void test_node_disconnect()
 {
-    printf("\n\t\ttest node disconnect\t\t");
+    printf("\n\t\t%s\t\t", __func__);
 
     test_node_disconnect_one();
     test_node_disconnect_both();
@@ -164,13 +165,65 @@ void test_node_disconnect()
 }
 
 
+void test_node_merge()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n1 = node_amp_create(&(amp_t){0, 0});
+    node_p n2 = node_amp_create(&(amp_t){0, 0});
+    node_merge(n1, n2);
+
+    node_p N1[] = {
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 2}),
+        node_str_create(&(label_t){V, 2}),
+    };
+    n2 = node_amp_create(&(amp_t){0, 0});
+    node_connect(N1[0], n2, ELSE);
+    node_connect(N1[0], n2, THEN);
+    for(int i=1; i<4; i++)
+        node_connect(N1[i], n2, i&1);
+
+    node_merge(n1, n2);
+    assert(list_head_vector(LH(n1), 2, 3, N1[0], N1[1], N1[0], 2, N1[2], N1[3]));
+
+    node_p N2[] = {
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 1}),
+        node_str_create(&(label_t){V, 2}),
+        node_str_create(&(label_t){V, 2}),
+    };
+    n2 = node_amp_create(&(amp_t){0, 0});
+    for(int i=0; i<4; i++)
+        node_connect(N2[i], n2, i&1);
+
+    node_merge(n1, n2);
+
+    assert(list_head_vector(LH(n1), 2, 
+        5, N1[0], N1[1], N1[0], N2[0], N2[1],
+        4, N1[2], N1[3], N2[2], N2[3]
+    ));
+
+    for(int i=0; i<4; i++)
+    {
+        free(N1[i]);
+        free(N2[i]);
+    }
+    list_head_free(LH(n1));
+
+    assert(mem_empty());
+}
+
+
 
 void test_node_connection()
 {
-    printf("\n\ttest node connection\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     test_node_connect();
     test_node_disconnect();
+    test_node_merge();
 
     assert(mem_empty());
 }
@@ -179,7 +232,7 @@ void test_node_connection()
 
 void test_node()
 {
-    printf("\ntest node library\t\t");
+    printf("\n%s\t\t", __func__);
 
     test_node_create();
     test_node_connection();
