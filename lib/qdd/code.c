@@ -60,3 +60,18 @@ void qdd_free(qdd_p q)
     list_body_free(LB(q)->lb);
     free(q);
 }
+
+
+
+void qdd_reduce(qdd_p q)
+{
+    for(list_body_p lb_1 = LB(q)->lb; lb_1->lb; lb_1 = lb_1->lb)
+    for(list_body_p lb_2 = lb_1     ; lb_2->lb; lb_2 = lb_2->lb)
+    {
+        list_body_p lb_aux = lb_2->lb;
+        if(!amp_compare(node_amp(lb_1->n), node_amp(lb_aux->n))) 
+            continue;
+
+        node_me
+    }
+}
