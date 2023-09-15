@@ -1,8 +1,8 @@
-#include <stdlib.h>
 #include <assert.h>
 
 #include "debug.h"
 #include "../label/struct.h"
+#include "../tree/header.h"
 
 #ifdef DEBUG
 
@@ -10,12 +10,12 @@
 
 #endif
 
-qdd_p qdd_create(node_p n, list_body_p lb, int max)
+qdd_p qdd_create(node_p n, list_body_p lb, int qbits)
 {
     qdd_p q = malloc(sizeof(qdd_t));
     assert(q);
 
-    *q = (qdd_t){{n, lb}, max};
+    *q = (qdd_t){{n, lb}, qbits};
     return q;
 }
 
@@ -52,4 +52,11 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     free(lb);
 
     return qdd_create(n, lb_res, qbits);
+}
+
+void qdd_free(qdd_p q)
+{
+    tree_free(LB(q)->n);
+    list_body_free(LB(q)->lb);
+    free(q);
 }

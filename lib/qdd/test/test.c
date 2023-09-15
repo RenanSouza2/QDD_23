@@ -3,8 +3,11 @@
 
 #include "../debug.h"
 #include "../../node/debug.h"
+#include "../../tree/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
+
+
 
 void test_create()
 {
@@ -24,6 +27,7 @@ void test_vector()
     printf("\n\t%s\t\t", __func__);
     
     qdd_p q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+    qdd_free(q);
 
     assert(mem_empty());
 }
