@@ -66,8 +66,9 @@ void qdd_free(qdd_p q)
 }
 
 
+typedef bool (*node_eq_f)(node_p, node_p);
 
-list_head_p list_body_amp_reduce(list_body_p lb)
+list_head_p list_body_amp_reduce(list_body_p lb, node_eq_f fn)
 {
     list_head_p lh = list_head_create(NULL, NULL);
     for(; lb->lb; lb = lb->lb)
@@ -78,7 +79,7 @@ list_head_p list_body_amp_reduce(list_body_p lb)
         {
             list_body_p lb_aux = lb_c->lb;
             node_p n2 = lb_aux->n;
-            if(!amp_compare(node_amp(n1), node_amp(n2))) 
+            if(!fn(n1, n2)) 
             {
                 lb_c = lb_aux;
                 continue;
@@ -140,7 +141,7 @@ void qdd_reduce(qdd_p q)
         // first row
         list_body_str_reduce(LB(n), n);
 
-        //other rows
+        // other rows
         for(list_head_p lh = LH(n); lh->lh; )
         {
             //first
@@ -157,6 +158,11 @@ void qdd_reduce(qdd_p q)
             lh = lh->lh;
             list_body_str_reduce(LB(lh), n);
         }
+
+        // rule 2
+        for(list_head_p lh_1 = LH(n); lh_1->lh; )
+        for(list_head_p lh_1)
+
         list_head_remove(lh, n);
     }
 }
