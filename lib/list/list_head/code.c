@@ -251,4 +251,5 @@ void list_head_merge(list_head_p lh_1, list_head_p lh_2)
 
     list_head_p lh_2_aux = list_head_copy(lh_2);
     list_head_merge_1(lh_1, lh_2_aux);
+    free(lh_2);
 }
