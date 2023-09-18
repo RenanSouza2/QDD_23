@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../node/struct.h"
+#include "../str/struct.h"
 
 #ifdef DEBUG
 

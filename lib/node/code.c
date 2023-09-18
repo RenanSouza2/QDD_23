@@ -87,16 +87,14 @@ amp_p node_amp(node_p n)
     return NODE_AMP(n);
 }
 
-bool node_amp_cmp(node_p n1, node_p n2)
+bool node_amp_eq(node_p n1, node_p n2)
 {
-    return amp_compare(node_amp(n1), node_amp(n2));
+    return amp_eq(node_amp(n1), node_amp(n2));
 }
 
-bool node_amp_cmp(node_p n1, node_p n2)
+bool node_str_eq(node_p n1, node_p n2)
 {
-    str_p str_1 = node_str(n1);
-    str_p str_2 = node_str(n2);
-    return (str_1->el == str_2->el) && (str_1->th == str_2->th);
+    return str_eq(node_str(n1), node_str(n2));
 }
 
 

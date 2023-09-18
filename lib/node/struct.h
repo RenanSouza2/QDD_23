@@ -3,6 +3,7 @@
 
 #include "header.h"
 #include "../list/list_head/struct.h"
+#include "../str/struct.h"
 #include "../label/struct.h"
 #include "../amp/struct.h"
 
@@ -10,11 +11,6 @@ STRUCT(node)
 {
     list_head_t lh;
     label_t lab;
-};
-
-STRUCT(str)
-{
-    node_p el, th;
 };
 
 STRUCT(node_str)

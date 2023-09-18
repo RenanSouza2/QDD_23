@@ -7,6 +7,6 @@ typedef double number_t;
 
 PLACEHOLDER(amp);
 
-bool amp_compare(amp_p amp_1, amp_p amp_2);
+bool amp_eq(amp_p amp_1, amp_p amp_2);
 
 #endif
