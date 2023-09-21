@@ -8,8 +8,6 @@
 
 PLACEHOLDER(list_body);
 
-#define LB(POINTER)    ((list_body_p)(POINTER))
-
 list_body_p list_body_create(node_p n, list_body_p lb_next);
 list_body_p list_body_copy(list_body_p lb);
 void list_body_free(list_body_p lb);

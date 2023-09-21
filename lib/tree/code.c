@@ -2,6 +2,7 @@
 
 #include "debug.h"
 #include "../str/struct.h"
+#include "../list/list_body/struct.h"
 
 #ifdef DEBUG
 
