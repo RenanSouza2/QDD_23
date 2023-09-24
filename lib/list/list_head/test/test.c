@@ -45,8 +45,6 @@ void test_list_head_create()
 
 void test_list_head_insert()
 {
-
-
     printf("\n\t\t%s\t\t", __func__);
 
     node_p N[] = {
@@ -61,23 +59,29 @@ void test_list_head_insert()
         node_str_create(&(label_t){V, 3}),
     };
 
-    list_head_p lh = list_head_create(NULL, NULL);
-    list_head_insert(lh, N[0]);
+    printf("\n\t\t\t%s 1\t\t", __func__);
+    list_head_p lh = NULL;
+    lh = list_head_insert(lh, N[0]);
     assert(list_head_vector(lh, 1, 1, N[0]));
 
-    list_head_insert(lh, N[1]);
+    printf("\n\t\t\t%s 2\t\t", __func__);
+    lh = list_head_insert(lh, N[1]);
     assert(list_head_vector(lh, 1, 2, N[0], N[1]));
 
-    list_head_insert(lh, N[2]);
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    lh = list_head_insert(lh, N[2]);
     assert(list_head_vector(lh, 2, 1, N[2], 2, N[0], N[1]));
     
-    list_head_insert(lh, N[3]);
+    printf("\n\t\t\t%s 4\t\t", __func__);
+    lh = list_head_insert(lh, N[3]);
     assert(list_head_vector(lh, 3, 1, N[2], 2, N[0], N[1], 1, N[3]));
 
-    list_head_insert(lh, N[4]);
+    printf("\n\t\t\t%s 5\t\t", __func__);
+    lh = list_head_insert(lh, N[4]);
     assert(list_head_vector(lh, 3, 1, N[2], 2, N[0], N[1], 2, N[3], N[4]));
 
-    list_head_insert(lh, N[5]);
+    printf("\n\t\t\t%s 6\t\t", __func__);
+    lh = list_head_insert(lh, N[5]);
     assert(list_head_vector(lh, 4, 1, N[2], 2, N[0], N[1], 1, N[5], 2, N[3], N[4]));
 
     list_head_free(lh);

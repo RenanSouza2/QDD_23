@@ -136,28 +136,21 @@ int list_compare(list_head_p lh_1, list_head_p lh_2)
 
 
 
-void list_head_insert(list_head_p lh, node_p n)
+list_head_p list_head_insert(list_head_p lh, node_p n)
 {
-    if(LB(lh)->n == NULL)
-    {
-        LB(lh)->n = n;
-        return;
-    }
-
+    if(lh == NULL) return list_head_create(n, NULL);
+    
     label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
         LB(lh)->lb = list_body_create(n, LB(lh)->lb);
-        return;
+        return lh;
     }
 
     if(label_list_compare(lab, lh) < 0)
-    {
-        list_head_p lh_aux = list_head_copy(lh);
-        *lh = (list_head_t){{n, NULL}, lh_aux};
-        return;
-    }
+        return list_head_create(n, lh);
 
+    list_head_p lh_0 = lh;
     for(; lh->lh; lh = lh->lh)
         if(label_list_compare(lab, lh->lh) < 0)
             break;
@@ -165,10 +158,11 @@ void list_head_insert(list_head_p lh, node_p n)
     if(label_list_compare(lab, lh) != 0)
     {
         lh->lh = list_head_create(n, lh->lh);
-        return;
+        return lh_0;
     }
 
     LB(lh)->lb = list_body_create(n, LB(lh)->lb);
+    return lh_0;
 }
 
 void list_head_remove(list_head_p lh, node_p n)
