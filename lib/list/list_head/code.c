@@ -165,19 +165,17 @@ list_head_p list_head_insert(list_head_p lh, node_p n)
     return lh_0;
 }
 
-void list_head_remove(list_head_p lh, node_p n)
+list_head_p list_head_remove(list_head_p lh, node_p n)
 {
     label_p lab = node_label(n);
     if(label_list_compare(lab, lh) == 0)
     {
-        list_head_p lh_aux = lh->lh;
-        if(list_body_remove(LB(lh), n) || lh_aux == NULL) return;
-        
-        *lh = *lh_aux;
-        free(lh_aux);
-        return;
+        if(list_body_remove(LB(lh), n)) return lh;
+
+        return list_head_pop(lh);
     }
 
+    list_head_p lh_0 = lh;
     for(; lh->lh; lh = lh->lh)
         if(label_list_compare(lab, lh->lh) <= 0)
             break;
@@ -186,10 +184,9 @@ void list_head_remove(list_head_p lh, node_p n)
     assert(lh_aux);
     assert(label_list_compare(lab, lh_aux) == 0);
 
-    if(list_body_remove(LB(lh_aux), n)) return;
-
-    lh->lh = lh_aux->lh;
-    free(lh_aux);
+    if(list_body_remove(LB(lh_aux), n)) return lh_0;
+    lh->lh = list_head_pop(lh_aux);
+    return lh_0;
 }
 
 void list_head_merge_1(list_head_p lh_1, list_head_p lh_2)
