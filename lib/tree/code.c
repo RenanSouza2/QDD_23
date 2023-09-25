@@ -19,7 +19,7 @@ void tree_display(node_p n)
 
 void tree_free(node_p n)
 {
-    if(n->lh[ELSE] || n->lh[THEN]) return;
+    if(LB(n)->n) return;
 
     if(node_is_amp(n))
     {
@@ -37,19 +37,21 @@ void tree_free(node_p n)
     tree_free(n2);
 }
 
-list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
+list_head_p tree_enlist_rec(list_head_p lh, node_p n)
 {
-    if(n0 && (node_first(n) != n0)) return lh;
-
-    lh = list_head_insert(lh, n);
+    list_head_insert(lh, n);
     if(node_is_amp(n)) return lh;
 
     str_p str = node_str(n);
-    lh = tree_enlist_rec(lh, n, str->el);
-    return tree_enlist_rec(lh, n, str->th);
+    node_p n1 = str->el;
+    if(LB(n1)->n == n) lh = tree_enlist_rec(lh, n1);
+
+    n1 = str->th;
+    return (LB(n1)->n == n) ? tree_enlist_rec(lh, n1) : lh;
 }
 
 list_head_p tree_enlist(node_p n)
 {
-    return tree_enlist_rec(NULL, NULL, n);
+    list_head_p lh = list_head_create(NULL, NULL);
+    return tree_enlist_rec(lh, n);
 }

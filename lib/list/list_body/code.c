@@ -35,7 +35,7 @@ bool list_body_vector(list_body_p lb, int tot_b, node_p n[])
     {
         if(lb->n == n[i]) continue;
 
-        PRINT("\nERROR LIST BODY VECTOR 1 | ND MISMATCH | %d %d\t\t", i, tot_b);
+        PRINT("\nERROR LIST BODY VECTOR 1 | NODE MISMATCH | %d %d\t\t", i, tot_b);
         return false;
     }
 
@@ -122,11 +122,8 @@ bool list_body_remove(list_body_p lb, node_p n)
     return true;
 }
 
-list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
+void list_body_merge(list_body_p lb_1, list_body_p lb_2)
 {
-    list_body_p lb_2_0 = lb_2;
-    for(; lb_2->lb; lb_2 = lb_2->lb);
-    lb_2->lb = list_body_copy(lb_1);
-    free(lb_1);
-    return lb_2_0;
+    for(; lb_1->lb; lb_1 = lb_1->lb);
+    lb_1->lb = list_body_copy(lb_2);
 }

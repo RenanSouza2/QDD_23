@@ -1,5 +1,5 @@
-#ifndef __ND_H__
-#define __ND_H__
+#ifndef __NODE_H__
+#define __NODE_H__
 
 #include <stdbool.h>
 
@@ -22,7 +22,6 @@ void node_free(node_p n);
 bool node_is_amp(node_p n);
 str_p node_str(node_p n);
 amp_p node_amp(node_p n);
-node_p node_first(node_p n);
 
 void node_connect(node_p n1, node_p n2, int side);
 void node_connect_both(node_p n, node_p n_el, node_p n_th);
