@@ -2,6 +2,8 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../list/list_head/struct.h"
+#include "../list/list_body/struct.h"
 
 #ifdef DEBUG
 

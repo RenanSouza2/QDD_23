@@ -91,35 +91,19 @@ void list_body_free(list_body_p lb)
 
 
 
-void list_body_insert(list_body_p lb, node_p n)
-{
-    if(lb->n) lb->lb = list_body_create(n, lb->lb);
-    else      lb->n  = n;
-}
-
-bool list_body_remove(list_body_p lb, node_p n)
+list_body_p list_body_remove(list_body_p lb, node_p n)
 {
     if(lb->n == n)
-    {
-        list_body_p lb_aux = lb->lb;
-        if(lb_aux == NULL)
-        {
-            lb->n = NULL;
-            return false;
-        }
+        return list_body_pop(lb);
 
-        *lb = *lb_aux;
-        free(lb_aux);
-        return true;
-    }
-
+    list_body_p lb_0 = lb;
     for(; lb->lb; lb = lb->lb)
         if(lb->lb->n == n)
             break;
 
     assert(lb->lb);
     lb->lb = list_body_pop(lb->lb);
-    return true;
+    return lb_0;
 }
 
 list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)

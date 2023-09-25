@@ -44,8 +44,8 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
         node_p N[tot_b];
         for(int j=0; j<tot_b; j++)
             N[j] = va_arg(args, node_p);
+        if(list_body_vector(lh->lb, tot_b, N)) continue;
 
-        if(list_body_vector(LB(lh), tot_b, N)) continue;
         PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
         return false;
     }
@@ -95,7 +95,8 @@ list_head_p list_head_create_cold()
 list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
     list_head_p lh = list_head_create_cold();
-    *lh = (list_head_t){{n, NULL}, lh_next};
+    list_body_p lb = n ? list_body_create(n, NULL) : NULL;
+    *lh = (list_head_t){lb, lh_next};
     return lh;
 }
 
@@ -116,14 +117,14 @@ list_head_p list_head_pop(list_head_p lh)
 void list_head_free(list_head_p lh)
 {
     for(; lh; lh = list_head_pop(lh))
-        list_body_free(LB(lh)->lb);
+        list_body_free(lh->lb);
 }
 
 
 
 label_p list_label(list_head_p lh)
 {
-    return node_label(LB(lh)->n);
+    return node_label(lh->lb->n);
 }
 
 int label_list_compare(label_p lab, list_head_p lh)
@@ -148,7 +149,7 @@ list_head_p list_head_insert(list_head_p lh, node_p n)
         case -1: return list_head_create(n, lh);
         
         case 0: 
-        LB(lh)->lb = list_body_create(n, LB(lh)->lb);
+        lh->lb = list_body_create(n, lh->lb);
         return lh;
 
         case 1:
@@ -164,7 +165,8 @@ list_head_p list_head_remove(list_head_p lh, node_p n)
     switch(label_list_compare(lab, lh))
     {
         case 0:
-        if(list_body_remove(LB(lh), n)) return lh;
+        lh->lb = list_body_remove(lh->lb, n);
+        if(lh->lb) return lh;
         return list_head_pop(lh);
 
         case 1:

@@ -3,11 +3,11 @@
 
 #include "header.h"
 
-#include "../list_body/struct.h"
+#include "../list_body/header.h"
 
 STRUCT(list_head)
 {
-    list_body_t lb;
+    list_body_p lb;
     list_head_p lh;
 };
 

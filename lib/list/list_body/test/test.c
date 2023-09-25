@@ -39,25 +39,6 @@ void test_list_body_create()
 
 
 
-void test_list_body_insert()
-{
-    printf("\n\t\t%s\t\t", __func__);
-
-    list_body_p lb = list_body_create(NULL, NULL);
-    
-    list_body_insert(lb, ND(1));
-    assert(list_body_vector(lb, 1, (node_p[]){ND(1)}));
-
-    list_body_insert(lb, ND(2));
-    assert(list_body_vector(lb, 2, (node_p[]){ND(1), ND(2)}));
-    
-    list_body_insert(lb, ND(3));
-    assert(list_body_vector(lb, 3, (node_p[]){ND(1), ND(3), ND(2)}));
-
-    list_body_free(lb);
-    assert(mem_empty());
-}
-
 void test_list_body_remove()
 {
     printf("\n\t\t%s\t\t", __func__);
@@ -65,17 +46,17 @@ void test_list_body_remove()
     list_body_p lb = list_body_create_test(1, 4);
     assert(list_body_vector(lb, 4, (node_p[]){ND(1), ND(2), ND(3), ND(4)}));
 
-    assert(list_body_remove(lb, ND(4)) == true);
+    lb = list_body_remove(lb, ND(4));
     assert(list_body_vector(lb, 3, (node_p[]){ND(1), ND(2), ND(3)}));
     
-    assert(list_body_remove(lb, ND(2)) == true);
+    lb = list_body_remove(lb, ND(2));
     assert(list_body_vector(lb, 2, (node_p[]){ND(1), ND(3)}));
     
-    assert(list_body_remove(lb, ND(1)) == true);
+    lb = list_body_remove(lb, ND(1));
     assert(list_body_vector(lb, 1, (node_p[]){ND(3)}));
     
-    assert(list_body_remove(lb, ND(3)) == false);
-    assert(list_body_vector(lb, 1, (node_p[]){NULL}));
+    lb = list_body_remove(lb, ND(3));
+    assert(lb == NULL);
 
     free(lb);
     assert(mem_empty());
@@ -120,7 +101,6 @@ void test_list_body_operations()
 {
     printf("\n\t%s\t\t", __func__);
 
-    test_list_body_insert();
     test_list_body_remove();
     test_list_body_merge();
 
