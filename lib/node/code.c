@@ -112,15 +112,13 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th)
     n_th->lh[THEN] = list_head_insert(n_th->lh[THEN], n);
 }
 
-void node_disconnect(node_p n, int side)
+void node_disconnect(node_p n1, node_p n2)
 {
-    assert(n);
+    int side = SIDE(n1,n2);
+    assert(V_STR(n1)[side] == n2);
+    V_STR(n1)[side] = NULL;
 
-    node_p n1 = V_STR(n)[side];
-    assert(n1);
-
-    V_STR(n)[side] = NULL;
-    n1->lh[side] = list_head_remove(n1->lh[side], n);
+    n2->lh[side] = list_head_remove(n2->lh[side], n1);
 }
 
 void node_disconnect_both(node_p n)
@@ -154,4 +152,5 @@ void node_merge(node_p n1, node_p n2)
 
     n1->lh[ELSE] = list_head_merge(n1->lh[ELSE], n2->lh[ELSE]);
     n1->lh[THEN] = list_head_merge(n1->lh[THEN], n2->lh[THEN]);
+    free(n2);
 }
