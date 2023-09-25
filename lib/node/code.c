@@ -87,6 +87,13 @@ amp_p node_amp(node_p n)
     return ND_AMP(n);
 }
 
+node_p node_first(node_p n)
+{
+    if(n->lh[ELSE]) return LB(n->lh[ELSE])->n;
+    if(n->lh[THEN]) return LB(n->lh[THEN])->n;
+    return NULL;
+}
+
 
 
 void node_connect(node_p n1, node_p n2, int side)
