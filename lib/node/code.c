@@ -57,8 +57,8 @@ node_p node_amp_create(amp_p amp)
 
 void node_free(node_p n)
 {
-    list_head_free(n->lh[0]);
-    list_head_free(n->lh[1]);
+    list_head_free(n->lh[ELSE]);
+    list_head_free(n->lh[THEN]);
     free(n);
 }
 
