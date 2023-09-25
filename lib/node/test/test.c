@@ -120,11 +120,13 @@ void test_node_disconnect_one()
     node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect_both(n, n_el, n_th);
 
-    node_disconnect(n, n_el);
+    printf("\n\t\t\t\t%s 1\t\t", __func__);
+    node_disconnect(n, ELSE);
     assert(ND_STR(n)->el == NULL);
     assert(LB(n_el)->n == NULL);
-    
-    node_disconnect(n, n_th);
+
+    printf("\n\t\t\t\t%s 2\t\t", __func__);
+    node_disconnect(n, THEN);
     assert(ND_STR(n)->th == NULL);
     assert(LB(n_th)->n == NULL);
 
@@ -173,6 +175,7 @@ void test_node_merge()
     node_p n1 = node_amp_create(&(amp_t){0, 0});
     node_p n2 = node_amp_create(&(amp_t){0, 0});
     node_merge(n1, n2);
+    free(n2);
 
     node_p N1[] = {
         node_str_create(&(label_t){V, 1}),
@@ -185,7 +188,6 @@ void test_node_merge()
     node_connect(N1[0], n2, THEN);
     for(int i=1; i<4; i++)
         node_connect(N1[i], n2, i&1);
-
     node_merge(n1, n2);
     assert(list_head_vector(n1->lh[ELSE], 2,
         1, N1[0], 
@@ -195,6 +197,7 @@ void test_node_merge()
         2, N1[0], N1[1], 
         1, N1[3]
     ));
+    free(n2);
 
     node_p N2[] = {
         node_str_create(&(label_t){V, 1}),
@@ -214,6 +217,7 @@ void test_node_merge()
         3, N2[1], N1[0], N1[1], 
         2, N2[3], N1[3]
     ));
+    free(n2);
 
     for(int i=0; i<4; i++)
     {
