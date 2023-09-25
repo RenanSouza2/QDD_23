@@ -13,7 +13,7 @@ void node_amp_display(node_p na);
 #define ND(POINTER)       ((node_p)(POINTER))
 #define ND_STR(POINTER)   ((str_p)(ND(POINTER)+1))
 #define ND_AMP(POINTER)   ((amp_p)(ND(POINTER)+1))
-#define V_STR(POINTER)      ((node_p*)ND_STR(POINTER))
-#define SIDE(ND,ND1)    (ND_STR(ND)->el != ND1)
+#define V_STR(POINTER)    ((node_p*)ND_STR(POINTER))
+#define SIDE(ND,ND1)      (ND_STR(ND)->el != ND1)
 
 #endif

@@ -57,19 +57,18 @@ void test_node_connect_one()
     printf("\n\t\t\t%s\t\t", __func__);
 
     node_p n = node_str_create(&(label_t){V, 2});
-    
     node_p n_el = node_str_create(&(label_t){V, 1});
     node_connect(n, n_el, ELSE);
     assert(ND_STR(n)->el == n_el);
-    assert(LB(n_el)->n == n);
+    assert(list_head_vector(n_el->lh, 1, 1, n));
     
     node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect(n, n_th, THEN);
     assert(ND_STR(n)->th == n_th);
-    assert(LB(n_th)->n == n);
+    assert(list_head_vector(n_th->lh, 1, 1, n));
 
-    free(n_el);
-    free(n_th);
+    node_free(n_el);
+    node_free(n_th);
     free(n);
     assert(mem_empty());
 }
@@ -85,11 +84,11 @@ void test_node_connect_both()
     node_connect_both(n, n_el, n_th);
     assert(ND_STR(n)->el == n_el);
     assert(ND_STR(n)->th == n_th);
-    assert(LB(n_el)->n == n);
-    assert(LB(n_th)->n == n);
+    assert(list_head_vector(n_el->lh, 1, 1, n));
+    assert(list_head_vector(n_th->lh, 1, 1, n));
 
-    free(n_el);
-    free(n_th);
+    node_free(n_el);
+    node_free(n_th);
     free(n);
     assert(mem_empty());
 }
@@ -182,7 +181,10 @@ void test_node_merge()
         node_connect(N1[i], n2, i&1);
 
     node_merge(n1, n2);
-    assert(list_head_vector(LH(n1), 2, 3, N1[0], N1[1], N1[0], 2, N1[2], N1[3]));
+    assert(list_head_vector(n1->lh, 2,
+        3, N1[0], N1[1], N1[0], 
+        2, N1[2], N1[3]
+    ));
 
     node_p N2[] = {
         node_str_create(&(label_t){V, 1}),
@@ -195,10 +197,9 @@ void test_node_merge()
         node_connect(N2[i], n2, i&1);
 
     node_merge(n1, n2);
-
-    assert(list_head_vector(LH(n1), 2, 
-        5, N1[0], N1[1], N1[0], N2[0], N2[1],
-        4, N1[2], N1[3], N2[2], N2[3]
+    assert(list_head_vector(n1->lh, 2, 
+        5, N2[0], N2[1], N1[0], N1[1], N1[0],
+        4, N2[2], N2[3], N1[2], N1[3]
     ));
 
     for(int i=0; i<4; i++)
@@ -206,7 +207,7 @@ void test_node_merge()
         free(N1[i]);
         free(N2[i]);
     }
-    list_head_free(LH(n1));
+    node_free(n1);
 
     assert(mem_empty());
 }
