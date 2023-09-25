@@ -19,7 +19,7 @@ void tree_display(node_p n)
 
 void tree_free(node_p n)
 {
-    if(n->lh) return;
+    if(n->lh[ELSE] || n->lh[THEN]) return;
 
     if(node_is_amp(n))
     {
