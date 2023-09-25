@@ -28,14 +28,15 @@ void list_body_display(list_body_p lb)
     }
 }
 
-bool list_body_vector(list_body_p lb, int tot_b, node_p n[])
+bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list args)
 {
     int i = 0;
     for(; lb && (i<tot_b); i++, lb = lb->lb)
     {
-        if(lb->n == n[i]) continue;
+        node_p n = va_arg(args, node_p);
+        if(lb->n == n) continue;
 
-        PRINT("\nERROR LIST BODY VECTOR 1 | ND MISMATCH | %d %d\t\t", i, tot_b);
+        PRINT("\nERROR LIST BODY VECTOR 1 | NODE MISMATCH | %d %d\t\t", i, tot_b);
         return false;
     }
 
@@ -52,6 +53,13 @@ bool list_body_vector(list_body_p lb, int tot_b, node_p n[])
     }
 
     return true;
+}
+
+bool list_body_vector(list_body_p lb, int tot_b, ...)
+{
+    va_list args;
+    va_start(args, tot_b);
+    return list_body_vector_vargs(lb, tot_b, args);
 }
 
 #endif
@@ -110,7 +118,6 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 {
     list_body_p lb_2_0 = lb_2;
     for(; lb_2->lb; lb_2 = lb_2->lb);
-    lb_2->lb = list_body_copy(lb_1);
-    free(lb_1);
+    lb_2->lb = lb_1;
     return lb_2_0;
 }

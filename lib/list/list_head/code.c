@@ -41,10 +41,7 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
         int tot_b = va_arg(args, int);
-        node_p N[tot_b];
-        for(int j=0; j<tot_b; j++)
-            N[j] = va_arg(args, node_p);
-        if(list_body_vector(lh->lb, tot_b, N)) continue;
+        if(list_body_vector_vargs(lh->lb, tot_b, args)) continue;
 
         PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
         return false;
@@ -166,8 +163,7 @@ list_head_p list_head_remove(list_head_p lh, node_p n)
     {
         case 0:
         lh->lb = list_body_remove(lh->lb, n);
-        if(lh->lb) return lh;
-        return list_head_pop(lh);
+        return lh->lb ? lh : list_head_pop(lh);
 
         case 1:
         lh->lh = list_head_remove(lh->lh, n);

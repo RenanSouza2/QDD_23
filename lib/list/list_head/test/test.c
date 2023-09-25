@@ -170,55 +170,58 @@ void test_list_head_remove()
         3, N[10], N[9], N[8]
     ));
 
-    lh = list_head_remove(lh, N[4]);
-    assert(list_head_vector(lh, 3, 
-        1, N[3],
-        3, N[5], N[7], N[6], 
-        3, N[8], N[10], N[9])
-    );
-
     printf("\n\t\t\t%s  4\t\t", __func__);
-    lh = list_head_remove(lh, N[7]);
-    assert(list_head_vector(lh, 3, 
-        1, N[3],
-        2, N[5], N[6], 
-        3, N[8], N[10], N[9])
-    );
+    lh = list_head_remove(lh, N[4]);
+    assert(list_head_vector(lh, 3,
+        1, N[ 3], 
+        3, N[ 7], N[6], N[5],
+        3, N[10], N[9], N[8]
+    ));
 
     printf("\n\t\t\t%s  5\t\t", __func__);
-    lh = list_head_remove(lh, N[5]);
-    assert(list_head_vector(lh, 3, 
-        1, N[3],
-        1, N[6], 
-        3, N[8], N[10], N[9])
-    );
+    lh = list_head_remove(lh, N[7]);
+    assert(list_head_vector(lh, 3,
+        1, N[ 3], 
+        2, N[ 6], N[5],
+        3, N[10], N[9], N[8]
+    ));
 
     printf("\n\t\t\t%s  6\t\t", __func__);
-    lh = list_head_remove(lh, N[6]);
-    assert(list_head_vector(lh, 2, 
-        1, N[3],
-        3, N[8], N[10], N[9])
-    );
+    lh = list_head_remove(lh, N[5]);
+    assert(list_head_vector(lh, 3,
+        1, N[ 3], 
+        1, N[ 6],
+        3, N[10], N[9], N[8]
+    ));
 
     printf("\n\t\t\t%s  7\t\t", __func__);
-    lh = list_head_remove(lh, N[10]);
-    assert(list_head_vector(lh, 2, 
-        1, N[3],
-        2, N[8], N[9])
-    );
+    lh = list_head_remove(lh, N[6]);
+    assert(list_head_vector(lh, 2,
+        1, N[ 3], 
+        3, N[10], N[9], N[8]
+    ));
 
     printf("\n\t\t\t%s  8\t\t", __func__);
-    lh = list_head_remove(lh, N[8]);
-    assert(list_head_vector(lh, 2, 
-        1, N[3],
-        1, N[9])
-    );
+    lh = list_head_remove(lh, N[10]);
+    assert(list_head_vector(lh, 2,
+        1, N[3], 
+        2, N[9], N[8]
+    ));
 
     printf("\n\t\t\t%s  9\t\t", __func__);
-    lh = list_head_remove(lh, N[9]);
-    assert(list_head_vector(lh, 1,  1, N[3]));
+    lh = list_head_remove(lh, N[8]);
+    assert(list_head_vector(lh, 2,
+        1, N[3], 
+        1, N[9]
+    ));
 
     printf("\n\t\t\t%s 10\t\t", __func__);
+    lh = list_head_remove(lh, N[9]);
+    assert(list_head_vector(lh, 1,
+        1, N[3]
+    ));
+
+    printf("\n\t\t\t%s 11\t\t", __func__);
     lh = list_head_remove(lh, N[3]);
     assert(lh == NULL);
 

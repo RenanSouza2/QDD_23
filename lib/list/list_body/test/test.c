@@ -44,16 +44,16 @@ void test_list_body_remove()
     printf("\n\t\t%s\t\t", __func__);
 
     list_body_p lb = list_body_create_test(1, 4);
-    assert(list_body_vector(lb, 4, (node_p[]){ND(1), ND(2), ND(3), ND(4)}));
+    assert(list_body_vector(lb, 4, ND(1), ND(2), ND(3), ND(4)));
 
     lb = list_body_remove(lb, ND(4));
-    assert(list_body_vector(lb, 3, (node_p[]){ND(1), ND(2), ND(3)}));
+    assert(list_body_vector(lb, 3, ND(1), ND(2), ND(3)));
     
     lb = list_body_remove(lb, ND(2));
-    assert(list_body_vector(lb, 2, (node_p[]){ND(1), ND(3)}));
+    assert(list_body_vector(lb, 2, ND(1), ND(3)));
     
     lb = list_body_remove(lb, ND(1));
-    assert(list_body_vector(lb, 1, (node_p[]){ND(3)}));
+    assert(list_body_vector(lb, 1, ND(3)));
     
     lb = list_body_remove(lb, ND(3));
     assert(lb == NULL);
@@ -70,28 +70,28 @@ void test_list_body_merge()
     list_body_p lb_1 = list_body_create_test(1, 2);
     list_body_p lb_2 = list_body_create_test(3, 4);
     lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_vector(lb_1, 4, (node_p[]){ND(3), ND(4), ND(1), ND(2)}));
+    assert(list_body_vector(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
     list_body_free(lb_1);
 
     printf("\n\t\t\t%s 2\t\t", __func__);
     lb_1 = list_body_create_test(1, 2);
     lb_2 = list_body_create(ND(3), NULL);
     lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_vector(lb_1, 3, (node_p[]){ND(3), ND(1), ND(2)}));
+    assert(list_body_vector(lb_1, 3, ND(3), ND(1), ND(2)));
     list_body_free(lb_1);
 
     printf("\n\t\t\t%s 3\t\t", __func__);
     lb_1 = list_body_create(ND(1), NULL);
     lb_2 = list_body_create_test(2, 3);
     lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_vector(lb_1, 3, (node_p[]){ND(2), ND(3), ND(1)}));
+    assert(list_body_vector(lb_1, 3, ND(2), ND(3), ND(1)));
     list_body_free(lb_1);
 
     printf("\n\t\t\t%s 4\t\t", __func__);
     lb_1 = list_body_create(ND(1), NULL);
     lb_2 = list_body_create(ND(2), NULL);
     lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_vector(lb_1, 2, (node_p[]){ND(2), ND(1)}));
+    assert(list_body_vector(lb_1, 2, ND(2), ND(1)));
     list_body_free(lb_1);
 
     assert(mem_empty());
