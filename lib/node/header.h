@@ -1,5 +1,5 @@
-#ifndef __NODE_H__
-#define __NODE_H__
+#ifndef __ND_H__
+#define __ND_H__
 
 #include <stdbool.h>
 

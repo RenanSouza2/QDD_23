@@ -35,7 +35,7 @@ bool list_body_vector(list_body_p lb, int tot_b, node_p n[])
     {
         if(lb->n == n[i]) continue;
 
-        PRINT("\nERROR LIST BODY VECTOR 1 | NODE MISMATCH | %d %d\t\t", i, tot_b);
+        PRINT("\nERROR LIST BODY VECTOR 1 | ND MISMATCH | %d %d\t\t", i, tot_b);
         return false;
     }
 

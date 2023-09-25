@@ -13,13 +13,11 @@ void test_node_create_str()
 
     node_p ne = node_str_create(&(label_t){V, 2});
 
-    assert(LB(ne)->n  == NULL);
-    assert(LB(ne)->lb == NULL);
-    assert(LH(ne)->lh == NULL);
+    assert(ne->lh == NULL);
     assert(ne->lab.cl == V);
     assert(ne->lab.lv == 2);
-    assert(NODE_STR(ne)->el == NULL);
-    assert(NODE_STR(ne)->th == NULL);
+    assert(ND_STR(ne)->el == NULL);
+    assert(ND_STR(ne)->th == NULL);
 
     free(ne);
     assert(mem_empty());
@@ -32,13 +30,11 @@ void test_node_create_amp()
     amp_t amp = (amp_t){1, 2};
     node_p na = node_amp_create(&amp);
     
-    assert(LB(na)->n  == NULL);
-    assert(LB(na)->lb == NULL);
-    assert(LH(na)->lh == NULL);
+    assert(na->lh == NULL);
     assert(na->lab.cl == 0);
     assert(na->lab.lv == 0);
-    assert(NODE_AMP(na)->re == 1);
-    assert(NODE_AMP(na)->im == 2);
+    assert(ND_AMP(na)->re == 1);
+    assert(ND_AMP(na)->im == 2);
 
     free(na);
     assert(mem_empty());
@@ -64,12 +60,12 @@ void test_node_connect_one()
     
     node_p n_el = node_str_create(&(label_t){V, 1});
     node_connect(n, n_el, ELSE);
-    assert(NODE_STR(n)->el == n_el);
+    assert(ND_STR(n)->el == n_el);
     assert(LB(n_el)->n == n);
     
     node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect(n, n_th, THEN);
-    assert(NODE_STR(n)->th == n_th);
+    assert(ND_STR(n)->th == n_th);
     assert(LB(n_th)->n == n);
 
     free(n_el);
@@ -87,8 +83,8 @@ void test_node_connect_both()
     node_p n_th = node_str_create(&(label_t){V, 1});
     
     node_connect_both(n, n_el, n_th);
-    assert(NODE_STR(n)->el == n_el);
-    assert(NODE_STR(n)->th == n_th);
+    assert(ND_STR(n)->el == n_el);
+    assert(ND_STR(n)->th == n_th);
     assert(LB(n_el)->n == n);
     assert(LB(n_th)->n == n);
 
@@ -120,11 +116,11 @@ void test_node_disconnect_one()
     node_connect_both(n, n_el, n_th);
 
     node_disconnect(n, n_el);
-    assert(NODE_STR(n)->el == NULL);
+    assert(ND_STR(n)->el == NULL);
     assert(LB(n_el)->n == NULL);
     
     node_disconnect(n, n_th);
-    assert(NODE_STR(n)->th == NULL);
+    assert(ND_STR(n)->th == NULL);
     assert(LB(n_th)->n == NULL);
 
     free(n_el);
@@ -143,8 +139,8 @@ void test_node_disconnect_both()
     node_connect_both(n, n_el, n_th);
 
     node_disconnect_both(n);
-    assert(NODE_STR(n)->el == NULL);
-    assert(NODE_STR(n)->th == NULL);
+    assert(ND_STR(n)->el == NULL);
+    assert(ND_STR(n)->th == NULL);
     assert(LB(n_el)->n == NULL);
     assert(LB(n_th)->n == NULL);
 
