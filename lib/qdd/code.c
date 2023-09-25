@@ -98,81 +98,7 @@ list_head_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     return lh;
 }
 
-void list_body_reduce_useless(list_body_p lb, node_p n)
-{
-    while(lb->lb)
-    {
-        node_p n1 = lb->lb->n;
-        str_p str = node_str(n1);
-        if(str->el != str->th)
-        {
-            lb = lb->lb;
-            break;
-        }
-
-        node_disconnect_both(n1);
-        node_merge(n, n1);
-    }
-}
-
-// void qdd_reduce(qdd_p q)
-// {
-//     list_head_p lh = list_body_reduce_2(LB(q)->lb, node_amp_eq);
-//
-//     for(node_p n = LB(lh)->n; n; n = LB(lh)->n)
-//     {
-//         // first position
-//         for(node_p n1 = LB(n)->n; n1; n1 = LB(n)->n)
-//         {
-//             str_p str = node_str(n1);
-//             if(str->el != str->th)
-//                 break;
-//
-//             node_disconnect_both(n1);
-//             node_merge(n, n1);
-//         }
-//
-//         // early scape
-//         if(LB(n)->n == NULL)
-//         {
-//             LB(q)->n = n;
-//             free(lh);
-//             return;
-//         }
-//
-//         // first row
-//         list_body_reduce_1(LB(n), n);
-//
-//         // other rows
-//         for(list_head_p lh = LH(n); lh->lh; )
-//         {
-//             //first
-//             for(node_p n1 = LB(lh->lh)->n; n1; n1 = LB(lh->lh)->n)
-//             {
-//                 str_p str = node_str(n1);
-//                 if(str->el != str->th)
-//                     break;
-//
-//                 node_disconnect_both(n1);
-//                 node_merge(n, n1);
-//             }
-//
-//             lh = lh->lh;
-//             list_body_reduce_1(LB(lh), n);
-//         }
-//
-//         // rule 2
-//         for(list_head_p lh_1 = LH(n); lh_1; lh_1 = lh_1->lh)
-//         {
-//             list_head_p lh_aux = list_body_reduce_2(LB(lh_1), node_str_eq);
-//             list_head_merge(lh, lh_aux);
-//         }
-//
-//         list_head_remove(lh, n);
-//     }
-// }
-
-list_head_p qdd_reduce_rec_1(list_head_p lh, node_p n0)
+list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
 {
     while(lh)
     {
@@ -180,20 +106,56 @@ list_head_p qdd_reduce_rec_1(list_head_p lh, node_p n0)
         str_p str = node_str(n1);
         if(str->el != str->th) break;
 
-        node_disconnect(n1, n0);
+        node_disconnect(n1, THEN);
         node_merge(n0, n1);
         lh = list_head_remove(lh, n1);
         free(n1);
     }
+
+    if(lh == NULL) return NULL;
+
+    for(list_body_p lb = LB(lh); lb->lb;)
+    {
+        node_p n1 = lb->n;
+        str_p str = node_str(n1);
+        if(str->el != str->th)
+        {
+            lb = lb->lb;
+            continue;
+        }
+
+        node_disconnect(n1, THEN);
+        node_merge(n0, n1);
+        lb->lb = list_body_pop(lb->lb);
+        free(n1);
+    }
+
+    lh->lh = list_head_reduce_redundance(lh->lh, n0);
     return lh;
 }
 
-void qdd_reduce_1(qdd_p q)
+void qdd_reduce(qdd_p q)
 {
     list_head_p lh_0 = list_body_reduce_equivalence(q->lb, node_amp_eq);
     while(lh_0)
     {
         node_p n0 = LB(lh_0)->n;
-        n0->lh[ELSE] = qdd_reduce_rec_1(n0->lh[ELSE], n0);
+        n0->lh[ELSE] = list_head_reduce_redundance(n0->lh[ELSE], n0);
+        if(node_first(n0) == NULL)
+        {
+            q->n = n0;
+            free(lh_0);
+            return;
+        }
+
+        node_eq_f fn[] = {node_th_eq, node_el_eq};
+        for(int side = 0; side < 2; side ++)
+        for(list_head_p lh = n0->lh[side]; lh; lh = lh->lh)
+        {
+            list_head_p lh_aux = list_body_reduce_equivalence(LB(lh), fn[side]);
+            lh_0 = list_head_merge(lh_0, lh_aux);
+        }
+
+        lh_0 = list_head_remove(lh_0, n0);
     }
 }

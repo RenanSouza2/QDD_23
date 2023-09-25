@@ -23,7 +23,8 @@ bool node_is_amp(node_p n);
 str_p node_str(node_p n);
 amp_p node_amp(node_p n);
 bool node_amp_eq(node_p n1, node_p n2);
-bool node_str_eq(node_p n1, node_p n2);
+bool node_el_eq(node_p n1, node_p n2);
+bool node_th_eq(node_p n1, node_p n2);
 node_p node_first(node_p n);
 
 void node_connect(node_p n1, node_p n2, int side);
