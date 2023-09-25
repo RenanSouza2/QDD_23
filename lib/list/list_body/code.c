@@ -122,8 +122,11 @@ bool list_body_remove(list_body_p lb, node_p n)
     return true;
 }
 
-void list_body_merge(list_body_p lb_1, list_body_p lb_2)
+list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 {
-    for(; lb_1->lb; lb_1 = lb_1->lb);
-    lb_1->lb = list_body_copy(lb_2);
+    list_body_p lb_2_0 = lb_2;
+    for(; lb_2->lb; lb_2 = lb_2->lb);
+    lb_2->lb = list_body_copy(lb_1);
+    free(lb_1);
+    return lb_2_0;
 }
