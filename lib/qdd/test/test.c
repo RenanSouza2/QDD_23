@@ -13,8 +13,8 @@ void test_create()
 {
     printf("\n\t%s\t\t", __func__);
     
-    qdd_p q = qdd_create(NODE(1), LB(2), 3);
-    assert(LB(q)->n == NODE(1));
+    qdd_p q = qdd_create(ND(1), LB(2), 3);
+    assert(LB(q)->n == ND(1));
     assert(LB(q)->lb == LB(2));
     assert(q->qbits == 3);
     free(q);
