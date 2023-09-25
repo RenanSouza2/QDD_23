@@ -172,58 +172,26 @@ list_head_p list_head_remove(list_head_p lh, node_p n)
     assert(false);
 }
 
-void list_head_merge_1(list_head_p lh_1, list_head_p lh_2)
+list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
 {
-    switch(list_compare(lh_1, lh_2))
+    if(lh_1 == NULL) return lh_2;
+    if(lh_2 == NULL) return lh_1;
+
+    switch (list_compare(lh_1, lh_2))
     {
-        case 0:
-        list_body_merge(LB(lh_1), LB(lh_2));
-        lh_2 = list_head_pop(lh_2);
-        break;
+        case -1:
+        lh_1->lh = list_head_merge(lh_1->lh, lh_2);
+        return lh_1;
+    
+        case 0:;
+        list_head_p lh_next = list_head_merge(lh_1->lh, lh_2->lh);
+        lh_1 = LH(list_body_merge(LB(lh_1), LB(lh_2)));
+        lh_1->lh = lh_next;
+        return lh_1;
 
-        case 1:;
-        list_head_t lh = *lh_1;
-        *lh_1 = *lh_2;
-        *lh_2 =  lh;
-        break;
+        case 1:
+        lh_2->lh = list_head_merge(lh_1, lh_2->lh);
+        return lh_2;
     }
-
-    list_head_p lh = lh_1;
-    lh_1 = lh->lh;
-
-    while(lh_1 && lh_2)
-    {
-        switch (list_compare(lh_1, lh_2))
-        {
-            case -1:
-            lh = lh->lh = lh_1;
-            lh_1 = lh_1->lh;
-            break;
-        
-            case 0:
-            lh = lh->lh = lh_1;
-            list_body_merge(LB(lh), LB(lh_2));
-
-            lh_1 = lh_1->lh;
-            lh_2 = list_head_pop(lh_2);
-            break;
-
-            case 1:
-            lh = lh->lh = lh_2;
-            lh_2 = lh_2->lh;
-            break;
-        }
-    }
-
-    lh->lh = (list_head_p)((long)lh_1 | (long)lh_2);
-}
-
-void list_head_merge(list_head_p lh_1, list_head_p lh_2)
-{
-    assert(lh_1);
-    assert(lh_2);
-
-    list_head_p lh_2_aux = list_head_copy(lh_2);
-    list_head_merge_1(lh_1, lh_2_aux);
-    free(lh_2);
+    assert(false);
 }

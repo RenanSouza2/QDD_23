@@ -212,8 +212,8 @@ void test_list_head_merge()
     node_p n2 = node_str_create(&(label_t){V, 1});
     list_head_p lh_2 = list_head_create(n2, NULL);
 
-    list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 1, 2, n1, n2));
+    lh_1 = list_head_merge(lh_1, lh_2);
+    assert(list_head_vector(lh_1, 1, 2, n2, n1));
 
     list_head_free(lh_1);
     free(n1);
@@ -229,7 +229,7 @@ void test_list_head_merge()
     n2 = node_str_create(&(label_t){V, 2});
     lh_2 = list_head_create(n2, NULL);
 
-    list_head_merge(lh_1, lh_2);
+    lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 1, n1, 1, n2));
 
     list_head_free(lh_1);
@@ -246,7 +246,7 @@ void test_list_head_merge()
     n2 = node_str_create(&(label_t){V, 1});
     lh_2 = list_head_create(n2, NULL);
 
-    list_head_merge(lh_1, lh_2);
+    lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 1, n2, 1, n1));
 
     list_head_free(lh_1);
@@ -272,11 +272,11 @@ void test_list_head_merge()
     };
     lh_2 = list_head_create_vector(4, N2);
 
-    list_head_merge(lh_1, lh_2);
+    lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 5,
-        2, N1[0], N2[0],
+        2, N2[0], N1[0],
         1, N2[1],
-        2, N1[1], N2[2],
+        2, N2[2], N1[1],
         1, N2[3],
         1, N1[2]
     ));
