@@ -32,8 +32,8 @@ void test_list_head_create()
 {
     printf("\n\t%s\t\t", __func__);
 
-    list_head_p lh = list_head_create(NODE(1), LH(2));
-    assert(LB(lh)->n  == NODE(1));
+    list_head_p lh = list_head_create(ND(1), LH(2));
+    assert(LB(lh)->n  == ND(1));
     assert(LB(lh)->lb == NULL);
     assert(lh->lh == LH(2));
     free(lh);
@@ -291,13 +291,13 @@ void test_list_head_invert()
 {
     printf("\n\t\t%s\t\t", __func__);
 
-    list_head_p lh = list_head_create(NODE(1), NULL);
+    list_head_p lh = list_head_create(ND(1), NULL);
     lh = list_head_invert(lh);
-    assert(list_head_vector(lh, 1, 1, NODE(1)));
+    assert(list_head_vector(lh, 1, 1, ND(1)));
 
-    lh = list_head_create(NODE(2), lh);
+    lh = list_head_create(ND(2), lh);
     lh = list_head_invert(lh);
-    assert(list_head_vector(lh, 2, 1, NODE(1), 1, NODE(2)));
+    assert(list_head_vector(lh, 2, 1, ND(1), 1, ND(2)));
     list_head_free(lh);
 
     assert(mem_empty());
