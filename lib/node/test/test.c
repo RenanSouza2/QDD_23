@@ -120,11 +120,13 @@ void test_node_disconnect_one()
     node_p n_th = node_str_create(&(label_t){V, 1});
     node_connect_both(n, n_el, n_th);
 
-    node_disconnect(n, n_el);
+    printf("\n\t\t\t\t%s 1\t\t", __func__);
+    node_disconnect(n, ELSE);
     assert(ND_STR(n)->el == NULL);
     assert(LB(n_el)->n == NULL);
-    
-    node_disconnect(n, n_th);
+
+    printf("\n\t\t\t\t%s 2\t\t", __func__);
+    node_disconnect(n, THEN);
     assert(ND_STR(n)->th == NULL);
     assert(LB(n_th)->n == NULL);
 

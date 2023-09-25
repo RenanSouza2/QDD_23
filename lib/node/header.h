@@ -29,7 +29,7 @@ node_p node_first(node_p n);
 void node_connect(node_p n1, node_p n2, int side);
 void node_connect_both(node_p n, node_p n_el, node_p n_th);
 
-void node_disconnect(node_p n1, node_p n2);
+void node_disconnect(node_p n, int side);
 void node_disconnect_both(node_p n);
 
 void node_merge(node_p n1, node_p n2);
