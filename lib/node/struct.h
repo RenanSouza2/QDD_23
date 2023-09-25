@@ -1,5 +1,5 @@
-#ifndef __NODE_STRUCT_H__
-#define __NODE_STRUCT_H__
+#ifndef __ND_STRUCT_H__
+#define __ND_STRUCT_H__
 
 #include "header.h"
 #include "../list/list_head/struct.h"
@@ -8,7 +8,7 @@
 
 STRUCT(node)
 {
-    list_head_t lh;
+    list_head_p lh[2];
     label_t lab;
 };
 
