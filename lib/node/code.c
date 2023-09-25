@@ -42,7 +42,7 @@ node_p node_str_create(label_p lab)
     node_str_p ns = malloc(sizeof(node_str_t));
     assert(ns);
 
-    *ns = (node_str_t){{{NULL, NULL}, *lab}, {NULL, NULL}};
+    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
     return ND(ns);
 }
 
@@ -51,14 +51,13 @@ node_p node_amp_create(amp_p amp)
     node_amp_p na = malloc(sizeof(node_amp_t));
     assert(na);
 
-    *na = (node_amp_t){{{NULL, NULL}, {0, 0}}, *amp};
+    *na = (node_amp_t){{NULL, {0, 0}}, *amp};
     return ND(na);
 }
 
 void node_free(node_p n)
 {
-    list_head_free(n->lh[ELSE]);
-    list_head_free(n->lh[THEN]);
+    list_head_free(n->lh);
     free(n);
 }
 
@@ -87,20 +86,13 @@ amp_p node_amp(node_p n)
     return ND_AMP(n);
 }
 
-node_p node_first(node_p n)
-{
-    if(n->lh[ELSE]) return LB(n->lh[ELSE])->n;
-    if(n->lh[THEN]) return LB(n->lh[THEN])->n;
-    return NULL;
-}
-
 
 
 void node_connect(node_p n1, node_p n2, int side)
 {
     assert(V_STR(n1)[side] == NULL);
     V_STR(n1)[side] = n2;
-    n2->lh[side] = list_head_insert(n2->lh[side], n1);
+    n2->lh = list_head_insert(n2->lh, n1);
 }
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
@@ -108,19 +100,17 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th)
     assert(ND_STR(n)->el == NULL);
     assert(ND_STR(n)->th == NULL);
     *ND_STR(n) = (str_t){n_el, n_th};
-    n_el->lh[ELSE] = list_head_insert(n_el->lh[ELSE], n);
-    n_th->lh[THEN] = list_head_insert(n_th->lh[THEN], n);
+    n_el->lh = list_head_insert(n_el->lh, n);
+    n_th->lh = list_head_insert(n_th->lh, n);
 }
 
-void node_disconnect(node_p n, int side)
+void node_disconnect(node_p n1, node_p n2)
 {
-    assert(n);
+    int side = SIDE(n1,n2);
+    assert(V_STR(n1)[side] == n2);
+    V_STR(n1)[side] = NULL;
 
-    node_p n1 = V_STR(n)[side];
-    assert(n1);
-
-    V_STR(n)[side] = NULL;
-    n1->lh[side] = list_head_remove(n1->lh[side], n);
+    n2->lh = list_head_remove(n2->lh, n1);
 }
 
 void node_disconnect_both(node_p n)
@@ -131,8 +121,8 @@ void node_disconnect_both(node_p n)
     assert(n_el);
     assert(n_th);
     
-    n_el->lh[ELSE] = list_head_remove(n_el->lh[ELSE], n);
-    n_th->lh[THEN] = list_head_remove(n_th->lh[THEN], n);
+    n_el->lh = list_head_remove(n_el->lh, n);
+    n_th->lh = list_head_remove(n_th->lh, n);
     *str = (str_t){NULL, NULL};
 }
 
@@ -143,8 +133,7 @@ void node_merge(node_p n1, node_p n2)
     assert(n1);
     assert(n2);
 
-    for(int side = 0; side < 2; side ++)
-    for(list_head_p lh = n2->lh[side]; lh; lh = lh->lh)
+    for(list_head_p lh = n2->lh; lh; lh = lh->lh)
     for(list_body_p lb = LB(lh); lb; lb = lb->lb)
     {
         str_p str = node_str(lb->n);
@@ -152,6 +141,7 @@ void node_merge(node_p n1, node_p n2)
         if(str->th == n2) str->th = n1;
     }
 
-    n1->lh[ELSE] = list_head_merge(n1->lh[ELSE], n2->lh[ELSE]);
-    n1->lh[THEN] = list_head_merge(n1->lh[THEN], n2->lh[THEN]);
+    n1->lh = list_head_merge(n1->lh, n2->lh);
+    free(n2);
 }
+

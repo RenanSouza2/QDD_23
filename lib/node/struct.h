@@ -8,7 +8,7 @@
 
 STRUCT(node)
 {
-    list_head_p lh[2];
+    list_head_p lh;
     label_t lab;
 };
 
