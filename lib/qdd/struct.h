@@ -7,7 +7,8 @@
 
 STRUCT(qdd)
 {
-    list_body_t lb;
+    node_p n;
+    list_body_p lb;
     int qbits;
 };
 

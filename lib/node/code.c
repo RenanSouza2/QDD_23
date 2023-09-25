@@ -163,5 +163,4 @@ void node_merge(node_p n1, node_p n2)
 
     n1->lh[ELSE] = list_head_merge(n1->lh[ELSE], n2->lh[ELSE]);
     n1->lh[THEN] = list_head_merge(n1->lh[THEN], n2->lh[THEN]);
-    free(n2);
 }
