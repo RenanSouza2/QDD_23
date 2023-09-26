@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../list_body/struct.h"
 
 #ifdef DEBUG
 
@@ -15,8 +16,7 @@ void list_head_display_item(list_head_p lh)
 {
     if(display_header("LIST HEAD", lh)) return;
 
-    PRINT("\nnode: %p", LB(lh)->n);
-    PRINT("\nlb  : %p", LB(lh)->lb);
+    PRINT("\nlb  : %p", lh->lb);
     PRINT("\nlh  : %p", lh->lh);
 }
 
@@ -27,7 +27,7 @@ void list_head_display(list_head_p lh)
    for(; lh; lh = lh->lh)
     {
         PRINT("\n");
-        list_body_display(LB(lh));
+        list_body_display(lh->lb);
     }
     printf("\t\t");
 }
@@ -41,7 +41,7 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
         int tot_b = va_arg(args, int);
-        if(list_body_vector_vargs(lh->lb, tot_b, args)) continue;
+        if(list_body_vector_vargs(lh->lb, tot_b, &args)) continue;
 
         PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
         return false;

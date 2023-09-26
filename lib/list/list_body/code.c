@@ -28,12 +28,12 @@ void list_body_display(list_body_p lb)
     }
 }
 
-bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list args)
+bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list * args)
 {
     int i = 0;
     for(; lb && (i<tot_b); i++, lb = lb->lb)
     {
-        node_p n = va_arg(args, node_p);
+        node_p n = va_arg(*args, node_p);
         if(lb->n == n) continue;
 
         PRINT("\nERROR LIST BODY VECTOR 1 | NODE MISMATCH | %d %d\t\t", i, tot_b);
@@ -59,7 +59,7 @@ bool list_body_vector(list_body_p lb, int tot_b, ...)
 {
     va_list args;
     va_start(args, tot_b);
-    return list_body_vector_vargs(lb, tot_b, args);
+    return list_body_vector_vargs(lb, tot_b, &args);
 }
 
 #endif
