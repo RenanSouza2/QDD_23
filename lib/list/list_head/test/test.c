@@ -72,6 +72,7 @@ void test_list_head_insert()
         node_str_create(&(label_t){V, 4}), // 4
 
         node_str_create(&(label_t){V, 3}), // 5
+        node_str_create(&(label_t){V, 3}), // 6
     };
 
     printf("\n\t\t\t%s 1\t\t", __func__);
@@ -119,8 +120,17 @@ void test_list_head_insert()
         (label_t){V, 4}, 1, N[4], 1, N[3]
     ));
 
+    printf("\n\t\t\t%s 7\t\t", __func__);
+    lh = list_head_insert(lh, N[6], THEN);
+    assert(list_head_vector(lh, 4,
+        (label_t){V, 1}, 1, N[2], 0,
+        (label_t){V, 2}, 1, N[0], 1, N[1],
+        (label_t){V, 3}, 0,       2, N[6], N[5],
+        (label_t){V, 4}, 1, N[4], 1, N[3]
+    ));
+
     list_head_free(lh);
-    node_vector_free(6, N);
+    node_vector_free(7, N);
     assert(mem_empty());
 }
 
