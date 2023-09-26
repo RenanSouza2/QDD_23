@@ -361,21 +361,33 @@ void test_list_head_merge()
     assert(mem_empty());
 }
 
-// void test_list_head_invert()
-// {
-//     printf("\n\t\t%s\t\t", __func__);
-//
-//     list_head_p lh = list_head_create(ND(1), NULL);
-//     lh = list_head_invert(lh);
-//     assert(list_head_vector(lh, 1, 1, ND(1)));
-//
-//     lh = list_head_create(ND(2), lh);
-//     lh = list_head_invert(lh);
-//     assert(list_head_vector(lh, 2, 1, ND(1), 1, ND(2)));
-//     list_head_free(lh);
-//
-//     assert(mem_empty());
-// }
+void test_list_head_invert()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n = node_str_create(&LAB(V, 1));
+    list_head_p lh = list_head_create(n, NULL, ELSE);
+    lh = list_head_invert(lh);
+    assert(list_head_vector(lh, 1, 
+        LAB(V, 1), 1, n, 0
+    ));
+    list_head_free(lh);
+
+    node_p N[] = {
+        n,
+        node_str_create(&LAB(V, 2))
+    };
+    lh = list_head_create_vector(2, N);
+    lh = list_head_invert(lh);
+    assert(list_head_vector(lh, 2, 
+        LAB(V, 2), 0,       1, N[1],
+        LAB(V, 1), 1, N[0], 0
+    ));
+    list_head_free(lh);
+    node_vector_free(2, N);
+
+    assert(mem_empty());
+}
 
 void test_list_head_operations()
 {
@@ -384,7 +396,7 @@ void test_list_head_operations()
     test_list_head_insert();
     test_list_head_remove();
     test_list_head_merge();
-    // test_list_head_invert();
+    test_list_head_invert();
 
     assert(mem_empty());
 }
