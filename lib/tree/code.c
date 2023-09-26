@@ -41,9 +41,9 @@ void tree_free(node_p n)
 
 list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 {
-    if(n0 && (n->lh->lb->n != n0)) return lh;
+    if(n0 && (node_first(n) != n0)) return lh;
 
-    lh = list_head_insert(lh, n);
+    lh = list_head_insert(lh, n, ELSE);
     if(node_is_amp(n)) return lh;
 
     str_p str = node_str(n);
