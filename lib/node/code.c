@@ -94,6 +94,7 @@ node_p node_first(node_p n)
 }
 
 
+
 void node_connect(node_p n1, node_p n0, int side)
 {
     assert(V_STR(n1)[side] == NULL);
@@ -141,7 +142,8 @@ void node_merge(node_p n1, node_p n2)
     assert(n2);
 
     for(list_head_p lh = n2->lh; lh; lh = lh->lh)
-    for(list_body_p lb = LB(lh); lb; lb = lb->lb)
+    for(int side = 0; side < 2; side++)
+    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
     {
         str_p str = node_str(lb->n);
         if(str->el == n2) str->el = n1;
