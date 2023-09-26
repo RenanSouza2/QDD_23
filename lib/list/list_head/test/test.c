@@ -134,183 +134,182 @@ void test_list_head_insert()
     assert(mem_empty());
 }
 
-// void test_list_head_remove()
-// {
-//     printf("\n\t\t%s\t\t", __func__);
+void test_list_head_remove()
+{
+    printf("\n\t\t%s\t\t", __func__);
 
-//     node_p N[] = {
-//         node_str_create(&(label_t){V, 1}), // 0
-//         node_str_create(&(label_t){V, 1}), // 1
-//         node_str_create(&(label_t){V, 1}), // 2
-        
-//         node_str_create(&(label_t){V, 2}), // 3
-//         node_str_create(&(label_t){V, 2}), // 4
-        
-//         node_str_create(&(label_t){V, 3}), // 5
-//         node_str_create(&(label_t){V, 3}), // 6
-//         node_str_create(&(label_t){V, 3}), // 7
-        
-//         node_str_create(&(label_t){V, 4}), // 8
-//         node_str_create(&(label_t){V, 4}), // 9
-//         node_str_create(&(label_t){V, 4}), // 10
-//     };
+    node_p N[] = {
+        node_str_create(&(label_t){V, 1}), // 0
+        node_str_create(&(label_t){V, 1}), // 1
+        node_str_create(&(label_t){V, 1}), // 2
+       
+        node_str_create(&(label_t){V, 2}), // 3
+        node_str_create(&(label_t){V, 2}), // 4
+       
+        node_str_create(&(label_t){V, 3}), // 5
+        node_str_create(&(label_t){V, 3}), // 6
+        node_str_create(&(label_t){V, 3}), // 7
+       
+        node_str_create(&(label_t){V, 4}), // 8
+        node_str_create(&(label_t){V, 4}), // 9
+        node_str_create(&(label_t){V, 4}), // 10
+    };
+    list_head_p lh = list_head_create_vector(11, N);
+    assert(list_head_vector(lh, 4, 
+        (label_t){V, 1}, 2, N[ 2], N[0], 1, N[1], 
+        (label_t){V, 2}, 1, N[ 4],       1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       2, N[7], N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     list_head_p lh = list_head_create_vector(11, N);
-//     assert(list_head_vector(lh, 4, 
-//         3, N[ 2], N[1], N[0], 
-//         2, N[ 4], N[3], 
-//         3, N[ 7], N[6], N[5], 
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  1\t\t", __func__);
+    lh = list_head_remove(lh, N[2], ELSE);
+    assert(list_head_vector(lh, 4, 
+        (label_t){V, 1}, 1, N[ 0],       1, N[1], 
+        (label_t){V, 2}, 1, N[ 4],       1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       2, N[7], N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  1\t\t", __func__);
-//     lh = list_head_remove(lh, N[2]);
-//     assert(list_head_vector(lh, 4, 
-//         2, N[ 1], N[0], 
-//         2, N[ 4], N[3], 
-//         3, N[ 7], N[6], N[5], 
-//         3, N[10], N[9], N[8]
-//     ));
-
-//     printf("\n\t\t\t%s  2\t\t", __func__);
-//     lh = list_head_remove(lh, N[0]);
-//     assert(list_head_vector(lh, 4, 
-//         1, N[ 1], 
-//         2, N[ 4], N[3], 
-//         3, N[ 7], N[6], N[5], 
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  2\t\t", __func__);
+    lh = list_head_remove(lh, N[0], ELSE);
+    assert(list_head_vector(lh, 4, 
+        (label_t){V, 1}, 0,              1, N[1], 
+        (label_t){V, 2}, 1, N[ 4],       1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       2, N[7], N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
 
-//     printf("\n\t\t\t%s  3\t\t", __func__);
-//     lh = list_head_remove(lh, N[1]);
-//     assert(list_head_vector(lh, 3,
-//         2, N[ 4], N[3], 
-//         3, N[ 7], N[6], N[5],
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  3\t\t", __func__);
+    lh = list_head_remove(lh, N[1], THEN);
+    assert(list_head_vector(lh, 3, 
+        (label_t){V, 2}, 1, N[ 4],       1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       2, N[7], N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  4\t\t", __func__);
-//     lh = list_head_remove(lh, N[4]);
-//     assert(list_head_vector(lh, 3,
-//         1, N[ 3], 
-//         3, N[ 7], N[6], N[5],
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  4\t\t", __func__);
+    lh = list_head_remove(lh, N[4], ELSE);
+    assert(list_head_vector(lh, 3, 
+        (label_t){V, 2}, 0,              1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       2, N[7], N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  5\t\t", __func__);
-//     lh = list_head_remove(lh, N[7]);
-//     assert(list_head_vector(lh, 3,
-//         1, N[ 3], 
-//         2, N[ 6], N[5],
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  5\t\t", __func__);
+    lh = list_head_remove(lh, N[7], THEN);
+    assert(list_head_vector(lh, 3, 
+        (label_t){V, 2}, 0,              1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       1, N[5], 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  6\t\t", __func__);
-//     lh = list_head_remove(lh, N[5]);
-//     assert(list_head_vector(lh, 3,
-//         1, N[ 3], 
-//         1, N[ 6],
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  6\t\t", __func__);
+    lh = list_head_remove(lh, N[5], THEN);
+    assert(list_head_vector(lh, 3, 
+        (label_t){V, 2}, 0,              1, N[3], 
+        (label_t){V, 3}, 1, N[ 6],       0, 
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  7\t\t", __func__);
-//     lh = list_head_remove(lh, N[6]);
-//     assert(list_head_vector(lh, 2,
-//         1, N[ 3], 
-//         3, N[10], N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  7\t\t", __func__);
+    lh = list_head_remove(lh, N[6], ELSE);
+    assert(list_head_vector(lh, 2, 
+        (label_t){V, 2}, 0,              1, N[3],
+        (label_t){V, 4}, 2, N[10], N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  8\t\t", __func__);
-//     lh = list_head_remove(lh, N[10]);
-//     assert(list_head_vector(lh, 2,
-//         1, N[3], 
-//         2, N[9], N[8]
-//     ));
+    printf("\n\t\t\t%s  8\t\t", __func__);
+    lh = list_head_remove(lh, N[10], ELSE);
+    assert(list_head_vector(lh, 2, 
+        (label_t){V, 2}, 0,       1, N[3],
+        (label_t){V, 4}, 1, N[8], 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s  9\t\t", __func__);
-//     lh = list_head_remove(lh, N[8]);
-//     assert(list_head_vector(lh, 2,
-//         1, N[3], 
-//         1, N[9]
-//     ));
+    printf("\n\t\t\t%s  9\t\t", __func__);
+    lh = list_head_remove(lh, N[8], ELSE);
+    assert(list_head_vector(lh, 2, 
+        (label_t){V, 2}, 0, 1, N[3],
+        (label_t){V, 4}, 0, 1, N[9]
+    ));
 
-//     printf("\n\t\t\t%s 10\t\t", __func__);
-//     lh = list_head_remove(lh, N[9]);
-//     assert(list_head_vector(lh, 1,
-//         1, N[3]
-//     ));
+    printf("\n\t\t\t%s 10\t\t", __func__);
+    lh = list_head_remove(lh, N[9], THEN);
+    assert(list_head_vector(lh, 1, 
+        (label_t){V, 2}, 0, 1, N[3]
+    ));
 
-//     printf("\n\t\t\t%s 11\t\t", __func__);
-//     lh = list_head_remove(lh, N[3]);
-//     assert(lh == NULL);
+    printf("\n\t\t\t%s 11\t\t", __func__);
+    lh = list_head_remove(lh, N[3], THEN);
+    assert(lh == NULL);
 
-//     free(lh);
-//     node_vector_free(11, N);
-//     assert(mem_empty());
-// }
+    free(lh);
+    node_vector_free(11, N);
+    assert(mem_empty());
+}
 
 // void test_list_head_merge()
 // {
 //     printf("\n\t\t%s\t\t", __func__);
-
+//
 //     printf("\n\t\t\t%s 1\t\t", __func__);
 //     node_p n1 = node_str_create(&(label_t){V, 1});
 //     list_head_p lh_1 = list_head_create(n1, NULL);
-
+//
 //     node_p n2 = node_str_create(&(label_t){V, 1});
 //     list_head_p lh_2 = list_head_create(n2, NULL);
-
+//
 //     lh_1 = list_head_merge(lh_1, lh_2);
 //     assert(list_head_vector(lh_1, 1, 2, n2, n1));
-
+//
 //     list_head_free(lh_1);
 //     free(n1);
 //     free(n2);
 //     assert(mem_empty());
-
-
-
+//
+//
+//
 //     printf("\n\t\t\t%s 2\t\t", __func__);
 //     n1 = node_str_create(&(label_t){V, 1});
 //     lh_1 = list_head_create(n1, NULL);
-
+//
 //     n2 = node_str_create(&(label_t){V, 2});
 //     lh_2 = list_head_create(n2, NULL);
-
+//
 //     lh_1 = list_head_merge(lh_1, lh_2);
 //     assert(list_head_vector(lh_1, 2, 
 //         1, n1, 
 //         1, n2
 //     ));
-
+//
 //     list_head_free(lh_1);
 //     free(n1);
 //     free(n2);
 //     assert(mem_empty());
-
-
-
+//
+//
+//
 //     printf("\n\t\t\t%s 3\t\t", __func__);
 //     n1 = node_str_create(&(label_t){V, 2});
 //     lh_1 = list_head_create(n1, NULL);
-
+//
 //     n2 = node_str_create(&(label_t){V, 1});
 //     lh_2 = list_head_create(n2, NULL);
-
+//
 //     lh_1 = list_head_merge(lh_1, lh_2);
 //     assert(list_head_vector(lh_1, 2, 
 //         1, n2, 
 //         1, n1
 //     ));
-
+//
 //     list_head_free(lh_1);
 //     free(n1);
 //     free(n2);
 //     assert(mem_empty());
-
-
-
+//
+//
+//
 //     printf("\n\t\t\t%s 4\t\t", __func__);
 //     node_p N1[] = {
 //         node_str_create(&(label_t){V, 1}),
@@ -318,7 +317,7 @@ void test_list_head_insert()
 //         node_str_create(&(label_t){V, 5}),
 //     };
 //     lh_1 = list_head_create_vector(3, N1);
-
+//
 //     node_p N2[] = {
 //         node_str_create(&(label_t){V, 1}),
 //         node_str_create(&(label_t){V, 2}),
@@ -326,7 +325,7 @@ void test_list_head_insert()
 //         node_str_create(&(label_t){V, 4}),
 //     };
 //     lh_2 = list_head_create_vector(4, N2);
-
+//
 //     lh_1 = list_head_merge(lh_1, lh_2);
 //     assert(list_head_vector(lh_1, 5,
 //         2, N2[0], N1[0],
@@ -335,26 +334,26 @@ void test_list_head_insert()
 //         1, N2[3],
 //         1, N1[2]
 //     ));
-
+//
 //     list_head_free(lh_1);
 //     node_vector_free(3, N1);
 //     node_vector_free(4, N2);
 //     assert(mem_empty());
 // }
-
+//
 // void test_list_head_invert()
 // {
 //     printf("\n\t\t%s\t\t", __func__);
-
+//
 //     list_head_p lh = list_head_create(ND(1), NULL);
 //     lh = list_head_invert(lh);
 //     assert(list_head_vector(lh, 1, 1, ND(1)));
-
+//
 //     lh = list_head_create(ND(2), lh);
 //     lh = list_head_invert(lh);
 //     assert(list_head_vector(lh, 2, 1, ND(1), 1, ND(2)));
 //     list_head_free(lh);
-
+//
 //     assert(mem_empty());
 // }
 
@@ -363,7 +362,7 @@ void test_list_head_operations()
     printf("\n\t%s\t\t", __func__);
 
     test_list_head_insert();
-    // test_list_head_remove();
+    test_list_head_remove();
     // test_list_head_merge();
     // test_list_head_invert();
 

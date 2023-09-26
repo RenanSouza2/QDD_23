@@ -56,18 +56,15 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
             return false;
         }
 
-        int tot_b = va_arg(args, int);
-        if(!list_body_vector_vargs(lh->lb[ELSE], tot_b, &args))
+        
+        for(int side=0; side<2; side++)
         {
-            PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BOD ELSE MISMATCH | %d %d\t\t", i, tot_h);
-            return false;
-        }
-
-        tot_b = va_arg(args, int);
-        if(list_body_vector_vargs(lh->lb[THEN], tot_b, &args)) continue;
-        {
-            PRINT("\nERROR LIST HEAD VECTOR 3 | LIST BODY THEN MISMATCH | %d %d\t\t", i, tot_h);
-            return false;
+            int tot_b = va_arg(args, int);
+            if(!list_body_vector_vargs(lh->lb[side], tot_b, &args))
+            {
+                PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BODY %s MISMATCH | %d %d\t\t", side ? "ELSE" : "THEN", i, tot_h);
+                return false;
+            }
         }
     }
 
