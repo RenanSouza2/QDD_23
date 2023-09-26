@@ -45,13 +45,7 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     int i=0;
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
-        printf("\nHere %d", i);
-
         label_t lab = va_arg(args, label_t);
-
-            label_display(&lh->lab);
-            label_display(&lab);
-
         if(label_compare(&lh->lab, &lab) != 0)
         {
             PRINT("\nERROR LIST HEAD VECTOR 1 | LABEL MISMATCH | ");
