@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "../node/struct.h"
 #include "../list/list_body/struct.h"
+#include "../list/list_head/struct.h"
 
 #ifdef DEBUG
 
@@ -40,7 +41,7 @@ void tree_free(node_p n)
 
 list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 {
-    if(n0 && (LB(n->lh)->n != n0)) return lh;
+    if(n0 && (n->lh->lb->n != n0)) return lh;
 
     lh = list_head_insert(lh, n);
     if(node_is_amp(n)) return lh;
