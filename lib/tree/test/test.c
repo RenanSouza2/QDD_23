@@ -18,8 +18,8 @@ void test_tree_enlist()
 
     list_head_p lh = tree_enlist(n);
     assert(list_head_vector(lh, 2, 
-        2, n2, n1, 
-        1, n
+        LAB(0, 0), 2, n2, n1, 0,
+        LAB(V, 1), 1, n, 0
     ));
     tree_free(n);
     list_head_free(lh);
