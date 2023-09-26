@@ -4,10 +4,12 @@
 #include "header.h"
 
 #include "../list_body/header.h"
+#include "../../label/struct.h"
 
 STRUCT(list_head)
 {
-    list_body_p lb;
+    label_t lab;
+    list_body_p lb[2];
     list_head_p lh;
 };
 

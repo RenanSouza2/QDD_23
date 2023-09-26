@@ -88,13 +88,17 @@ amp_p node_amp(node_p n)
     return ND_AMP(n);
 }
 
+node_p node_first(node_p n)
+{
+    return list_head_first(n->lh);
+}
 
 
-void node_connect(node_p n1, node_p n2, int side)
+void node_connect(node_p n1, node_p n0, int side)
 {
     assert(V_STR(n1)[side] == NULL);
-    V_STR(n1)[side] = n2;
-    n2->lh = list_head_insert(n2->lh, n1);
+    V_STR(n1)[side] = n0;
+    n0->lh = list_head_insert(n0->lh, n1, side);
 }
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
@@ -102,17 +106,17 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th)
     assert(ND_STR(n)->el == NULL);
     assert(ND_STR(n)->th == NULL);
     *ND_STR(n) = (str_t){n_el, n_th};
-    n_el->lh = list_head_insert(n_el->lh, n);
-    n_th->lh = list_head_insert(n_th->lh, n);
+    n_el->lh = list_head_insert(n_el->lh, n, ELSE);
+    n_th->lh = list_head_insert(n_th->lh, n, THEN);
 }
 
-void node_disconnect(node_p n1, node_p n2)
+void node_disconnect(node_p n, int side)
 {
-    int side = SIDE(n1,n2);
-    assert(V_STR(n1)[side] == n2);
-    V_STR(n1)[side] = NULL;
+    node_p n0 = V_STR(n)[side];
+    assert(n0);
 
-    n2->lh = list_head_remove(n2->lh, n1);
+    V_STR(n)[side] = NULL;
+    n0->lh = list_head_remove(n0->lh, n, side);
 }
 
 void node_disconnect_both(node_p n)
@@ -123,8 +127,9 @@ void node_disconnect_both(node_p n)
     assert(n_el);
     assert(n_th);
     
-    n_el->lh = list_head_remove(n_el->lh, n);
-    n_th->lh = list_head_remove(n_th->lh, n);
+    n_el->lh = list_head_remove(n_el->lh, n, ELSE);
+    n_th->lh = list_head_remove(n_th->lh, n, THEN);
+
     *str = (str_t){NULL, NULL};
 }
 
