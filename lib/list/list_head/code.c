@@ -42,8 +42,6 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     va_list args;
     va_start(args, tot_h);
 
-    printf("tot: %d", tot_h);
-
     int i=0;
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
@@ -56,28 +54,38 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
 
         if(label_compare(&lh->lab, &lab) != 0)
         {
-            PRINT("\nERROR LIST HEAD VECTOR 0 | LABEL MISMATCH | \t\t");
+            PRINT("\nERROR LIST HEAD VECTOR 1 | LABEL MISMATCH | ");
             label_display(&lh->lab);
+            PRINT(" ");
             label_display(&lab);
+            PRINT("\t\t");
+            return false;
         }
 
         int tot_b = va_arg(args, int);
-        if(list_body_vector_vargs(lh->lb[ELSE], tot_b, &args))
-        if(list_body_vector_vargs(lh->lb[THEN], tot_b, &args)) continue;
+        if(!list_body_vector_vargs(lh->lb[ELSE], tot_b, &args))
+        {
+            PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BOD ELSE MISMATCH | %d %d\t\t", i, tot_h);
+            return false;
+        }
 
-        PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
-        return false;
+        tot_b = va_arg(args, int);
+        if(list_body_vector_vargs(lh->lb[THEN], tot_b, &args)) continue;
+        {
+            PRINT("\nERROR LIST HEAD VECTOR 3 | LIST BODY THEN MISMATCH | %d %d\t\t", i, tot_h);
+            return false;
+        }
     }
 
     if(lh)
     {
-        PRINT("\nERROR LIST HEAD VECTOR 2 | LIST LONGER | %d\t\t", tot_h);
+        PRINT("\nERROR LIST HEAD VECTOR 4 | LIST LONGER | %d\t\t", tot_h);
         return false;
     }
 
     if(i < tot_h)
     {
-        PRINT("\nERROR LIST HEAD VECTOR | LIST SHORTER | %d %d\t\t", i, tot_h);
+        PRINT("\nERROR LIST HEAD VECTOR 5 | LIST SHORTER | %d %d\t\t", i, tot_h);
         return false;
     }
 
@@ -171,6 +179,7 @@ bool list_head_occupied(list_head_p lh)
 {
     return lh->lb[ELSE] || lh->lb[THEN];
 }
+
 
 
 list_head_p list_head_insert(list_head_p lh, node_p n, int side)
