@@ -116,6 +116,9 @@ list_body_p list_body_remove(list_body_p lb, node_p n)
 
 list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 {
+    if(lb_1 == NULL) return lb_2;
+    if(lb_2 == NULL) return lb_1;
+
     list_body_p lb_2_0 = lb_2;
     for(; lb_2->lb; lb_2 = lb_2->lb);
     lb_2->lb = lb_1;

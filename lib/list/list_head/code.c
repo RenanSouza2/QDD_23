@@ -17,7 +17,8 @@ void list_head_display_item(list_head_p lh)
 {
     if(display_header("LIST HEAD", lh)) return;
 
-    PRINT("\nlb  : %p", lh->lb);
+    PRINT("\nlb[ELSE]  : %p", lh->lb[ELSE]);
+    PRINT("\nlb[THEN]  : %p", lh->lb[THEN]);
     PRINT("\nlh  : %p", lh->lh);
 }
 
@@ -28,9 +29,12 @@ void list_head_display(list_head_p lh)
    for(; lh; lh = lh->lh)
     {
         PRINT("\n");
+        PRINT("\n--------");
+        PRINT("\n");
+        label_display(&lh->lab);
         for(int side=0; side<2; side++)
         {
-            printf("\n\nside; %d", side);
+            printf("\n\nside: %s", side ? "THEN" : "ELSE");
             list_body_display(lh->lb[side]);
         }
     }
@@ -62,7 +66,7 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
             int tot_b = va_arg(args, int);
             if(!list_body_vector_vargs(lh->lb[side], tot_b, &args))
             {
-                PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BODY %s MISMATCH | %d %d\t\t", side ? "ELSE" : "THEN", i, tot_h);
+                PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BODY %s MISMATCH | %d %d\t\t", side ? "THEN" : "ELSE", i, tot_h);
                 return false;
             }
         }

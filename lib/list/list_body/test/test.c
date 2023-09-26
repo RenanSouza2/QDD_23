@@ -94,6 +94,20 @@ void test_list_body_merge()
     assert(list_body_vector(lb_1, 2, ND(2), ND(1)));
     list_body_free(lb_1);
 
+    printf("\n\t\t\t%s 5\t\t", __func__);
+    lb_1 = NULL;
+    lb_2 = list_body_create(ND(2), NULL);
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_vector(lb_1, 1, ND(2)));
+    list_body_free(lb_1);
+
+    printf("\n\t\t\t%s 6\t\t", __func__);
+    lb_1 = list_body_create(ND(2), NULL);;
+    lb_2 = NULL;
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_vector(lb_1, 1, ND(2)));
+    list_body_free(lb_1);
+
     assert(mem_empty());
 }
 

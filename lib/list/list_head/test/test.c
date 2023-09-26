@@ -259,10 +259,9 @@ void test_list_head_merge()
 
     node_p n2 = node_str_create(&LAB(V, 1));
     list_head_p lh_2 = list_head_create(n2, NULL, THEN);
-
     lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 1, 
-        1, n1, 1, n1
+        LAB(V, 1), 1, n1, 1, n2
     ));
 
     list_head_free(lh_1);
@@ -281,7 +280,7 @@ void test_list_head_merge()
 
     lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 1, 
-        2, n2, n1, 0
+        LAB(V, 1), 2, n2, n1, 0
     ));
 
     list_head_free(lh_1);
@@ -311,7 +310,7 @@ void test_list_head_merge()
 
 
 
-    printf("\n\t\t\t%s 3\t\t", __func__);
+    printf("\n\t\t\t%s 4\t\t", __func__);
     n1 = node_str_create(&LAB(V, 2));
     lh_1 = list_head_create(n1, NULL, ELSE);
 
@@ -320,8 +319,8 @@ void test_list_head_merge()
 
     lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 2, 
-        1, n2, 
-        1, n1
+        LAB(V, 1), 0,     1, n2, 
+        LAB(V, 2), 1, n1, 0
     ));
 
     list_head_free(lh_1);
@@ -331,7 +330,7 @@ void test_list_head_merge()
 
 
 
-    printf("\n\t\t\t%s 4\t\t", __func__);
+    printf("\n\t\t\t%s 5\t\t", __func__);
     node_p N1[] = {
         node_str_create(&LAB(V, 1)),
         node_str_create(&LAB(V, 3)),
@@ -349,11 +348,11 @@ void test_list_head_merge()
 
     lh_1 = list_head_merge(lh_1, lh_2);
     assert(list_head_vector(lh_1, 5,
-        2, N2[0], N1[0],
-        1, N2[1],
-        2, N2[2], N1[1],
-        1, N2[3],
-        1, N1[2]
+        LAB(V, 1), 2, N2[0], N1[0], 0,
+        LAB(V, 2), 0,               1, N2[1],
+        LAB(V, 3), 1, N2[2],        1, N1[1],
+        LAB(V, 4), 0,               1, N2[3],
+        LAB(V, 5), 1, N1[2],        0
     ));
 
     list_head_free(lh_1);
