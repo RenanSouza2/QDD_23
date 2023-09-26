@@ -3,13 +3,15 @@
 
 #include "header.h"
 
-#include "../list_body/struct.h"
+#include "../list_body/header.h"
+#include "../../label/struct.h"
 
 #define LH(POINTER)    ((list_head_p)(POINTER))
 
 STRUCT(list_head)
 {
-    list_body_t lb;
+    label_t lab;
+    list_body_p lb[2];
     list_head_p lh;
 };
 

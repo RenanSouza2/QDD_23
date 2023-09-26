@@ -13,8 +13,7 @@ list_body_p list_body_copy(list_body_p lb);
 list_body_p list_body_pop(list_body_p lb);
 void list_body_free(list_body_p lb);
 
-void list_body_insert(list_body_p lb, node_p n);
-bool list_body_remove(list_body_p lb, node_p n);
+list_body_p list_body_remove(list_body_p lb, node_p n);
 list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2);
 
 #endif

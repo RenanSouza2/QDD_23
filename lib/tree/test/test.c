@@ -12,13 +12,16 @@ void test_tree_enlist()
 {
     printf("\n\t%s\t\t", __func__);
 
-    node_p n  = node_str_create(&(label_t){V, 1});
+    node_p n  = node_str_create(&LAB(V, 1));
     node_p n1 = node_amp_create(&(amp_t){0, 0});
     node_p n2 = node_amp_create(&(amp_t){0, 1});
     node_connect_both(n, n1, n2);
 
     list_head_p lh = tree_enlist(n);
-    assert(list_head_vector(lh, 2, 2, n1, n2, 1, n));
+    assert(list_head_vector(lh, 2, 
+        LAB(0, 0), 2, n2, n1, 0,
+        LAB(V, 1), 1, n, 0
+    ));
     tree_free(n);
     list_head_free(lh);
 
