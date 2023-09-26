@@ -2,7 +2,7 @@
 #define __ND_STRUCT_H__
 
 #include "header.h"
-#include "../list/list_head/struct.h"
+#include "../list/list_head/header.h"
 #include "../label/struct.h"
 #include "../amp/struct.h"
 

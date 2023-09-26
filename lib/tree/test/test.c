@@ -17,7 +17,10 @@ void test_tree_enlist()
     node_connect_both(n, n1, n2);
 
     list_head_p lh = tree_enlist(n);
-    assert(list_head_vector(lh, 2, 2, n1, n2, 1, n));
+    assert(list_head_vector(lh, 2, 
+        2, n2, n1, 
+        1, n
+    ));
     tree_free(n);
     list_head_free(lh);
 

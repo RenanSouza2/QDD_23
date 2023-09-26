@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../list_body/struct.h"
 
 #ifdef DEBUG
 
@@ -15,8 +16,7 @@ void list_head_display_item(list_head_p lh)
 {
     if(display_header("LIST HEAD", lh)) return;
 
-    PRINT("\nnode: %p", LB(lh)->n);
-    PRINT("\nlb  : %p", LB(lh)->lb);
+    PRINT("\nlb  : %p", lh->lb);
     PRINT("\nlh  : %p", lh->lh);
 }
 
@@ -27,7 +27,7 @@ void list_head_display(list_head_p lh)
    for(; lh; lh = lh->lh)
     {
         PRINT("\n");
-        list_body_display(LB(lh));
+        list_body_display(lh->lb);
     }
     printf("\t\t");
 }
@@ -41,11 +41,8 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
     for(; lh && (i<tot_h); i++, lh = lh->lh)
     {
         int tot_b = va_arg(args, int);
-        node_p N[tot_b];
-        for(int j=0; j<tot_b; j++)
-            N[j] = va_arg(args, node_p);
+        if(list_body_vector_vargs(lh->lb, tot_b, &args)) continue;
 
-        if(list_body_vector(LB(lh), tot_b, N)) continue;
         PRINT("\nERROR LIST HEAD VECTOR 1 | LIST BODY MISMATCH | %d %d\t\t", i, tot_h);
         return false;
     }
@@ -95,7 +92,8 @@ list_head_p list_head_create_cold()
 list_head_p list_head_create(node_p n, list_head_p lh_next)
 {
     list_head_p lh = list_head_create_cold();
-    *lh = (list_head_t){{n, NULL}, lh_next};
+    list_body_p lb = n ? list_body_create(n, NULL) : NULL;
+    *lh = (list_head_t){lb, lh_next};
     return lh;
 }
 
@@ -116,14 +114,14 @@ list_head_p list_head_pop(list_head_p lh)
 void list_head_free(list_head_p lh)
 {
     for(; lh; lh = list_head_pop(lh))
-        list_body_free(LB(lh)->lb);
+        list_body_free(lh->lb);
 }
 
 
 
 label_p list_label(list_head_p lh)
 {
-    return node_label(LB(lh)->n);
+    return node_label(lh->lb->n);
 }
 
 int label_list_compare(label_p lab, list_head_p lh)
@@ -148,7 +146,7 @@ list_head_p list_head_insert(list_head_p lh, node_p n)
         case -1: return list_head_create(n, lh);
         
         case 0: 
-        LB(lh)->lb = list_body_create(n, LB(lh)->lb);
+        lh->lb = list_body_create(n, lh->lb);
         return lh;
 
         case 1:
@@ -164,8 +162,8 @@ list_head_p list_head_remove(list_head_p lh, node_p n)
     switch(label_list_compare(lab, lh))
     {
         case 0:
-        if(list_body_remove(LB(lh), n)) return lh;
-        return list_head_pop(lh);
+        lh->lb = list_body_remove(lh->lb, n);
+        return lh->lb ? lh : list_head_pop(lh);
 
         case 1:
         lh->lh = list_head_remove(lh->lh, n);
@@ -185,10 +183,10 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
         lh_1->lh = list_head_merge(lh_1->lh, lh_2);
         return lh_1;
     
-        case 0:;
-        list_head_p lh_next = list_head_merge(lh_1->lh, lh_2->lh);
-        lh_1 = LH(list_body_merge(LB(lh_1), LB(lh_2)));
-        lh_1->lh = lh_next;
+        case 0:
+        lh_1->lb = list_body_merge(lh_1->lb, lh_2->lb);
+        lh_1->lh = list_head_merge(lh_1->lh, lh_2->lh);
+        free(lh_2);
         return lh_1;
 
         case 1:
