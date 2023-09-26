@@ -11,7 +11,7 @@ void test_tree_enlist()
 {
     printf("\n\t%s\t\t", __func__);
 
-    node_p n  = node_str_create(&(label_t){V, 1});
+    node_p n  = node_str_create(&LAB(V, 1));
     node_p n1 = node_amp_create(&(amp_t){0, 0});
     node_p n2 = node_amp_create(&(amp_t){0, 1});
     node_connect_both(n, n1, n2);
