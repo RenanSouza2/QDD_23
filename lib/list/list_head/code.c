@@ -183,10 +183,10 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
         lh_1->lh = list_head_merge(lh_1->lh, lh_2);
         return lh_1;
     
-        case 0:;
-        list_head_p lh_next = list_head_merge(lh_1->lh, lh_2->lh);
-        lh_1 = LH(list_body_merge(LB(lh_1), LB(lh_2)));
-        lh_1->lh = lh_next;
+        case 0:
+        lh_1->lb = list_body_merge(lh_1->lb, lh_2->lb);
+        lh_1->lh = list_head_merge(lh_1->lh, lh_2->lh);
+        free(lh_2);
         return lh_1;
 
         case 1:

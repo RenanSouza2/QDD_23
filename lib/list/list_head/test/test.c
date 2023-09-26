@@ -259,7 +259,10 @@ void test_list_head_merge()
     lh_2 = list_head_create(n2, NULL);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 2, 1, n1, 1, n2));
+    assert(list_head_vector(lh_1, 2, 
+        1, n1, 
+        1, n2
+    ));
 
     list_head_free(lh_1);
     free(n1);
@@ -276,7 +279,10 @@ void test_list_head_merge()
     lh_2 = list_head_create(n2, NULL);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 2, 1, n2, 1, n1));
+    assert(list_head_vector(lh_1, 2, 
+        1, n2, 
+        1, n1
+    ));
 
     list_head_free(lh_1);
     free(n1);
