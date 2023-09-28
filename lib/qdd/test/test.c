@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+
 #include <assert.h>
 
 #include "../debug.h"
@@ -6,6 +9,44 @@
 #include "../../tree/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
+
+#define IDX(L) L.cl][L.lv
+
+void tree_create(int qbits, ...)
+{
+    node_p *N[3][qbits];
+    memset(N, 0, sizeof(N));
+
+    va_list args;
+    va_start(args, qbits);
+
+    int size = va_arg(args, int);
+    N[0][0] = malloc(size * sizeof(node_p));
+
+    node_p n;
+    int max = va_arg(args, int);
+    for(int i=0; i<max; i++)
+    {
+        label_t lab = va_arg(args, label_t);
+        int size = va_arg(args, int);
+
+        N[IDX(lab)] = malloc(size * sizeof(node_p));
+        for(int j=0; j<size; j++)
+        {
+            N[IDX(lab)][j] = n = node_str_create(&lab);
+            
+            for(int side=0; side<2; side++)
+            {
+                label_t lab_0 = va_arg(args, label_t);
+                assert(N[IDX(lab)]);
+
+                int index = va_arg(args, int);
+                node_connect(n, N[IDX(lab)][index], side);
+            }
+        }
+    }
+    return qdd_create(n, )
+}
 
 
 
@@ -27,8 +68,35 @@ void test_vector()
     printf("\n\t%s\t\t", __func__);
     
     qdd_p q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+    assert(label_compare(node_label(q->n), &LAB(V, 1)) == 0);
+
+    str_p str = node_str(q->n);
+    assert(node_is_amp(str->el));
+    assert(node_is_amp(str->th));
+    assert(amp_eq(node_amp(str->el), &(amp_t){0, 0}));
+    assert(amp_eq(node_amp(str->th), &(amp_t){0, 1}));
     qdd_free(q);
 
+    q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 2}, {0, 3}});
+    assert(label_compare(node_label(q->n), &LAB(V, 2)) == 0);
+
+    str = node_str(q->n);
+    node_p n = str->el;
+    assert(node_is_amp(n) == false);
+
+    assert(node_is_amp(str->th));
+    assert(amp_eq(node_amp(str->el), &(amp_t){0, 0}));
+    assert(amp_eq(node_amp(str->th), &(amp_t){0, 1}));
+
+    assert(mem_empty());
+}
+
+
+
+void test_reduce()
+{
+    printf("\n\t%s\t\t", __func__);
+    
     assert(mem_empty());
 }
 
@@ -38,9 +106,11 @@ void test_qdd()
 
     test_create();
     test_vector();
+    test_reduce();
 
     assert(mem_empty());
 }
+
 
 
 int main() 

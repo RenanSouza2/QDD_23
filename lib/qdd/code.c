@@ -30,7 +30,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     list_body_p lb = NULL;
 
     int Q = 1 << qbits;
-    for(int i=0; i<Q; i++)
+    for(int i=Q-1; i>=0; i--)
     {
         node_p n = node_amp_create(&amp[i]);
         lb = list_body_create(n, lb);
