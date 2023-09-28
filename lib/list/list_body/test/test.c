@@ -34,6 +34,14 @@ void test_list_body_create()
     free(lb);
     free(lb_1);
 
+    lb = list_body_create_vector(1, (node_p[]){ND(1)});
+    assert(list_body_vector(lb, 1, ND(1)));
+    free(lb);
+
+    lb = list_body_create_vector(1, (node_p[]){ND(1), ND(2)});
+    assert(list_body_vector(lb, 1, ND(1), ND(2)));
+    free(lb);
+
     assert(mem_empty());
 }
 

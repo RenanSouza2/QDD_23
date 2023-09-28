@@ -85,6 +85,17 @@ list_body_p list_body_copy(list_body_p lb)
     return lb_new;
 }
 
+list_body_p list_body_create_vector(int max, node_p N[])
+{
+    list_body_p lb_0 = list_body_create(N[0], NULL);
+    
+    list_body_p lb = lb_0;
+    for(int i=1; i<max; i++)
+        lb = lb->lb = list_body_create(N[i], NULL);
+
+    return lb_0;
+}
+
 list_body_p list_body_pop(list_body_p lb)
 {
     list_body_p lb_aux = lb->lb;
