@@ -12,6 +12,7 @@ PLACEHOLDER(list_body);
 
 list_body_p list_body_create(node_p n, list_body_p lb_next);
 list_body_p list_body_copy(list_body_p lb);
+list_body_p list_body_create_vector(int max, node_p N[]);
 void list_body_free(list_body_p lb);
 
 list_body_p list_body_remove(list_body_p lb, node_p n);
