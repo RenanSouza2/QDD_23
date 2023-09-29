@@ -3,6 +3,14 @@
 #include "debug.h"
 
 #ifdef DEBUG
+
+#include "../utils/header.h"
+
+void amp_display(amp_p amp)
+{
+    PRINT("%.3e, %.3e", amp->re, amp->im);
+}
+
 #endif
 
 number_t eps = 1e-5;

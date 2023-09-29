@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../amp/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
 #include "../../list/list_head/debug.h"
@@ -12,18 +13,38 @@
 
 #define IDX(L) L.cl][L.lv
 
-void tree_create(int qbits, ...)
+qdd_p qdd_create_variadic(int qbits, ...)
 {
+    printf("\nqbits: %d\t\t", qbits);
+
     node_p *N[3][qbits];
     memset(N, 0, sizeof(N));
 
     va_list args;
     va_start(args, qbits);
 
-    int size = va_arg(args, int);
-    N[0][0] = malloc(size * sizeof(node_p));
-
     node_p n;
+    int size = va_arg(args, int);
+
+    printf("\nsize amp: %d\t\t", size);
+
+    N[0][0] = malloc(size * sizeof(node_p));
+    for(int i=0; i<size; i++)
+    {
+        amp_t amp = va_arg(args, amp_t);
+        
+        printf("\namp[%d]: ", i);
+        amp_display(&amp);
+        printf("\t\t");
+
+        N[0][0][i] = n = node_amp_create(&amp);
+    }
+    list_body_p lb = list_body_create_vector(size, N[0][0]);
+
+    for(int i=0; i<size; i++)
+    {
+    }
+
     int max = va_arg(args, int);
     for(int i=0; i<max; i++)
     {
@@ -38,14 +59,19 @@ void tree_create(int qbits, ...)
             for(int side=0; side<2; side++)
             {
                 label_t lab_0 = va_arg(args, label_t);
-                assert(N[IDX(lab)]);
+                assert(N[IDX(lab_0)]);
 
                 int index = va_arg(args, int);
-                node_connect(n, N[IDX(lab)][index], side);
+                node_connect(n, N[IDX(lab_0)][index], side);
             }
         }
     }
-    return qdd_create(n, )
+
+    for(int i=0; i<qbits; i++)
+    for(int j=0; j<3; j++)
+    if(N[j][i]) free(N[j][i]);
+
+    return qdd_create(n, lb, qbits);
 }
 
 
@@ -60,6 +86,33 @@ void test_create()
     assert(q->qbits == 3);
     free(q);
 
+    assert(mem_empty());
+}
+
+void test_create_variadic()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    qdd_p q = qdd_create_variadic(1, 
+        2, AMP(0, 0), AMP(0, 1), 
+        1,
+        LAB(V, 1), 1, LAB(0, 0), 0, LAB(0, 0), 1
+    );
+
+    assert(q->n);
+    assert(label_compare(node_label(q->n), &LAB(V, 1)) == 0);
+    
+    str_p str = node_str(q->n);
+    assert(str->el);
+    assert(label_compare(node_label(str->el), &LAB(0, 0)) == 0);
+    amp_display(node_amp(str->el));
+    assert(amp_eq(node_amp(str->el), &AMP(0, 0)));
+
+    assert(str->th);
+    assert(label_compare(node_label(str->th), &LAB(0, 0)) == 0);
+    amp_display(node_amp(str->th));
+    assert(amp_eq(node_amp(str->th), &AMP(0, 1)));
+    
     assert(mem_empty());
 }
 
@@ -105,7 +158,8 @@ void test_qdd()
     printf("\n%s\t\t", __func__);
 
     test_create();
-    test_vector();
+    test_create_variadic();
+    // test_vector();
     test_reduce();
 
     assert(mem_empty());

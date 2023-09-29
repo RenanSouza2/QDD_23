@@ -18,6 +18,8 @@ void tree_display(node_p n)
     list_head_display(lh);
 }
 
+bool tree_assert(node_p n1, node_p n2)
+
 #endif
 
 void tree_free(node_p n)

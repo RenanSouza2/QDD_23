@@ -3,4 +3,10 @@
 
 #include "struct.h"
 
+#ifdef DEBUG
+
+void amp_display(amp_p amp);
+
+#endif
+
 #endif

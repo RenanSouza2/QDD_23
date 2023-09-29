@@ -26,20 +26,15 @@ qdd_p qdd_create(node_p n, list_body_p lb, int qbits)
 
 qdd_p qdd_create_vector(int qbits, amp_t amp[])
 {
-    list_body_p lb_res = NULL;
-    list_body_p lb = NULL;
-
     int Q = 1 << qbits;
-    for(int i=Q-1; i>=0; i--)
-    {
-        node_p n = node_amp_create(&amp[i]);
-        lb = list_body_create(n, lb);
-        lb_res = list_body_create(n, lb_res);
-    }
+    node_p N[Q];
+    for(int i=0; i<Q; i++)
+        N[i] = node_amp_create(&amp[i]);    
+    list_body_p lb = list_body_create_vector(Q, N);
 
     for(int i=1; i<=qbits; i++)
     for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->lb)
-    {
+    { 
         node_p n1 = lb_aux->n;
 
         list_body_p lb_tmp = lb_aux->lb;
@@ -48,15 +43,15 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
 
         node_p n = node_str_create(&(label_t){V, i});
         node_connect_both(n, n1, n2);
-        lb_aux->n = n;
-        lb_aux->lb = lb_tmp->lb;
-        free(lb_tmp);
+
+        *lb_aux = (list_body_t){n, list_body_pop(lb_aux->lb)};
     }
     assert(lb->lb == NULL);
     node_p n = lb->n;
     free(lb);
 
-    return qdd_create(n, lb_res, qbits);
+    lb = list_body_create_vector(Q, N);
+    return qdd_create(n, lb, qbits);
 }
 
 void qdd_free(qdd_p q)
