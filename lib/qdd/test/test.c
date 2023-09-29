@@ -165,26 +165,16 @@ void test_vector()
 {
     printf("\n\t%s\t\t", __func__);
     
-    qdd_p q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
-    assert(label_compare(node_label(q->n), &LAB(V, 1)) == 0);
+    qdd_p q0 = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+    qdd_p q1 = qdd_create_variadic(1,
+        2, AMP(0, 0), AMP(0, 1),
+        1,
+        LAB(V, 1), 1, LAB(0, 0), 0, LAB(0, 0), 1
+    );
+    assert(tree_assert(q0->n, q1->n));
 
-    str_p str = node_str(q->n);
-    assert(node_is_amp(str->el));
-    assert(node_is_amp(str->th));
-    assert(amp_eq(node_amp(str->el), &(amp_t){0, 0}));
-    assert(amp_eq(node_amp(str->th), &(amp_t){0, 1}));
-    qdd_free(q);
-
-    q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 2}, {0, 3}});
-    assert(label_compare(node_label(q->n), &LAB(V, 2)) == 0);
-
-    str = node_str(q->n);
-    node_p n = str->el;
-    assert(node_is_amp(n) == false);
-
-    assert(node_is_amp(str->th));
-    assert(amp_eq(node_amp(str->el), &(amp_t){0, 0}));
-    assert(amp_eq(node_amp(str->th), &(amp_t){0, 1}));
+    qdd_free(q0);
+    qdd_free(q1);
 
     assert(mem_empty());
 }
@@ -194,6 +184,23 @@ void test_vector()
 void test_reduce()
 {
     printf("\n\t%s\t\t", __func__);
+
+    qdd_p q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
+    qdd_reduce(q);
+
+    label_t amp, V1, V2;
+    amp = LAB(0, 0);
+    V1 = LAB(V, 1);
+    V2 = LAB(V, 2);
+
+    qdd_p q_exp = qdd_create_variadic(2,
+        3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
+        2,
+        2, V1, amp, 0, amp, 1, amp, 0, amp, 2,
+        1, V2, V1, 0, V1, 1
+    );
+
+    assert(tree_assert(q->n, q_exp->n));
     
     assert(mem_empty());
 }
@@ -204,7 +211,7 @@ void test_qdd()
 
     test_create();
     test_create_variadic();
-    // test_vector();
+    test_vector();
     test_reduce();
 
     assert(mem_empty());
