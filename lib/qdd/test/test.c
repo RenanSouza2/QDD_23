@@ -84,14 +84,19 @@ void test_create_variadic()
 {
     printf("\n\t%s\t\t", __func__);
 
+    label_t amp, V1, V2;
+    amp = LAB(0, 0);
+    V1 = LAB(V, 1);
+    V2 = LAB(V, 2);
+
     qdd_p q = qdd_create_variadic(1, 
         2, AMP(0, 0), AMP(0, 1), 
         1,
-        LAB(V, 1), 1, LAB(0, 0), 0, LAB(0, 0), 1
+        V1, 1, amp, 0, amp, 1
     );
 
     node_p n, n0, n1;
-    n  = node_str_create(&LAB(V, 1));
+    n  = node_str_create(&V1);
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_amp_create(&AMP(0, 1));
     node_connect_both(n, n0, n1);
@@ -99,6 +104,38 @@ void test_create_variadic()
     assert(tree_assert(q->n, n));
     assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
     assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
+    qdd_free(q);
+    tree_free(n);
+
+    q = qdd_create_variadic(1, 
+        1, AMP(0, 0), 
+        0
+    );
+    n = node_amp_create(&AMP(0, 0));
+    assert(tree_assert(q->n, n));
+    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
+    qdd_free(q);
+    tree_free(n);
+
+    q = qdd_create_variadic(2, 
+        4, AMP(0, 0), AMP(0, 1), AMP(0, 2), AMP(0, 3),
+        2,
+        V1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
+        V2, 1, V1, 0, V1, 1
+    );
+    n = node_str_create(&V2);
+    for(int i=0; i<2; i++)
+    {
+        node_p n1 = node_str_create(&V1);
+        node_connect(n, n1, i);
+
+        for(int j=0; j<2; j++)
+        {
+            node_p n0 = node_amp_create(&AMP(0, (i << 1) | j));
+            node_connect(n1, n0, j);
+        }
+    }
+    assert(tree_assert(q->n, n));
     qdd_free(q);
     tree_free(n);
 
