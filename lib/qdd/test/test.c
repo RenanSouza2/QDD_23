@@ -99,20 +99,18 @@ void test_create_variadic()
         LAB(V, 1), 1, LAB(0, 0), 0, LAB(0, 0), 1
     );
 
-    assert(q->n);
-    assert(label_compare(node_label(q->n), &LAB(V, 1)) == 0);
+    node_p n, n0, n1;
+    n  = node_str_create(&LAB(V, 1));
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_amp_create(&AMP(0, 1));
+    node_connect_both(n, n0, n1);
     
-    str_p str = node_str(q->n);
-    assert(str->el);
-    assert(label_compare(node_label(str->el), &LAB(0, 0)) == 0);
-    amp_display(node_amp(str->el));
-    assert(amp_eq(node_amp(str->el), &AMP(0, 0)));
+    assert(tree_assert(q->n, n));
+    assert(mem_empty());
+    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
+    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
+    qdd_free(q);
 
-    assert(str->th);
-    assert(label_compare(node_label(str->th), &LAB(0, 0)) == 0);
-    amp_display(node_amp(str->th));
-    assert(amp_eq(node_amp(str->th), &AMP(0, 1)));
-    
     assert(mem_empty());
 }
 

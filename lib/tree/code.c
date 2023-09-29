@@ -8,8 +8,10 @@
 
 #ifdef DEBUG
 
-#include "../../static_utils/mem_report/bin/header.h"
+#include "../utils/header.h"
+#include "../node/debug.h"
 #include "../list/list_head/debug.h"
+#include "../../static_utils/mem_report/bin/header.h"
 
 void tree_display(node_p n)
 {
@@ -18,7 +20,59 @@ void tree_display(node_p n)
     list_head_display(lh);
 }
 
+bool tree_assert_rec(node_p n, node_p n1, node_p n2)
+{
+    if(n == NULL || list_head_first(n1->lh) != n) return true;
+
+    if(n1 == NULL)
+    {
+        if(n2)
+        {
+            PRINT("ERROR TREE ASSSERT 1 | N1 IS NULL N2 IS NOT");
+            return false;
+        }
+
+        return true;
+    }
+
+    if(n2 == NULL)
+    {
+        PRINT("ERROR TREE ASSSERT 2 | N1 IS NOT NULL N2 IS");
+        return false;
+    }
+
+    if(label_compare(node_label(n1), node_label(n2)) != 0)
+    {
+        PRINT("ERROR TREE ASSSERT 2 | LABEL MISMATCH");
+        return false;
+    }
+
+    if(node_is_amp(n2))
+    {
+        if(!amp_eq(node_amp(n1), node_amp(n2)))
+        {
+            PRINT("ERROR TREE ASSSERT 3 | AMP MISMATCH");
+            return false;
+        }
+        return true;
+    }
+
+    for(int side=0; side<2; side++)
+    {
+        if(!tree_assert_rec(n1, V_STR(n1)[side], V_STR(n2)[side]))
+        {
+            PRINT("ERROR TREE ASSSERT 4 | %s MISMATCH", side ? "THEN" : "ELSE");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool tree_assert(node_p n1, node_p n2)
+{
+    return tree_assert_rec(NULL, n1, n2);
+}
 
 #endif
 
