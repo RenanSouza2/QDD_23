@@ -8,7 +8,7 @@
 
 void amp_display(amp_p amp)
 {
-    PRINT("%.3e, %.3e", amp->re, amp->im);
+    PRINT("%.1e, %.1e", amp->re, amp->im);
 }
 
 #endif

@@ -11,6 +11,7 @@
 
 #include "../utils/debug.h"
 #include "../label/debug.h"
+#include "../amp/debug.h"
 
 void node_str_display(node_p ns)
 {
@@ -26,7 +27,8 @@ void node_amp_display(node_p na)
     PRINT("\n");
     PRINT("\nnode (amp) display: %p", na);
     PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
-    PRINT("\nlabel: %.2e %.2e", ND_AMP(na)->re, ND_AMP(na)->im);
+    PRINT("\namp: ");
+    amp_display(node_amp(na));
     PRINT("\n");
 }
 

@@ -32,10 +32,6 @@ qdd_p qdd_create_variadic(int qbits, ...)
     }
     list_body_p lb = list_body_create_vector(size, N[0][0]);
 
-    for(int i=0; i<size; i++)
-    {
-    }
-
     int max = va_arg(args, int);
     for(int i=0; i<max; i++)
     {
@@ -126,15 +122,38 @@ void test_create_variadic()
     n = node_str_create(&V2);
     for(int i=0; i<2; i++)
     {
-        node_p n1 = node_str_create(&V1);
+        n1 = node_str_create(&V1);
         node_connect(n, n1, i);
 
         for(int j=0; j<2; j++)
         {
-            node_p n0 = node_amp_create(&AMP(0, (i << 1) | j));
+            n0 = node_amp_create(&AMP(0, (i << 1) | j));
             node_connect(n1, n0, j);
         }
     }
+    assert(tree_assert(q->n, n));
+    qdd_free(q);
+    tree_free(n);
+
+    assert(mem_empty());
+    
+    q = qdd_create_variadic(2, 
+        2, AMP(0, 0), AMP(0, 1),
+        2,
+        V1, 1, amp, 0, amp, 1,
+        V2, 1, amp, 0, V1, 0
+    );
+    
+    node_p n2;
+    n1 = node_amp_create(&AMP(0, 0));
+    n2 = node_amp_create(&AMP(0, 1));
+    n = node_str_create(&V1);
+    node_connect_both(n, n1, n2);
+    
+    n2 = n;
+    n = node_str_create(&V2);
+    node_connect_both(n, n1, n2);
+    
     assert(tree_assert(q->n, n));
     qdd_free(q);
     tree_free(n);
