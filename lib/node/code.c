@@ -47,10 +47,8 @@ void str_display(str_p str)
 
 node_p node_str_create(label_p lab)
 {
-    mem_report("|1");
     node_str_p ns = malloc(sizeof(node_str_t));
     assert(ns);
-    mem_report("|2");
 
     *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
     return ND(ns);

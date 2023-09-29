@@ -91,17 +91,16 @@ void test_create_variadic()
     );
 
     node_p n, n0, n1;
-    mem_report("1");
     n  = node_str_create(&LAB(V, 1));
-    mem_report("2");
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_amp_create(&AMP(0, 1));
     node_connect_both(n, n0, n1);
     
-    // assert(tree_assert(q->n, n));
-    // assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
-    // assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
+    assert(tree_assert(q->n, n));
+    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
+    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
     qdd_free(q);
+    tree_free(n);
 
     assert(mem_empty());
 }
