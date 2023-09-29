@@ -30,6 +30,12 @@ void node_amp_display(node_p na)
     PRINT("\n");
 }
 
+void node_display(node_p n)
+{
+    if(node_is_amp(n)) node_amp_display(n);
+    else               node_str_display(n);
+}
+
 void str_display(str_p str)
 {
     PRINT("%p\t\t%p", str->el, str->th);

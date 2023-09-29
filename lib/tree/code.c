@@ -22,36 +22,22 @@ void tree_display(node_p n)
 
 bool tree_assert_rec(node_p n, node_p n1, node_p n2)
 {
-    if(n == NULL || list_head_first(n1->lh) != n) return true;
-
-    if(n1 == NULL)
-    {
-        if(n2)
-        {
-            PRINT("ERROR TREE ASSSERT 1 | N1 IS NULL N2 IS NOT");
-            return false;
-        }
-
-        return true;
-    }
-
-    if(n2 == NULL)
-    {
-        PRINT("ERROR TREE ASSSERT 2 | N1 IS NOT NULL N2 IS");
-        return false;
-    }
-
+    assert(n1);
+    assert(n2);
+    
+    if(n && (list_head_first(n1->lh) != n)) return true;
+    
     if(label_compare(node_label(n1), node_label(n2)) != 0)
     {
-        PRINT("ERROR TREE ASSSERT 2 | LABEL MISMATCH");
+        PRINT("\nERROR TREE ASSSERT 1 | LABEL MISMATCH");
         return false;
     }
-
+    
     if(node_is_amp(n2))
     {
         if(!amp_eq(node_amp(n1), node_amp(n2)))
         {
-            PRINT("ERROR TREE ASSSERT 3 | AMP MISMATCH");
+            PRINT("\nERROR TREE ASSSERT 2 | AMP MISMATCH");
             return false;
         }
         return true;
@@ -61,7 +47,7 @@ bool tree_assert_rec(node_p n, node_p n1, node_p n2)
     {
         if(!tree_assert_rec(n1, V_STR(n1)[side], V_STR(n2)[side]))
         {
-            PRINT("ERROR TREE ASSSERT 4 | %s MISMATCH", side ? "THEN" : "ELSE");
+            PRINT("\nERROR TREE ASSSERT 3 | %s MISMATCH", side ? "THEN" : "ELSE");
             return false;
         }
     }
