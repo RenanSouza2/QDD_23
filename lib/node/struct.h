@@ -4,8 +4,12 @@
 #include "header.h"
 #include "../list/list_head/header.h"
 #include "../label/struct.h"
-#include "../str/struct.h"
 #include "../amp/struct.h"
+
+STRUCT(str)
+{
+    node_p el, th;
+};
 
 STRUCT(node)
 {
