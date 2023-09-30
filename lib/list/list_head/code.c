@@ -35,7 +35,7 @@ void list_head_display(list_head_p lh)
         for(int side=0; side<2; side++)
         {
             printf("\n\nside: %s", side ? "THEN" : "ELSE");
-            list_body_display(lh->lb[side]);
+            list_body_display_full(lh->lb[side]);
         }
     }
     printf("\t\t");

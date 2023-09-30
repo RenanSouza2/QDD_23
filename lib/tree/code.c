@@ -10,6 +10,7 @@
 
 #include "../utils/header.h"
 #include "../node/debug.h"
+#include "../label/debug.h"
 #include "../list/list_head/debug.h"
 #include "../../static_utils/mem_report/bin/header.h"
 
@@ -29,7 +30,11 @@ bool tree_assert_rec(node_p n, node_p n1, node_p n2)
     
     if(label_compare(node_label(n1), node_label(n2)) != 0)
     {
-        PRINT("\nERROR TREE ASSSERT 1 | LABEL MISMATCH");
+        PRINT("\nERROR TREE ASSSERT 1 | LABEL MISMATCH | ");
+        label_display(node_label(n1));
+        printf(" ");
+        label_display(node_label(n2));
+        printf("\t\t");
         return false;
     }
     

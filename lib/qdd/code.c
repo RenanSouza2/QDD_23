@@ -131,12 +131,15 @@ list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
     return lh;
 }
 
+
 void qdd_reduce(qdd_p q)
 {
     list_head_p lh_0 = list_body_reduce_equivalence(q->lb, node_amp_eq);
+
     while(lh_0)
     {
         node_p n0 = lh_0->lb[ELSE]->n;
+
         n0->lh = list_head_reduce_redundance(n0->lh, n0);
         if(n0->lh == NULL)
         {
@@ -149,7 +152,7 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
-            list_head_p lh_aux = list_body_reduce_equivalence(LB(lh), fn[side]);
+            list_head_p lh_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
             lh_0 = list_head_merge(lh_0, lh_aux);
         }
 

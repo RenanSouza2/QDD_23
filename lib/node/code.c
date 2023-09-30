@@ -19,6 +19,9 @@ void node_str_display(node_p ns)
     PRINT("\nnode (str) display: %p", ns);
     PRINT("\nlabel: ");
     label_display(node_label(ns));
+    
+    str_p str = node_str(ns);
+    printf("\nel: %p\tth: %p", str->el, str->th);
     PRINT("\n");
 }
 

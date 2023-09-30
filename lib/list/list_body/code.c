@@ -7,6 +7,7 @@
 
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
+#include "../../node/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
 void list_body_display_item(list_body_p lb)
@@ -25,6 +26,15 @@ void list_body_display(list_body_p lb)
     {
         PRINT("\n\tnode %3d: %p\t\t", i, lb->n);
         label_display(node_label(lb->n));
+    }
+}
+
+void list_body_display_full(list_body_p lb)
+{
+    int i;
+    for(i=0; lb; i++, lb = lb->lb)
+    {
+        node_display(lb->n);
     }
 }
 

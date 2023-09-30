@@ -6,6 +6,7 @@
 
 #include "../debug.h"
 #include "../../amp/debug.h"
+#include "../../label/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
 #include "../../list/list_head/debug.h"
@@ -158,18 +159,46 @@ void test_create_variadic()
     qdd_free(q);
     tree_free(n);
 
+    q = qdd_create_variadic(2,
+        3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
+        2,
+        V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
+        V2, 1, V1, 0, V1, 1
+    );
+
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_amp_create(&AMP(0, 1));
+    n2 = node_str_create(&V1);
+    node_connect_both(n2, n0, n1);
+    
+    node_p n3;
+    n1 = node_amp_create(&AMP(0, 2));
+    n3 = node_str_create(&V1);
+    node_connect_both(n3, n0, n1);
+
+    n = node_str_create(&V2);
+    node_connect_both(n, n2, n3);
+
+    assert(tree_assert(q->n, n)); 
+    qdd_free(q);
+    tree_free(n);
+
     assert(mem_empty());
 }
 
 void test_vector()
 {
     printf("\n\t%s\t\t", __func__);
+
+    label_t amp, V1;
+    amp = LAB(0, 0);
+    V1 = LAB(V, 1);
     
     qdd_p q0 = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
     qdd_p q1 = qdd_create_variadic(1,
         2, AMP(0, 0), AMP(0, 1),
         1,
-        LAB(V, 1), 1, LAB(0, 0), 0, LAB(0, 0), 1
+        V1, 1, amp, 0, amp, 1
     );
     assert(tree_assert(q0->n, q1->n));
 
@@ -196,11 +225,13 @@ void test_reduce()
     qdd_p q_exp = qdd_create_variadic(2,
         3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
         2,
-        2, V1, amp, 0, amp, 1, amp, 0, amp, 2,
-        1, V2, V1, 0, V1, 1
+        V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
+        V2, 1, V1, 0, V1, 1
     );
 
     assert(tree_assert(q->n, q_exp->n));
+    qdd_free(q);
+    qdd_free(q_exp);
     
     assert(mem_empty());
 }
