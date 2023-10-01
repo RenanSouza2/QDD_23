@@ -37,8 +37,8 @@ void test_list_head_create()
     list_head_p lh = list_head_create(n, LH(2), ELSE);
     assert(lh->lab.cl == 0);
     assert(lh->lab.lv == 0);
-    assert(list_body_vector(lh->lb[ELSE], 1, n));
-    assert(list_body_vector(lh->lb[THEN], 0));
+    assert(list_body(lh->lb[ELSE], 1, n));
+    assert(list_body(lh->lb[THEN], 0));
     assert(lh->lh == LH(2));
     free(lh->lb[ELSE]);
     free(lh);
@@ -47,7 +47,7 @@ void test_list_head_create()
     printf("\n\t\t%s 2\t\t", __func__);
     n  = node_str_create(&LAB(V, 2));
     lh = list_head_create(n, NULL, THEN);
-    assert(list_head_vector(lh, 1,
+    assert(list_head(lh, 1,
         LAB(V, 2), 0, 1, n
     ));
     list_head_free(lh);
@@ -78,26 +78,26 @@ void test_list_head_insert()
     printf("\n\t\t\t%s 1\t\t", __func__);
     list_head_p lh = NULL;
     lh = list_head_insert(lh, N[0], ELSE);
-    assert(list_head_vector(lh, 1, 
+    assert(list_head(lh, 1, 
         LAB(V, 2), 1, N[0], 0
     ));
 
     printf("\n\t\t\t%s 2\t\t", __func__);
     lh = list_head_insert(lh, N[1], THEN);
-    assert(list_head_vector(lh, 1, 
+    assert(list_head(lh, 1, 
         LAB(V, 2), 1, N[0], 1, N[1] 
     ));
 
     printf("\n\t\t\t%s 3\t\t", __func__);
     lh = list_head_insert(lh, N[2], ELSE);
-    assert(list_head_vector(lh, 2,
+    assert(list_head(lh, 2,
         LAB(V, 1), 1, N[2], 0,
         LAB(V, 2), 1, N[0], 1, N[1] 
     ));
     
     printf("\n\t\t\t%s 4\t\t", __func__);
     lh = list_head_insert(lh, N[3], THEN);
-    assert(list_head_vector(lh, 3,
+    assert(list_head(lh, 3,
         LAB(V, 1), 1, N[2], 0,
         LAB(V, 2), 1, N[0], 1, N[1],
         LAB(V, 4), 0, 1, N[3]
@@ -105,7 +105,7 @@ void test_list_head_insert()
 
     printf("\n\t\t\t%s 5\t\t", __func__);
     lh = list_head_insert(lh, N[4], ELSE);
-    assert(list_head_vector(lh, 3,
+    assert(list_head(lh, 3,
         LAB(V, 1), 1, N[2], 0,
         LAB(V, 2), 1, N[0], 1, N[1],
         LAB(V, 4), 1, N[4], 1, N[3]
@@ -113,7 +113,7 @@ void test_list_head_insert()
 
     printf("\n\t\t\t%s 6\t\t", __func__);
     lh = list_head_insert(lh, N[5], THEN);
-    assert(list_head_vector(lh, 4,
+    assert(list_head(lh, 4,
         LAB(V, 1), 1, N[2], 0,
         LAB(V, 2), 1, N[0], 1, N[1],
         LAB(V, 3), 0,       1, N[5],
@@ -122,7 +122,7 @@ void test_list_head_insert()
 
     printf("\n\t\t\t%s 7\t\t", __func__);
     lh = list_head_insert(lh, N[6], THEN);
-    assert(list_head_vector(lh, 4,
+    assert(list_head(lh, 4,
         LAB(V, 1), 1, N[2], 0,
         LAB(V, 2), 1, N[0], 1, N[1],
         LAB(V, 3), 0,       2, N[6], N[5],
@@ -155,7 +155,7 @@ void test_list_head_remove()
         node_str_create(&LAB(V, 4)), // 10
     };
     list_head_p lh = list_head_create_vector(11, N);
-    assert(list_head_vector(lh, 4, 
+    assert(list_head(lh, 4, 
         LAB(V, 1), 2, N[ 2], N[0], 1, N[1], 
         LAB(V, 2), 1, N[ 4],       1, N[3], 
         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
@@ -164,7 +164,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  1\t\t", __func__);
     lh = list_head_remove(lh, N[2], ELSE);
-    assert(list_head_vector(lh, 4, 
+    assert(list_head(lh, 4, 
         LAB(V, 1), 1, N[ 0],       1, N[1], 
         LAB(V, 2), 1, N[ 4],       1, N[3], 
         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
@@ -173,7 +173,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  2\t\t", __func__);
     lh = list_head_remove(lh, N[0], ELSE);
-    assert(list_head_vector(lh, 4, 
+    assert(list_head(lh, 4, 
         LAB(V, 1), 0,              1, N[1], 
         LAB(V, 2), 1, N[ 4],       1, N[3], 
         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
@@ -183,7 +183,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  3\t\t", __func__);
     lh = list_head_remove(lh, N[1], THEN);
-    assert(list_head_vector(lh, 3, 
+    assert(list_head(lh, 3, 
         LAB(V, 2), 1, N[ 4],       1, N[3], 
         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
         LAB(V, 4), 2, N[10], N[8], 1, N[9]
@@ -191,7 +191,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  4\t\t", __func__);
     lh = list_head_remove(lh, N[4], ELSE);
-    assert(list_head_vector(lh, 3, 
+    assert(list_head(lh, 3, 
         LAB(V, 2), 0,              1, N[3], 
         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
         LAB(V, 4), 2, N[10], N[8], 1, N[9]
@@ -199,7 +199,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  5\t\t", __func__);
     lh = list_head_remove(lh, N[7], THEN);
-    assert(list_head_vector(lh, 3, 
+    assert(list_head(lh, 3, 
         LAB(V, 2), 0,              1, N[3], 
         LAB(V, 3), 1, N[ 6],       1, N[5], 
         LAB(V, 4), 2, N[10], N[8], 1, N[9]
@@ -207,7 +207,7 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  6\t\t", __func__);
     lh = list_head_remove(lh, N[5], THEN);
-    assert(list_head_vector(lh, 3, 
+    assert(list_head(lh, 3, 
         LAB(V, 2), 0,              1, N[3], 
         LAB(V, 3), 1, N[ 6],       0, 
         LAB(V, 4), 2, N[10], N[8], 1, N[9]
@@ -215,28 +215,28 @@ void test_list_head_remove()
 
     printf("\n\t\t\t%s  7\t\t", __func__);
     lh = list_head_remove(lh, N[6], ELSE);
-    assert(list_head_vector(lh, 2, 
+    assert(list_head(lh, 2, 
         LAB(V, 2), 0,              1, N[3],
         LAB(V, 4), 2, N[10], N[8], 1, N[9]
     ));
 
     printf("\n\t\t\t%s  8\t\t", __func__);
     lh = list_head_remove(lh, N[10], ELSE);
-    assert(list_head_vector(lh, 2, 
+    assert(list_head(lh, 2, 
         LAB(V, 2), 0,       1, N[3],
         LAB(V, 4), 1, N[8], 1, N[9]
     ));
 
     printf("\n\t\t\t%s  9\t\t", __func__);
     lh = list_head_remove(lh, N[8], ELSE);
-    assert(list_head_vector(lh, 2, 
+    assert(list_head(lh, 2, 
         LAB(V, 2), 0, 1, N[3],
         LAB(V, 4), 0, 1, N[9]
     ));
 
     printf("\n\t\t\t%s 10\t\t", __func__);
     lh = list_head_remove(lh, N[9], THEN);
-    assert(list_head_vector(lh, 1, 
+    assert(list_head(lh, 1, 
         LAB(V, 2), 0, 1, N[3]
     ));
 
@@ -260,7 +260,7 @@ void test_list_head_merge()
     node_p n2 = node_str_create(&LAB(V, 1));
     list_head_p lh_2 = list_head_create(n2, NULL, THEN);
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 1, 
+    assert(list_head(lh_1, 1, 
         LAB(V, 1), 1, n1, 1, n2
     ));
 
@@ -279,7 +279,7 @@ void test_list_head_merge()
     lh_2 = list_head_create(n2, NULL, ELSE);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 1, 
+    assert(list_head(lh_1, 1, 
         LAB(V, 1), 2, n2, n1, 0
     ));
 
@@ -298,7 +298,7 @@ void test_list_head_merge()
     lh_2 = list_head_create(n2, NULL, THEN);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 2, 
+    assert(list_head(lh_1, 2, 
         LAB(V, 1), 1, n1, 0,
         LAB(V, 2), 0,     1, n2
     ));
@@ -318,7 +318,7 @@ void test_list_head_merge()
     lh_2 = list_head_create(n2, NULL, THEN);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 2, 
+    assert(list_head(lh_1, 2, 
         LAB(V, 1), 0,     1, n2, 
         LAB(V, 2), 1, n1, 0
     ));
@@ -347,7 +347,7 @@ void test_list_head_merge()
     lh_2 = list_head_create_vector(4, N2);
 
     lh_1 = list_head_merge(lh_1, lh_2);
-    assert(list_head_vector(lh_1, 5,
+    assert(list_head(lh_1, 5,
         LAB(V, 1), 2, N2[0], N1[0], 0,
         LAB(V, 2), 0,               1, N2[1],
         LAB(V, 3), 1, N2[2],        1, N1[1],
@@ -368,7 +368,7 @@ void test_list_head_invert()
     node_p n = node_str_create(&LAB(V, 1));
     list_head_p lh = list_head_create(n, NULL, ELSE);
     lh = list_head_invert(lh);
-    assert(list_head_vector(lh, 1, 
+    assert(list_head(lh, 1, 
         LAB(V, 1), 1, n, 0
     ));
     list_head_free(lh);
@@ -379,7 +379,7 @@ void test_list_head_invert()
     };
     lh = list_head_create_vector(2, N);
     lh = list_head_invert(lh);
-    assert(list_head_vector(lh, 2, 
+    assert(list_head(lh, 2, 
         LAB(V, 2), 0,       1, N[1],
         LAB(V, 1), 1, N[0], 0
     ));

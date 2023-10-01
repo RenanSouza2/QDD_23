@@ -41,7 +41,7 @@ void list_head_display(list_head_p lh)
     printf("\t\t");
 }
 
-bool list_head_vector(list_head_p lh, int tot_h, ...)
+bool list_head(list_head_p lh, int tot_h, ...)
 {
     va_list args;
     va_start(args, tot_h);
@@ -64,7 +64,7 @@ bool list_head_vector(list_head_p lh, int tot_h, ...)
         for(int side=0; side<2; side++)
         {
             int tot_b = va_arg(args, int);
-            if(!list_body_vector_vargs(lh->lb[side], tot_b, &args))
+            if(!list_body_vargs(lh->lb[side], tot_b, &args))
             {
                 PRINT("\nERROR LIST HEAD VECTOR 2 | LIST BODY %s MISMATCH | %d %d\t\t", side ? "THEN" : "ELSE", i, tot_h);
                 return false;
@@ -105,8 +105,6 @@ list_head_p list_head_invert(list_head_p lh)
 
 #endif
 
-
-
 list_head_p list_head_create_cold()
 {
     list_head_p lh = malloc(sizeof(list_head_t));
@@ -118,17 +116,18 @@ list_head_p list_head_create(node_p n, list_head_p lh_next, int side)
 {
     list_head_p lh = list_head_create_cold();
     label_p lab = node_label(n);
-    list_body_p lb[] = {NULL, NULL};
-    lb[side] = list_body_create(n, NULL);
-    *lh = (list_head_t){*lab, {lb[ELSE], lb[THEN]}, lh_next};
+    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
+    lh->lb[side] = list_body_create(n, NULL);
     return lh;
 }
 
-list_head_p list_head_copy(list_head_p lh)
+list_head_p list_head_create_body(list_body_p lb, list_head_p lh_next, int side)
 {
-    list_head_p lh_new = list_head_create_cold();
-    *lh_new = *lh;
-    return lh_new;
+    list_head_p lh = list_head_create_cold();
+    label_p lab = node_label(lb->n);
+    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
+    lh->lb[side] = lb;
+    return lh;
 }
 
 list_head_p list_head_pop(list_head_p lh)

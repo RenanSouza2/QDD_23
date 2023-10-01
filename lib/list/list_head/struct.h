@@ -3,7 +3,6 @@
 
 #include "header.h"
 
-#include "../list_body/header.h"
 #include "../../label/struct.h"
 
 #define LH(POINTER)    ((list_head_p)(POINTER))

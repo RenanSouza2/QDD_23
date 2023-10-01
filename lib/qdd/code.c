@@ -63,38 +63,6 @@ void qdd_free(qdd_p q)
 
 
 
-typedef bool (*node_eq_f)(node_p, node_p);
-
-list_head_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
-{
-    if(lb == NULL) return NULL;
-
-    list_head_p lh = NULL;
-    for(list_body_p lb_1 = lb; lb_1->lb; lb_1 = lb_1->lb)
-    {
-        bool insert = false;
-        node_p n1 = lb_1->n;
-        for(list_body_p lb_2 = lb_1; lb_2->lb; )
-        {
-            list_body_p lb_aux = lb_2->lb;
-            node_p n2 = lb_aux->n;
-            if(!fn(n1, n2)) 
-            {
-                lb_2 = lb_aux;
-                continue;
-            }
-
-            insert = true;
-            node_merge(n1, n2);
-            lb_2->lb = list_body_pop(lb_2->lb);
-        }
-        
-        if(insert)
-            lh = list_head_insert(lh, n1, ELSE);
-    }
-    return lh;
-}
-
 list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
 {
     while(lh)
@@ -136,7 +104,8 @@ list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
 
 void qdd_reduce(qdd_p q)
 {
-    list_head_p lh_0 = list_body_reduce_equivalence(q->lb, node_amp_eq);
+    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
+    list_head_p lh_0 = list_head_create_body(lb_aux, NULL, ELSE);
 
     list_head_display(lh_0);
 
@@ -157,7 +126,8 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
-            list_head_p lh_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+            list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 
             lh_0 = list_head_merge(lh_0, lh_aux);
         }
 

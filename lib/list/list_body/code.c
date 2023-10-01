@@ -38,7 +38,7 @@ void list_body_display_full(list_body_p lb)
     }
 }
 
-bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list * args)
+bool list_body_vargs(list_body_p lb, int tot_b, va_list * args)
 {
     int i = 0;
     for(; lb && (i<tot_b); i++, lb = lb->lb)
@@ -65,11 +65,11 @@ bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list * args)
     return true;
 }
 
-bool list_body_vector(list_body_p lb, int tot_b, ...)
+bool list_body(list_body_p lb, int tot_b, ...)
 {
     va_list args;
     va_start(args, tot_b);
-    return list_body_vector_vargs(lb, tot_b, &args);
+    return list_body_vargs(lb, tot_b, &args);
 }
 
 #endif
@@ -86,13 +86,6 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
     list_body_p lb = list_body_create_cold();
     *lb = (list_body_t){n, lb_next};
     return lb;
-}
-
-list_body_p list_body_copy(list_body_p lb)
-{
-    list_body_p lb_new = list_body_create_cold();
-    *lb_new = *lb;
-    return lb_new;
 }
 
 list_body_p list_body_create_vector(int max, node_p N[])
@@ -144,4 +137,39 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
     for(; lb_2->lb; lb_2 = lb_2->lb);
     lb_2->lb = lb_1;
     return lb_2_0;
+}
+
+
+
+list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
+{
+    if(lb == NULL) return NULL;
+
+    list_body_p lb_res = NULL;
+    for(list_body_p lb_1 = lb; lb_1->lb; lb_1 = lb_1->lb)
+    {
+        bool insert = false;
+        node_p n1 = lb_1->n;
+        for(list_body_p lb_2 = lb_1; lb_2->lb; )
+        {
+            list_body_p lb_aux = lb_2->lb;
+            node_p n2 = lb_aux->n;
+            if(!fn(n1, n2)) 
+            {
+                lb_2 = lb_aux;
+                continue;
+            }
+
+            insert = true;
+            node_merge(n1, n2);
+            lb_2->lb = list_body_pop(lb_2->lb);
+        }
+        
+        if(insert)
+        {
+            lb_res = list_body_create(n1, lb_res);
+            if(lb_1->lb == NULL) break;
+        }
+    }
+    return lb_res;
 }

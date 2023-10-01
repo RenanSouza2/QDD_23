@@ -77,7 +77,7 @@ void test_str_eq()
     n1 = node_str_create(&LAB(V, 1));
     n2 = node_str_create(&LAB(V, 1));
 
-    typedef bool (*node_eq_f)(node_p, node_p);
+    // typedef bool (*node_eq_f)(node_p, node_p);
     node_eq_f fn[] = {node_el_eq, node_th_eq};
     for(int side=0; side<2; side++)
     {
@@ -116,14 +116,14 @@ void test_node_connect_one()
     node_p n_el = node_str_create(&LAB(V, 1));
     node_connect(n, n_el, ELSE);
     assert(ND_STR(n)->el == n_el);
-    assert(list_head_vector(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1, 
         LAB(V, 2), 1, n, 0
     ));
     
     node_p n_th = node_str_create(&LAB(V, 1));
     node_connect(n, n_th, THEN);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head_vector(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1, 
         LAB(V, 2), 0, 1, n
     ));
 
@@ -144,10 +144,10 @@ void test_node_connect_both()
     node_connect_both(n, n_el, n_th);
     assert(ND_STR(n)->el == n_el);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head_vector(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1, 
         LAB(V, 2), 1, n, 0
     ));
-    assert(list_head_vector(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1, 
         LAB(V, 2), 0, 1, n
     ));
 
@@ -247,7 +247,7 @@ void test_node_merge()
     for(int i=1; i<4; i++)
         node_connect(N1[i], n2, i&1);
     node_merge(n1, n2);
-    assert(list_head_vector(n1->lh, 2,
+    assert(list_head(n1->lh, 2,
         LAB(V, 1), 1, N1[0], 2, N1[1], N1[0], 
         LAB(V, 2), 1, N1[2], 1, N1[3]
     ));
@@ -263,7 +263,7 @@ void test_node_merge()
     for(int i=0; i<4; i++)
         node_connect(N2[i], n2, i&1);
     node_merge(n1, n2);
-    assert(list_head_vector(n1->lh, 2,
+    assert(list_head(n1->lh, 2,
         LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0], 
         LAB(V, 2), 2, N2[2], N1[2], 2, N2[3], N1[3]
     ));
