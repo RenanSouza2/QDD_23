@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../str/struct.h"
 #include "../node/struct.h"
 #include "../list/list_body/struct.h"
 #include "../list/list_head/struct.h"

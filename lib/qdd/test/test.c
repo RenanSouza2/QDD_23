@@ -232,6 +232,9 @@ void test_reduce()
     assert(tree_assert(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);
+
+    q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
+    qdd_reduce(q);
     
     assert(mem_empty());
 }

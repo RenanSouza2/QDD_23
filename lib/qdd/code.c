@@ -132,13 +132,18 @@ list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
 }
 
 
+#include "../list/list_head/debug.h"
+
 void qdd_reduce(qdd_p q)
 {
     list_head_p lh_0 = list_body_reduce_equivalence(q->lb, node_amp_eq);
 
+    list_head_display(lh_0);
+
     while(lh_0)
     {
         node_p n0 = lh_0->lb[ELSE]->n;
+        list_head_display(n0->lh);
 
         n0->lh = list_head_reduce_redundance(n0->lh, n0);
         if(n0->lh == NULL)
