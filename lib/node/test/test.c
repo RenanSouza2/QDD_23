@@ -40,12 +40,68 @@ void test_node_create_amp()
     assert(mem_empty());
 }
 
-void test_node_create()
+void test_node_life_cycle()
 {
     printf("\n\t%s\t\t", __func__);
 
     test_node_create_str();
     test_node_create_amp();
+
+    assert(mem_empty());
+}
+
+void test_amp_eq()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n1, n2;
+    n1 = node_amp_create(&AMP(0, 0));
+    n2 = node_amp_create(&AMP(0, 0));
+    assert(node_amp_eq(n1, n2) == true);
+    free(n2);
+
+    n2 = node_amp_create(&AMP(0, 1));
+    assert(node_amp_eq(n1, n2) == false);
+    free(n1);
+    free(n2);
+
+    assert(mem_empty());
+}
+
+void test_str_eq()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n0, n1, n2;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+
+    typedef bool (*node_eq_f)(node_p, node_p);
+    node_eq_f fn[] = {node_el_eq, node_th_eq};
+    for(int side=0; side<2; side++)
+    {
+        assert(fn[side](n1, n2) == true);
+        
+        node_connect(n1, n0, side);
+        assert(fn[side](n1, n2) == false);
+        
+        node_connect(n2, n0, side);
+        assert(fn[side](n1, n2) == true);
+    }
+    node_free(n0);
+    free(n1);
+    free(n2);
+
+    assert(mem_empty());
+}
+
+void test_node_access()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    test_amp_eq();
+    test_str_eq();
 
     assert(mem_empty());
 }
@@ -239,7 +295,8 @@ void test_node()
 {
     printf("\n%s\t\t", __func__);
 
-    test_node_create();
+    test_node_life_cycle();
+    test_node_access();
     test_node_connection();
 
     assert(mem_empty());

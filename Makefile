@@ -11,5 +11,5 @@ clean:
 	$(MAKE) clean --directory=$(SRC)
 	$(MAKE) clean --directory=$(LIB)
 	
-test: 
+test:
 	$(MAKE) test --directory=$(LIB) -s
