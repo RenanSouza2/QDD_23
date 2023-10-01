@@ -19,7 +19,7 @@ void test_tree_enlist()
     node_connect_both(n, n1, n2);
 
     list_head_p lh = tree_enlist(n);
-    assert(list_head_vector(lh, 2, 
+    assert(list_head(lh, 2, 
         LAB(0, 0), 2, n2, n1, 0,
         LAB(V, 1), 1, n, 0
     ));

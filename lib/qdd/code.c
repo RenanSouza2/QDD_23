@@ -69,34 +69,13 @@ list_head_p list_head_reduce_redundance(list_head_p lh, node_p n0)
     {
         node_p n1 = lh->lb[ELSE]->n;
         str_p str = node_str(n1);
-        if(str->el != str->th) break;
+        if(str->el != str->th)
+            break;
 
-        node_disconnect(n1, THEN);
-        node_merge(n0, n1);
-        lh = list_head_remove(lh, n1, ELSE);
-        free(n1);
+        node_disconnect_both()
     }
 
     if(lh == NULL) return NULL;
-
-    for(list_body_p lb = lh->lb[ELSE]; lb->lb;)
-    {
-        node_p n1 = lb->lb->n;
-        str_p str = node_str(n1);
-        if(str->el != str->th)
-        {
-            lb = lb->lb;
-            continue;
-        }
-
-        node_disconnect(n1, THEN);
-        node_merge(n0, n1);
-        lb->lb = list_body_pop(lb->lb);
-        free(n1);
-    }
-
-    lh->lh = list_head_reduce_redundance(lh->lh, n0);
-    return lh;
 }
 
 
