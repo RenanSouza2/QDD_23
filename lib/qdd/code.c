@@ -63,11 +63,13 @@ void qdd_free(qdd_p q)
 
 
 
-void node_reduce_redundance(node_p n0)
+void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
 {
-    while(n0->lh)
+    if(*lh_p == NULL) return;
+
+    while(*lh_p)
     {
-        node_p n1 = n0->lh->lb[ELSE]->n;
+        node_p n1 = (*lh_p)->lb[ELSE]->n;
         str_p str = node_str(n1);
         if(str->el != str->th)
             break;
@@ -76,9 +78,9 @@ void node_reduce_redundance(node_p n0)
         node_merge(n0, n1);
     }
 
-    if(n0->lh == NULL) return;
+    if(*lh_p == NULL) return;
 
-    for(list_body_p lb = n0->lh->lb[ELSE]; lb && lb->lb; )
+    for(list_body_p lb = (*lh_p)->lb[ELSE]; lb && lb->lb; )
     {
         node_p n1 = lb->lb->n;
         str_p str = node_str(n1);
@@ -92,33 +94,7 @@ void node_reduce_redundance(node_p n0)
         node_merge(n0, n1);
     }
 
-    for(list_head_p lh = n0->lh; lh && lh->lh; lh = lh->lh)
-    {
-        while(lh->lh)
-        {
-            node_p n1 = lh->lh->lb[ELSE]->n;
-            str_p str = node_str(n1);
-            if(str->el != str->th)
-                break;
-
-            node_disconnect_both(n1);
-            node_merge(n0, n1);
-        }
-        
-        for(list_body_p lb = lh->lh->lb[ELSE]; lb && lb->lb; )
-        {
-            node_p n1 = lb->lb->n;
-            str_p str = node_str(n1);
-            if(str->el != str->th)
-            {
-                lb = lb->lb;
-                continue;
-            }
-
-            node_disconnect_both(n1);
-            node_merge(n0, n1);
-        }
-    }
+    list_head_reduce_redundance(&(*lh_p)->lh, n0);
 }
 
 
@@ -137,7 +113,7 @@ void qdd_reduce(qdd_p q)
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
         node_p n0 = lh_0->lb[ELSE]->n;
-        node_reduce_redundance(n0);
+        list_head_reduce_redundance(&n0->lh, n0);
 
         if(n0->lh == NULL)
         {
