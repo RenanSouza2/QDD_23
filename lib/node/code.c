@@ -26,7 +26,6 @@ void node_str_display(node_p ns)
 
 void node_amp_display(node_p na)
 {
-    PRINT("\n");
     PRINT("\nnode (amp) display: %p", na);
     PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
     PRINT("\namp: ");
@@ -181,6 +180,9 @@ void node_merge(node_p n1, node_p n2)
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
+    if(!node_is_amp(n1))
+        node_disconnect_both(n2);
+
     free(n2);
 }
 
