@@ -97,7 +97,7 @@ void test_create_variadic()
     n1 = node_amp_create(&AMP(0, 1));
     node_connect_both(n, n0, n1);
     
-    assert(tree_assert(q->n, n));
+    assert(tree(q->n, n));
     assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
     assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
     qdd_free(q);
@@ -108,7 +108,7 @@ void test_create_variadic()
         0
     );
     n = node_amp_create(&AMP(0, 0));
-    assert(tree_assert(q->n, n));
+    assert(tree(q->n, n));
     assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
     qdd_free(q);
     tree_free(n);
@@ -131,7 +131,7 @@ void test_create_variadic()
             node_connect(n1, n0, j);
         }
     }
-    assert(tree_assert(q->n, n));
+    assert(tree(q->n, n));
     qdd_free(q);
     tree_free(n);
 
@@ -154,7 +154,7 @@ void test_create_variadic()
     n = node_str_create(&V2);
     node_connect_both(n, n1, n2);
     
-    assert(tree_assert(q->n, n));
+    assert(tree(q->n, n));
     qdd_free(q);
     tree_free(n);
 
@@ -178,7 +178,7 @@ void test_create_variadic()
     n = node_str_create(&V2);
     node_connect_both(n, n2, n3);
 
-    assert(tree_assert(q->n, n)); 
+    assert(tree(q->n, n)); 
     qdd_free(q);
     tree_free(n);
 
@@ -199,7 +199,7 @@ void test_vector()
         1,
         V1, 1, amp, 0, amp, 1
     );
-    assert(tree_assert(q0->n, q1->n));
+    assert(tree(q0->n, q1->n));
 
     qdd_free(q0);
     qdd_free(q1);
@@ -228,12 +228,20 @@ void test_reduce()
         V2, 1, V1, 0, V1, 1
     );
 
-    assert(tree_assert(q->n, q_exp->n));
+    assert(tree(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);
 
     q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
     qdd_reduce(q);
+    
+    q_exp = qdd_create_variadic(1,
+        1, AMP(0, 0),
+        0
+    );
+    assert(tree(q->n, q_exp->n));
+    qdd_free(q);
+    qdd_free(q_exp);
     
     assert(mem_empty());
 }

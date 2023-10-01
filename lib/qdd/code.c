@@ -63,39 +63,41 @@ void qdd_free(qdd_p q)
 
 
 
-void list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
-{
-    while(*lb_p)
-    {
-        node_p n1 = (*lb_p)->n;
-        str_p str = node_str(n1);
-        if(str->el != str->th)
-            break;
 
-        node_disconnect_both(n1);
-        node_merge(n0, n1);
-    }
+bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
+{
+    if(*lb_p == NULL) return false;
+
+    node_p n1 = (*lb_p)->n;
+    str_p str = node_str(n1);
+    if(str->el != str->th) return false;
+
+    node_disconnect_both(n1);
+    node_merge(n0, n1);
+    return true;
+}
+
+void list_body_reduce_redundance_rec(list_body_p *lb_p, node_p n0)
+{
+    while(list_body_reduce_redundance(lb_p, n0));
 
     if(*lb_p == NULL) return;
 
     list_body_reduce_redundance(&(*lb_p)->lb, n0);
-} 
+}
 
 void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
 {
     if(*lh_p == NULL) return;
 
-    list_body_reduce_redundance(&(*lh_p)->lb[ELSE], n0);
+    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE], n0));
 
     if(*lh_p == NULL) return;
 
+    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb, n0);
     list_head_reduce_redundance(&(*lh_p)->lh, n0);
 }
 
-
-#include "../list/list_head/debug.h"
-#include "../node/debug.h"
-#include "../label/debug.h"
 
 void qdd_reduce(qdd_p q)
 {
@@ -113,6 +115,7 @@ void qdd_reduce(qdd_p q)
         if(n0->lh == NULL)
         {
             q->n = n0;
+            free(lh_0->lb[ELSE]);
             free(lh_0);
             return;
         }

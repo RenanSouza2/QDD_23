@@ -20,7 +20,7 @@ void tree_display(node_p n)
     list_head_display(lh);
 }
 
-bool tree_assert_rec(node_p n, node_p n1, node_p n2)
+bool tree_rec(node_p n, node_p n1, node_p n2)
 {
     assert(n1);
     assert(n2);
@@ -49,7 +49,7 @@ bool tree_assert_rec(node_p n, node_p n1, node_p n2)
 
     for(int side=0; side<2; side++)
     {
-        if(!tree_assert_rec(n1, V_STR(n1)[side], V_STR(n2)[side]))
+        if(!tree_rec(n1, V_STR(n1)[side], V_STR(n2)[side]))
         {
             PRINT("\nERROR TREE ASSSERT 3 | %s MISMATCH", side ? "THEN" : "ELSE");
             return false;
@@ -59,9 +59,9 @@ bool tree_assert_rec(node_p n, node_p n1, node_p n2)
     return true;
 }
 
-bool tree_assert(node_p n1, node_p n2)
+bool tree(node_p n1, node_p n2)
 {
-    return tree_assert_rec(NULL, n1, n2);
+    return tree_rec(NULL, n1, n2);
 }
 
 #endif
