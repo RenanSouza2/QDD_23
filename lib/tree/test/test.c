@@ -46,7 +46,7 @@ void test_tree_assert()
     nb = node_str_create(&LAB(V, 1));
     node_connect_both(nb, n1, n2);
 
-    assert(tree_assert(na, nb));
+    assert(tree(na, nb));
     tree_free(na);
     tree_free(nb);
 
@@ -77,7 +77,7 @@ void test_tree_assert()
     nb = node_str_create(&LAB(V, 2));
     node_connect_both(nb, n3, n4);
     
-    assert(tree_assert(na, nb));
+    assert(tree(na, nb));
     tree_free(na);
     tree_free(nb);
 

@@ -98,9 +98,6 @@ void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
 }
 
 
-#include "../list/list_head/debug.h"
-#include "../node/debug.h"
-#include "../label/debug.h"
 
 void qdd_reduce(qdd_p q)
 {
@@ -118,6 +115,7 @@ void qdd_reduce(qdd_p q)
         if(n0->lh == NULL)
         {
             q->n = n0;
+            free(lh_0->lb[ELSE]);
             free(lh_0);
             return;
         }
