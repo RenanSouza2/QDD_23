@@ -99,8 +99,15 @@ void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
 }
 
 
+
+#include "../list/list_head/debug.h"
+#include "../node/debug.h"
+
 void qdd_reduce(qdd_p q)
 {
+    printf("\n--------------------------------------------------");
+    printf("\nSTART");
+
     list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
     if(lb_aux == NULL) return;
 
@@ -109,8 +116,14 @@ void qdd_reduce(qdd_p q)
         lh_0;
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
+        printf("\nloop");
+
         node_p n0 = lh_0->lb[ELSE]->n;
+        printf("\nnode");
+        node_display(n0);
+        list_head_display(n0->lh);
         list_head_reduce_redundance(&n0->lh, n0);
+        printf("\n after rule 1");
 
         if(n0->lh == NULL)
         {
@@ -124,6 +137,7 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
+            printf("\nside: %d", side);
             list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
             if(lb_aux == NULL) continue;
 

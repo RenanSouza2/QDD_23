@@ -234,6 +234,17 @@ void test_reduce()
 
     q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
     qdd_reduce(q);
+
+    q_exp = qdd_create_variadic(1,
+        1, AMP(0, 0),
+        0
+    );
+    assert(tree(q->n, q_exp->n));
+    qdd_free(q);
+    qdd_free(q_exp);
+
+    q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
+    qdd_reduce(q);
     
     q_exp = qdd_create_variadic(1,
         1, AMP(0, 0),
