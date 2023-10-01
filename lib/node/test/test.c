@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../list/list_body/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
@@ -251,6 +252,10 @@ void test_node_merge()
         LAB(V, 1), 1, N1[0], 2, N1[1], N1[0], 
         LAB(V, 2), 1, N1[2], 1, N1[3]
     ));
+    for(list_head_p lh = n1->lh; lh; lh = lh->lh)
+    for(int side=0; side<2; side++)
+    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
+        assert(V_STR(lb->n)[side] == n1);
 
     printf("\n\t\t\t%s 3\t\t", __func__);
     node_p N2[] = {
@@ -267,6 +272,10 @@ void test_node_merge()
         LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0], 
         LAB(V, 2), 2, N2[2], N1[2], 2, N2[3], N1[3]
     ));
+    for(list_head_p lh = n1->lh; lh; lh = lh->lh)
+    for(int side=0; side<2; side++)
+    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
+        assert(V_STR(lb->n)[side] == n1);
 
     for(int i=0; i<4; i++)
     {

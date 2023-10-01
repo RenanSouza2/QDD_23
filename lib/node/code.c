@@ -15,7 +15,6 @@
 
 void node_str_display(node_p ns)
 {
-    PRINT("\n");
     PRINT("\nnode (str) display: %p", ns);
     PRINT("\nlabel: ");
     label_display(node_label(ns));

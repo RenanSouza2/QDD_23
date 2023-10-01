@@ -28,13 +28,13 @@ void list_head_display(list_head_p lh)
 
    for(; lh; lh = lh->lh)
     {
-        PRINT("\n");
         PRINT("\n--------");
-        PRINT("\n");
-        label_display(&lh->lab);
         for(int side=0; side<2; side++)
+        if(lh->lb[side])
         {
-            printf("\n\nside: %s", side ? "THEN" : "ELSE");
+            PRINT("\n");
+            label_display(&lh->lab);
+            PRINT(" %s", side ? "THEN" : "ELSE");
             list_body_display_full(lh->lb[side]);
         }
     }
