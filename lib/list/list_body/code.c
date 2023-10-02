@@ -143,7 +143,7 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     if(lb == NULL) return NULL;
 
     list_body_p lb_res = NULL;
-    for(list_body_p lb_1 = lb; lb_1->lb; lb_1 = lb_1->lb)
+    for(list_body_p lb_1 = lb; lb_1 && lb_1->lb; lb_1 = lb_1->lb)
     {
         bool insert = false;
         node_p n1 = lb_1->n;
@@ -158,7 +158,6 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
 
             insert = true;
             node_merge(n1, n2);
-            lb_2->lb = list_body_pop(lb_2->lb);
         }
 
         if(insert)

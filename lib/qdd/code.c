@@ -87,8 +87,11 @@ void qdd_reduce(qdd_p q)
         printf("\nnode");
         node_display(n0);
         list_head_display(n0->lh);
+        printf("\nHere");
         list_head_reduce_redundance(&n0->lh, n0);
-        printf("\n after rule 1");
+        printf("\n---------------");
+        printf("\nafter rule 1");
+        list_head_display(n0->lh);
 
         if(n0->lh == NULL)
         {
@@ -102,8 +105,9 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
-            printf("\nside: %d", side);
+            printf("\nside: %d\t\t", side);
             list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+            printf("\nafter side: %d\t\t", side);
             if(lb_aux == NULL) continue;
 
             list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 

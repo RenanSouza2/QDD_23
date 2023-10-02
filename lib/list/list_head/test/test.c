@@ -389,6 +389,15 @@ void test_list_head_invert()
     assert(mem_empty());
 }
 
+void test_list_head_reduce_redundance()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+
+    assert(mem_empty());
+}
+
+
 void test_list_head_operations()
 {
     printf("\n\t%s\t\t", __func__);
@@ -397,6 +406,7 @@ void test_list_head_operations()
     test_list_head_remove();
     test_list_head_merge();
     test_list_head_invert();
+    test_list_head_reduce_redundance();
 
     assert(mem_empty());
 }

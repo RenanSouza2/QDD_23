@@ -128,32 +128,26 @@ void test_list_body_reduce_equivalence()
 {
     printf("\n\t\t%s\t\t", __func__);
 
-    list_body_p lb_res = list_body_reduce_equivalence(NULL, node_amp_eq);
-    assert(lb_res == NULL);
-
-    node_p na, n1;
-    n1 = node_amp_create(&AMP(0, 0));
-    na = node_str_create(&LAB(V, 1));
-    node_connect(na, n1, ELSE);
-
-    node_p nb, n2;
-    n2 = node_amp_create(&AMP(0, 0));
-    nb = node_str_create(&LAB(V, 1));
-    node_connect(nb, n2, ELSE);
-
-    list_body_p lb = list_body_create_vector(2, (node_p[]){n1, n2});
-    lb_res = list_body_reduce_equivalence(lb, node_amp_eq);
-    assert(list_body(lb, 1, n1));
-    assert(list_body(lb_res, 1, n1));
-    assert(list_head(lb->n->lh, 1,
-        LAB(V, 1), 2, nb, na, 0
+    node_p n0_0, n0_1, n1, n2;
+    n0_0 = node_amp_create(&AMP(0, 0));
+    n0_1 = node_amp_create(&AMP(0, 1));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+    node_connect_both(n1, n0_0, n0_1);
+    node_connect_both(n2, n0_0, n0_1);
+    
+    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_th_eq);
+    assert(list_head(n0_0->lh, 1,
+        LAB(V, 1), 1, n2, 0
     ));
-
-    node_free(n1);
-    free(na);
-    free(nb);
-    free(lb);
-    free(lb_res);
+    assert(list_head(n0_1->lh, 1,
+        LAB(V, 1), 0, 1, n2
+    ));
+    assert(list_body(lb, 1, n2));
+    node_free(n0_0);
+    node_free(n0_1);
+    node_free(n2);
+    list_body_free(lb);
 
     assert(mem_empty());
 }
