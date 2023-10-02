@@ -147,9 +147,14 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     {
         bool insert = false;
         node_p n1 = lb_1->n;
+        printf("\nnode 1");
+        node_display(n1);
+
         for(list_body_p lb_2 = lb_1; lb_2->lb; )
         {
             node_p n2 = lb_2->lb->n;
+        printf("\nnode 2");
+        node_display(n2);
             if(!fn(n1, n2)) 
             {
                 lb_2 = lb_2->lb;

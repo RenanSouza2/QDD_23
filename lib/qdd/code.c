@@ -65,15 +65,20 @@ void qdd_free(qdd_p q)
 
 
 
+#include "../list/list_body/debug.h"
 #include "../list/list_head/debug.h"
 #include "../node/debug.h"
 
 void qdd_reduce(qdd_p q)
 {
     printf("\n--------------------------------------------------");
-    printf("\nSTART");
+    printf("\nSTART\t\t");
+
+    list_body_display(q->lb);
+    printf("\t\t");
 
     list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
+    printf("\nHere");
     if(lb_aux == NULL) return;
 
     for(
