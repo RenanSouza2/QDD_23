@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../../node/struct.h"
 
 #ifdef DEBUG
 
@@ -168,4 +169,26 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     }
 
     return lb_res;
+}
+
+bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
+{
+    if(*lb_p == NULL) return false;
+
+    node_p n1 = (*lb_p)->n;
+    str_p str = node_str(n1);
+    if(str->el != str->th) return false;
+
+    node_disconnect_both(n1);
+    node_merge(n0, n1);
+    return true;
+}
+
+void list_body_reduce_redundance_rec(list_body_p *lb_p, node_p n0)
+{
+    while(list_body_reduce_redundance(lb_p, n0));
+
+    if(*lb_p == NULL) return;
+
+    list_body_reduce_redundance_rec(&(*lb_p)->lb, n0);
 }

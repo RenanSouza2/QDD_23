@@ -135,7 +135,7 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th)
     str_p str = node_str(n);
     assert(str->el == NULL);
     assert(str->th == NULL);
-    *ND_STR(n) = (str_t){n_el, n_th};
+    *str = (str_t){n_el, n_th};
     n_el->lh = list_head_insert(n_el->lh, n, ELSE);
     n_th->lh = list_head_insert(n_th->lh, n, THEN);
 }
@@ -156,11 +156,10 @@ void node_disconnect_both(node_p n)
     node_p n_th = str->th;
     assert(n_el);
     assert(n_th);
+    *str = (str_t){NULL, NULL};
     
     n_el->lh = list_head_remove(n_el->lh, n, ELSE);
     n_th->lh = list_head_remove(n_th->lh, n, THEN);
-
-    *str = (str_t){NULL, NULL};
 }
 
 

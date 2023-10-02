@@ -112,6 +112,18 @@ void test_list_body_merge()
     assert(mem_empty());
 }
 
+void test_list_body_operations()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    test_list_body_remove();
+    test_list_body_merge();
+
+    assert(mem_empty());
+}
+
+
+
 void test_list_body_reduce_equivalence()
 {
     printf("\n\t\t%s\t\t", __func__);
@@ -146,13 +158,103 @@ void test_list_body_reduce_equivalence()
     assert(mem_empty());
 }
 
-void test_list_body_operations()
+void test_list_body_reduce_redundance()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    printf("\n\t\t\t%s 1\t\t", __func__);
+    node_p n0, n1;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect(n1, n0, ELSE);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == false);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 1, n1, 0
+    ));
+    node_free(n0);
+    node_free(n1);
+    
+    printf("\n\t\t\t%s 2\t\t", __func__);
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect(n1, n0, THEN);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == false);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 0, 1, n1
+    ));
+    node_free(n0);
+    node_free(n1);
+
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect_both(n1, n0, n0);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(n0->lh == NULL);
+    node_free(n0);
+
+    printf("\n\t\t\t%s 4\t\t", __func__);
+    node_p n2;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+    node_connect(n2, n0, ELSE);
+    node_connect_both(n1, n0, n0);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 1, n2, 0
+    ));
+    node_free(n0);
+    node_free(n2);
+
+    printf("\n\t\t\t%s 5\t\t", __func__);
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+    node_connect(n2, n0, THEN);
+    node_connect_both(n1, n0, n0);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 0, 1, n2
+    ));
+    node_free(n0);
+    node_free(n2);
+
+    printf("\n\t\t\t%s 6\t\t", __func__);
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 2));
+    node_connect(n2, n1, ELSE);
+    node_connect_both(n1, n0, n0);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 2), 1, n2, 0
+    ));
+    node_free(n0);
+    node_free(n2);
+
+    printf("\n\t\t\t%s 7\t\t", __func__);
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 2));
+    node_connect(n2, n1, THEN);
+    node_connect_both(n1, n0, n0);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 2), 0, 1, n2
+    ));
+    node_free(n0);
+    node_free(n2);
+
+    assert(mem_empty());
+}
+
+void test_list_body_reduce()
 {
     printf("\n\t%s\t\t", __func__);
 
-    test_list_body_remove();
-    test_list_body_merge();
     test_list_body_reduce_equivalence();
+    test_list_body_reduce_redundance();
 
     assert(mem_empty());
 }
@@ -165,6 +267,7 @@ void test_list_body()
 
     test_list_body_create();
     test_list_body_operations();
+    test_list_body_reduce();
 
     assert(mem_empty());
 }
