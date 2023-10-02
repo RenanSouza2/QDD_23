@@ -128,6 +128,7 @@ void test_list_body_reduce_equivalence()
 {
     printf("\n\t\t%s\t\t", __func__);
 
+    printf("\n\t\t\t%s 1\t\t", __func__);
     node_p n0_0, n0_1, n1, n2;
     n0_0 = node_amp_create(&AMP(0, 0));
     n0_1 = node_amp_create(&AMP(0, 1));
@@ -136,7 +137,7 @@ void test_list_body_reduce_equivalence()
     node_connect_both(n1, n0_0, n0_1);
     node_connect_both(n2, n0_0, n0_1);
     
-    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_th_eq, false);
+    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_th_eq);
     assert(list_head(n0_0->lh, 1,
         LAB(V, 1), 1, n2, 0
     ));
@@ -149,6 +150,7 @@ void test_list_body_reduce_equivalence()
     node_free(n2);
     list_body_free(lb);
 
+    printf("\n\t\t\t%s 2\t\t", __func__);
     node_p N[] = {
         node_amp_create(&AMP(0, 0)),
         node_amp_create(&AMP(0, 1)),
@@ -156,7 +158,7 @@ void test_list_body_reduce_equivalence()
         node_amp_create(&AMP(0, 1))
     };
     lb = list_body_create_vector(4, N);
-    list_body_p lb_res = list_body_reduce_equivalence(lb, node_amp_eq, true);
+    list_body_p lb_res = list_body_reduce_equivalence(lb, node_amp_eq);
     assert(list_body(lb, 2, N[0], N[1]));
     assert(list_body(lb_res, 2, N[1], N[0]));
     list_body_free(lb);

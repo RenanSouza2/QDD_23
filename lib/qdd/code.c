@@ -71,7 +71,7 @@ void qdd_free(qdd_p q)
 
 void qdd_reduce(qdd_p q)
 {
-    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq, true);
+    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
     if(lb_aux == NULL) return;
 
     for(
@@ -94,7 +94,7 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
-            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side], false);
+            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
             if(lb_aux == NULL) continue;
 
             list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 

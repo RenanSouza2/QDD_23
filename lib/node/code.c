@@ -164,7 +164,7 @@ void node_disconnect_both(node_p n)
 
 
 
-void node_merge(node_p n1, node_p n2)
+bool node_merge(node_p n1, node_p n2)
 {
     assert(n1);
     assert(n2);
@@ -179,9 +179,10 @@ void node_merge(node_p n1, node_p n2)
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
-    if(!node_is_amp(n1))
-        node_disconnect_both(n2);
+    bool res = !node_is_amp(n1);
+    if(res) node_disconnect_both(n2);
 
     free(n2);
+    return res;
 }
 

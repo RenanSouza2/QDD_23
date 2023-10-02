@@ -137,7 +137,7 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
     return lb_2_0;
 }
 
-bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1, bool remove)
+bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
 {
     bool insert = false;
     for(; lb->lb; )
@@ -150,14 +150,14 @@ bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1, boo
         }
 
         insert = true;
-        node_merge(n1, n2);
-        if(remove) lb->lb = list_body_pop(lb->lb);
+        if(!node_merge(n1, n2))
+            lb->lb = list_body_pop(lb->lb);
     }
 
     return insert;
 }
 
-list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn, bool remove)
+list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
 {
     if(lb == NULL) return NULL;
 
@@ -165,7 +165,7 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn, bool remo
     for(; lb && lb->lb; lb = lb->lb)
     {
         node_p n1 = lb->n;
-        if(!list_body_reduce_equivalence_1(lb, fn, n1, remove))
+        if(!list_body_reduce_equivalence_1(lb, fn, n1))
             continue;
             
         lb_res = list_body_create(n1, lb_res);

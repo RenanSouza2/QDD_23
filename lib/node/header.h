@@ -33,6 +33,6 @@ void node_connect_both(node_p n, node_p n_el, node_p n_th);
 void node_disconnect(node_p n, int side);
 void node_disconnect_both(node_p n);
 
-void node_merge(node_p n1, node_p n2);
+bool node_merge(node_p n1, node_p n2);
 
 #endif
