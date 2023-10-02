@@ -137,39 +137,39 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
     return lb_2_0;
 }
 
+bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1, bool remove)
+{
+    bool insert = false;
+    for(; lb->lb; )
+    {
+        node_p n2 = lb->lb->n;
+        if(!fn(n1, n2)) 
+        {
+            lb = lb->lb;
+            continue;
+        }
 
-list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
+        insert = true;
+        node_merge(n1, n2);
+        if(remove) lb->lb = list_body_pop(lb->lb);
+    }
+
+    return insert;
+}
+
+list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn, bool remove)
 {
     if(lb == NULL) return NULL;
 
     list_body_p lb_res = NULL;
-    for(list_body_p lb_1 = lb; lb_1 && lb_1->lb; lb_1 = lb_1->lb)
+    for(; lb && lb->lb; lb = lb->lb)
     {
-        bool insert = false;
-        node_p n1 = lb_1->n;
-        printf("\nnode 1");
-        node_display(n1);
-
-        for(list_body_p lb_2 = lb_1; lb_2->lb; )
-        {
-            node_p n2 = lb_2->lb->n;
-        printf("\nnode 2");
-        node_display(n2);
-            if(!fn(n1, n2)) 
-            {
-                lb_2 = lb_2->lb;
-                continue;
-            }
-
-            insert = true;
-            node_merge(n1, n2);
-        }
-
-        if(insert)
-        {
-            lb_res = list_body_create(n1, lb_res);
-            if(lb_1->lb == NULL) break;
-        }
+        node_p n1 = lb->n;
+        if(!list_body_reduce_equivalence_1(lb, fn, n1, remove))
+            continue;
+            
+        lb_res = list_body_create(n1, lb_res);
+        if(lb->lb == NULL) break;
     }
 
     return lb_res;

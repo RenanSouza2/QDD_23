@@ -71,14 +71,7 @@ void qdd_free(qdd_p q)
 
 void qdd_reduce(qdd_p q)
 {
-    printf("\n--------------------------------------------------");
-    printf("\nSTART\t\t");
-
-    list_body_display(q->lb);
-    printf("\t\t");
-
-    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
-    printf("\nHere");
+    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq, true);
     if(lb_aux == NULL) return;
 
     for(
@@ -86,17 +79,8 @@ void qdd_reduce(qdd_p q)
         lh_0;
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
-        printf("\nloop");
-
         node_p n0 = lh_0->lb[ELSE]->n;
-        printf("\nnode");
-        node_display(n0);
-        list_head_display(n0->lh);
-        printf("\nHere");
         list_head_reduce_redundance(&n0->lh, n0);
-        printf("\n---------------");
-        printf("\nafter rule 1");
-        list_head_display(n0->lh);
 
         if(n0->lh == NULL)
         {
@@ -110,9 +94,7 @@ void qdd_reduce(qdd_p q)
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         {
-            printf("\nside: %d\t\t", side);
-            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
-            printf("\nafter side: %d\t\t", side);
+            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side], false);
             if(lb_aux == NULL) continue;
 
             list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 
