@@ -249,12 +249,51 @@ void test_list_body_reduce_redundance()
     assert(mem_empty());
 }
 
+void test_list_body_reduce_redundance_rec()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n0, n1;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+
+    node_p n2;
+    n2 = node_str_create(&LAB(V, 1));
+    node_connect_both(n2, n0, n0);
+    node_connect(n1, n0, ELSE);
+    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE], n0);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 1, n1, 0
+    ));
+    node_free(n0);
+    node_free(n1);
+
+    node_p n3;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+    n3 = node_str_create(&LAB(V, 1));
+    node_connect(n3, n0, ELSE);
+    node_connect_both(n2, n0, n0);
+    node_connect(n1, n0, ELSE);
+    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE], n0);
+    assert(list_head(n0->lh, 1,
+        LAB(V, 1), 2, n1, n3, 0
+    ));
+    node_free(n0);
+    node_free(n1);
+    node_free(n3);
+
+    assert(mem_empty());
+}
+
 void test_list_body_reduce()
 {
     printf("\n\t%s\t\t", __func__);
 
     test_list_body_reduce_equivalence();
     test_list_body_reduce_redundance();
+    test_list_body_reduce_redundance_rec();
 
     assert(mem_empty());
 }
