@@ -15,7 +15,7 @@
 
 qdd_p qdd_create_variadic(int qbits, ...)
 {
-    node_p *N[3][qbits];
+    node_p *N[3][qbits+1];
     memset(N, 0, sizeof(N));
 
     va_list args;
@@ -249,6 +249,22 @@ void test_qdd_reduce()
     qdd_reduce(q);
 
     q_exp = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+    assert(tree(q->n, q_exp->n));
+    qdd_free(q);
+    qdd_free(q_exp);
+
+    printf("\n\t\t%s 4\t\t", __func__);
+    q = qdd_create_vector(3, (amp_t[]){
+        {0, 0}, {0, 1}, {0, 1}, {0, 0},
+        {0, 0}, {0, 1}, {0, 1}, {0, 0}
+    });
+    qdd_reduce(q);
+    q_exp = qdd_create_variadic(3, 
+        2, AMP(0, 0), AMP(0, 1),
+        2,
+        V1, 2, amp, 0, amp, 1, amp, 1, amp, 0,
+        V2, 1, V1, 0, V1, 1
+    );
     assert(tree(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);

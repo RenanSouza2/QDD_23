@@ -250,3 +250,20 @@ void list_head_reduce_redundance(list_head_p *lh_p)
     list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
     list_head_reduce_redundance(&(*lh_p)->lh);
 }
+
+list_head_p list_head_reduce_equivalence(list_head_p lh)
+{
+    list_head_p lh_0 = NULL;
+    node_eq_f fn[] = {node_th_eq, node_el_eq};
+    for(; lh; lh = lh->lh)
+    for(int side = 0; side < 2; side ++)
+    if(lh->lb[side])
+    {
+        list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+        if(lb_aux == NULL) continue;
+
+        list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 
+        lh_0 = list_head_merge(lh_0, lh_aux);
+    }
+    return lh_0;
+}

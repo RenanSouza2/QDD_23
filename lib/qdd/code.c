@@ -79,21 +79,10 @@ void qdd_reduce(qdd_p q)
         if(n0->lh == NULL)
         {
             q->n = n0;
-            free(lh_0->lb[ELSE]);
-            free(lh_0);
-            return;
+            continue;
         }
 
-        node_eq_f fn[] = {node_th_eq, node_el_eq};
-        for(list_head_p lh = n0->lh; lh; lh = lh->lh)
-        for(int side = 0; side < 2; side ++)
-        if(lh->lb[side])
-        {
-            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
-            if(lb_aux == NULL) continue;
-
-            list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 
-            lh_0 = list_head_merge(lh_0, lh_aux);
-        }
+        list_head_p lh_aux = list_head_reduce_equivalence(n0->lh);
+        list_head_merge(lh_0, lh_aux);
     }
 }
