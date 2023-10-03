@@ -15,7 +15,7 @@
 
 qdd_p qdd_create_variadic(int qbits, ...)
 {
-    node_p *N[3][qbits];
+    node_p *N[3][qbits+1];
     memset(N, 0, sizeof(N));
 
     va_list args;
