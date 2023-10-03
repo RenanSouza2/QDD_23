@@ -63,14 +63,6 @@ void qdd_free(qdd_p q)
 
 
 
-
-
-#include "../list/list_body/debug.h"
-#include "../list/list_head/debug.h"
-#include "../node/debug.h"
-#include "../tree/debug.h"
-#include "../label/debug.h"
-
 void qdd_reduce(qdd_p q)
 {
     list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
