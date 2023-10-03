@@ -137,6 +137,8 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
     return lb_2_0;
 }
 
+
+
 bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
 {
     bool insert = false;
@@ -175,6 +177,8 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     return lb_res;
 }
 
+#include "../list_head/debug.h"
+
 bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
 {
     if(*lb_p == NULL) return false;
@@ -183,8 +187,8 @@ bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
     str_p str = node_str(n1);
     if(str->el != str->th) return false;
 
-    node_disconnect_both(n1);
     node_merge(n0, n1);
+
     return true;
 }
 

@@ -63,7 +63,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
 
 
 
-void test_create()
+void test_qdd_create()
 {
     printf("\n\t%s\t\t", __func__);
     
@@ -76,7 +76,7 @@ void test_create()
     assert(mem_empty());
 }
 
-void test_create_variadic()
+void test_qdd_create_variadic()
 {
     printf("\n\t%s\t\t", __func__);
 
@@ -185,7 +185,7 @@ void test_create_variadic()
     assert(mem_empty());
 }
 
-void test_vector()
+void test_qdd_vector()
 {
     printf("\n\t%s\t\t", __func__);
 
@@ -209,10 +209,11 @@ void test_vector()
 
 
 
-void test_reduce()
+void test_qdd_reduce()
 {
     printf("\n\t%s\t\t", __func__);
 
+    printf("\n\t\t%s 1\t\t", __func__);
     qdd_p q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
     qdd_reduce(q);
 
@@ -227,11 +228,11 @@ void test_reduce()
         V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
         V2, 1, V1, 0, V1, 1
     );
-
     assert(tree(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);
 
+    printf("\n\t\t%s 2\t\t", __func__);
     q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
     qdd_reduce(q);
 
@@ -243,13 +244,11 @@ void test_reduce()
     qdd_free(q);
     qdd_free(q_exp);
 
+    printf("\n\t\t%s 3\t\t", __func__);
     q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
     qdd_reduce(q);
-    
-    q_exp = qdd_create_variadic(1,
-        1, AMP(0, 0),
-        0
-    );
+
+    q_exp = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
     assert(tree(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);
@@ -261,10 +260,10 @@ void test_qdd()
 {
     printf("\n%s\t\t", __func__);
 
-    test_create();
-    test_create_variadic();
-    test_vector();
-    test_reduce();
+    test_qdd_create();
+    test_qdd_create_variadic();
+    test_qdd_vector();
+    test_qdd_reduce();
 
     assert(mem_empty());
 }

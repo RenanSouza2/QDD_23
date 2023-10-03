@@ -20,7 +20,7 @@ void node_str_display(node_p ns)
     label_display(node_label(ns));
     
     str_p str = node_str(ns);
-    printf("\nel: %p\tth: %p", str->el, str->th);
+    PRINT("\nel: %p\tth: %p", str->el, str->th);
     PRINT("\n");
 }
 
@@ -179,10 +179,9 @@ bool node_merge(node_p n1, node_p n2)
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
-    bool res = !node_is_amp(n1);
+    bool res = !node_is_amp(n2);
     if(res) node_disconnect_both(n2);
 
     free(n2);
     return res;
 }
-

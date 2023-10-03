@@ -237,6 +237,8 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
     assert(false);
 }
 
+
+
 void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
 {
     if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;

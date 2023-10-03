@@ -68,6 +68,8 @@ void qdd_free(qdd_p q)
 #include "../list/list_body/debug.h"
 #include "../list/list_head/debug.h"
 #include "../node/debug.h"
+#include "../tree/debug.h"
+#include "../label/debug.h"
 
 void qdd_reduce(qdd_p q)
 {
@@ -93,6 +95,7 @@ void qdd_reduce(qdd_p q)
         node_eq_f fn[] = {node_th_eq, node_el_eq};
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
+        if(lh->lb[side])
         {
             list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
             if(lb_aux == NULL) continue;
