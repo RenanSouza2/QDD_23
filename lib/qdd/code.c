@@ -74,7 +74,7 @@ void qdd_reduce(qdd_p q)
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
         node_p n0 = lh_0->lb[ELSE]->n;
-        list_head_reduce_redundance(&n0->lh, n0);
+        list_head_reduce_redundance(&n0->lh);
 
         if(n0->lh == NULL)
         {

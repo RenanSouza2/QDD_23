@@ -178,7 +178,7 @@ void test_list_body_reduce_redundance()
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_str_create(&LAB(V, 1));
     node_connect(n1, n0, ELSE);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == false);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 1, n1, 0
     ));
@@ -189,7 +189,7 @@ void test_list_body_reduce_redundance()
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_str_create(&LAB(V, 1));
     node_connect(n1, n0, THEN);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == false);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 0, 1, n1
     ));
@@ -200,7 +200,7 @@ void test_list_body_reduce_redundance()
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_str_create(&LAB(V, 1));
     node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
     assert(n0->lh == NULL);
     node_free(n0);
 
@@ -211,7 +211,7 @@ void test_list_body_reduce_redundance()
     n2 = node_str_create(&LAB(V, 1));
     node_connect(n2, n0, ELSE);
     node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 1, n2, 0
     ));
@@ -224,7 +224,7 @@ void test_list_body_reduce_redundance()
     n2 = node_str_create(&LAB(V, 1));
     node_connect(n2, n0, THEN);
     node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 0, 1, n2
     ));
@@ -237,7 +237,7 @@ void test_list_body_reduce_redundance()
     n2 = node_str_create(&LAB(V, 2));
     node_connect(n2, n1, ELSE);
     node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
     assert(list_head(n0->lh, 1,
         LAB(V, 2), 1, n2, 0
     ));
@@ -250,7 +250,7 @@ void test_list_body_reduce_redundance()
     n2 = node_str_create(&LAB(V, 2));
     node_connect(n2, n1, THEN);
     node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE], n0) == true);
+    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
     assert(list_head(n0->lh, 1,
         LAB(V, 2), 0, 1, n2
     ));
@@ -272,7 +272,7 @@ void test_list_body_reduce_redundance_rec()
     n2 = node_str_create(&LAB(V, 1));
     node_connect_both(n2, n0, n0);
     node_connect(n1, n0, ELSE);
-    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE], n0);
+    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE]);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 1, n1, 0
     ));
@@ -287,7 +287,7 @@ void test_list_body_reduce_redundance_rec()
     node_connect(n3, n0, ELSE);
     node_connect_both(n2, n0, n0);
     node_connect(n1, n0, ELSE);
-    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE], n0);
+    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE]);
     assert(list_head(n0->lh, 1,
         LAB(V, 1), 2, n1, n3, 0
     ));

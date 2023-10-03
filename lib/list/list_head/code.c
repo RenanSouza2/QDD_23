@@ -239,14 +239,14 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
 
 
 
-void list_head_reduce_redundance(list_head_p *lh_p, node_p n0)
+void list_head_reduce_redundance(list_head_p *lh_p)
 {
     if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
 
-    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE], n0));
+    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE]));
 
     if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
 
-    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb, n0);
-    list_head_reduce_redundance(&(*lh_p)->lh, n0);
+    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
+    list_head_reduce_redundance(&(*lh_p)->lh);
 }

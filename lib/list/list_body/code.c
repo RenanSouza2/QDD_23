@@ -177,9 +177,7 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     return lb_res;
 }
 
-#include "../list_head/debug.h"
-
-bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
+bool list_body_reduce_redundance(list_body_p *lb_p)
 {
     if(*lb_p == NULL) return false;
 
@@ -187,16 +185,16 @@ bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
     str_p str = node_str(n1);
     if(str->el != str->th) return false;
 
-    node_merge(n0, n1);
+    node_merge(str->el, n1);
 
     return true;
 }
 
-void list_body_reduce_redundance_rec(list_body_p *lb_p, node_p n0)
+void list_body_reduce_redundance_rec(list_body_p *lb_p)
 {
-    while(list_body_reduce_redundance(lb_p, n0));
+    while(list_body_reduce_redundance(lb_p));
 
     if(*lb_p == NULL) return;
 
-    list_body_reduce_redundance_rec(&(*lb_p)->lb, n0);
+    list_body_reduce_redundance_rec(&(*lb_p)->lb);
 }
