@@ -9,5 +9,7 @@ STRUCT(label)
 };
 
 #define LAB(CL, LV) (label_t){CL, LV}
+#define IDX(L) L.lv][L.cl
+
 
 #endif
