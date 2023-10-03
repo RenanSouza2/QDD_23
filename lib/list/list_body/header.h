@@ -20,7 +20,7 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2);
 
 typedef bool (*node_eq_f)(node_p, node_p);
 list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn);
-bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0);
-void list_body_reduce_redundance_rec(list_body_p *lb_p, node_p n0);
+bool list_body_reduce_redundance(list_body_p *lb_p);
+void list_body_reduce_redundance_rec(list_body_p *lb_p);
 
 #endif
