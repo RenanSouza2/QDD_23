@@ -3,4 +3,6 @@
 
 #include "../../static_utils/struct.h"
 
+PLACEHOLDER(qdd);
+
 #endif

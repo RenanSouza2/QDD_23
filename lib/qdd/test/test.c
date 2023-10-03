@@ -42,7 +42,6 @@ qdd_p qdd_create_variadic(int qbits, ...)
         for(int j=0; j<size; j++)
         {
             N_1[j] = n = node_str_create(&lab);
-            
             for(int side=0; side<2; side++)
             {
                 label_t lab_0 = va_arg(args, label_t);
