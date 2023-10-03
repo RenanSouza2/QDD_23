@@ -2,11 +2,13 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../../node/struct.h"
 
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
+#include "../../node/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
 void list_body_display_item(list_body_p lb)
@@ -28,7 +30,13 @@ void list_body_display(list_body_p lb)
     }
 }
 
-bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list * args)
+void list_body_display_full(list_body_p lb)
+{
+    for(; lb; lb = lb->lb)
+        node_display(lb->n);
+}
+
+bool list_body_vargs(list_body_p lb, int tot_b, va_list * args)
 {
     int i = 0;
     for(; lb && (i<tot_b); i++, lb = lb->lb)
@@ -55,11 +63,11 @@ bool list_body_vector_vargs(list_body_p lb, int tot_b, va_list * args)
     return true;
 }
 
-bool list_body_vector(list_body_p lb, int tot_b, ...)
+bool list_body(list_body_p lb, int tot_b, ...)
 {
     va_list args;
     va_start(args, tot_b);
-    return list_body_vector_vargs(lb, tot_b, &args);
+    return list_body_vargs(lb, tot_b, &args);
 }
 
 #endif
@@ -76,13 +84,6 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
     list_body_p lb = list_body_create_cold();
     *lb = (list_body_t){n, lb_next};
     return lb;
-}
-
-list_body_p list_body_copy(list_body_p lb)
-{
-    list_body_p lb_new = list_body_create_cold();
-    *lb_new = *lb;
-    return lb_new;
 }
 
 list_body_p list_body_create_vector(int max, node_p N[])
@@ -134,4 +135,68 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
     for(; lb_2->lb; lb_2 = lb_2->lb);
     lb_2->lb = lb_1;
     return lb_2_0;
+}
+
+
+
+bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
+{
+    bool insert = false;
+    for(; lb->lb; )
+    {
+        node_p n2 = lb->lb->n;
+        if(!fn(n1, n2)) 
+        {
+            lb = lb->lb;
+            continue;
+        }
+
+        insert = true;
+        if(!node_merge(n1, n2))
+            lb->lb = list_body_pop(lb->lb);
+    }
+
+    return insert;
+}
+
+list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
+{
+    if(lb == NULL) return NULL;
+
+    list_body_p lb_res = NULL;
+    for(; lb && lb->lb; lb = lb->lb)
+    {
+        node_p n1 = lb->n;
+        if(!list_body_reduce_equivalence_1(lb, fn, n1))
+            continue;
+            
+        lb_res = list_body_create(n1, lb_res);
+        if(lb->lb == NULL) break;
+    }
+
+    return lb_res;
+}
+
+#include "../list_head/debug.h"
+
+bool list_body_reduce_redundance(list_body_p *lb_p, node_p n0)
+{
+    if(*lb_p == NULL) return false;
+
+    node_p n1 = (*lb_p)->n;
+    str_p str = node_str(n1);
+    if(str->el != str->th) return false;
+
+    node_merge(n0, n1);
+
+    return true;
+}
+
+void list_body_reduce_redundance_rec(list_body_p *lb_p, node_p n0)
+{
+    while(list_body_reduce_redundance(lb_p, n0));
+
+    if(*lb_p == NULL) return;
+
+    list_body_reduce_redundance_rec(&(*lb_p)->lb, n0);
 }

@@ -9,8 +9,6 @@ STRUCT(node)
 
 int main()
 {
-    
-
     printf("\n");
     return 0;
 }

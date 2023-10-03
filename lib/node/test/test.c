@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "../debug.h"
+#include "../../list/list_body/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
@@ -40,12 +41,68 @@ void test_node_create_amp()
     assert(mem_empty());
 }
 
-void test_node_create()
+void test_node_life_cycle()
 {
     printf("\n\t%s\t\t", __func__);
 
     test_node_create_str();
     test_node_create_amp();
+
+    assert(mem_empty());
+}
+
+void test_amp_eq()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n1, n2;
+    n1 = node_amp_create(&AMP(0, 0));
+    n2 = node_amp_create(&AMP(0, 0));
+    assert(node_amp_eq(n1, n2) == true);
+    free(n2);
+
+    n2 = node_amp_create(&AMP(0, 1));
+    assert(node_amp_eq(n1, n2) == false);
+    free(n1);
+    free(n2);
+
+    assert(mem_empty());
+}
+
+void test_str_eq()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    node_p n0, n1, n2;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    n2 = node_str_create(&LAB(V, 1));
+
+    // typedef bool (*node_eq_f)(node_p, node_p);
+    node_eq_f fn[] = {node_el_eq, node_th_eq};
+    for(int side=0; side<2; side++)
+    {
+        assert(fn[side](n1, n2) == true);
+        
+        node_connect(n1, n0, side);
+        assert(fn[side](n1, n2) == false);
+        
+        node_connect(n2, n0, side);
+        assert(fn[side](n1, n2) == true);
+    }
+    node_free(n0);
+    free(n1);
+    free(n2);
+
+    assert(mem_empty());
+}
+
+void test_node_access()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    test_amp_eq();
+    test_str_eq();
 
     assert(mem_empty());
 }
@@ -60,14 +117,14 @@ void test_node_connect_one()
     node_p n_el = node_str_create(&LAB(V, 1));
     node_connect(n, n_el, ELSE);
     assert(ND_STR(n)->el == n_el);
-    assert(list_head_vector(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1, 
         LAB(V, 2), 1, n, 0
     ));
     
     node_p n_th = node_str_create(&LAB(V, 1));
     node_connect(n, n_th, THEN);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head_vector(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1, 
         LAB(V, 2), 0, 1, n
     ));
 
@@ -88,10 +145,10 @@ void test_node_connect_both()
     node_connect_both(n, n_el, n_th);
     assert(ND_STR(n)->el == n_el);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head_vector(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1, 
         LAB(V, 2), 1, n, 0
     ));
-    assert(list_head_vector(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1, 
         LAB(V, 2), 0, 1, n
     ));
 
@@ -191,10 +248,14 @@ void test_node_merge()
     for(int i=1; i<4; i++)
         node_connect(N1[i], n2, i&1);
     node_merge(n1, n2);
-    assert(list_head_vector(n1->lh, 2,
+    assert(list_head(n1->lh, 2,
         LAB(V, 1), 1, N1[0], 2, N1[1], N1[0], 
         LAB(V, 2), 1, N1[2], 1, N1[3]
     ));
+    for(list_head_p lh = n1->lh; lh; lh = lh->lh)
+    for(int side=0; side<2; side++)
+    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
+        assert(V_STR(lb->n)[side] == n1);
 
     printf("\n\t\t\t%s 3\t\t", __func__);
     node_p N2[] = {
@@ -207,10 +268,14 @@ void test_node_merge()
     for(int i=0; i<4; i++)
         node_connect(N2[i], n2, i&1);
     node_merge(n1, n2);
-    assert(list_head_vector(n1->lh, 2,
+    assert(list_head(n1->lh, 2,
         LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0], 
         LAB(V, 2), 2, N2[2], N1[2], 2, N2[3], N1[3]
     ));
+    for(list_head_p lh = n1->lh; lh; lh = lh->lh)
+    for(int side=0; side<2; side++)
+    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
+        assert(V_STR(lb->n)[side] == n1);
 
     for(int i=0; i<4; i++)
     {
@@ -239,7 +304,8 @@ void test_node()
 {
     printf("\n%s\t\t", __func__);
 
-    test_node_create();
+    test_node_life_cycle();
+    test_node_access();
     test_node_connection();
 
     assert(mem_empty());

@@ -6,15 +6,15 @@
 #include "../label/struct.h"
 #include "../amp/struct.h"
 
+STRUCT(str)
+{
+    node_p el, th;
+};
+
 STRUCT(node)
 {
     list_head_p lh;
     label_t lab;
-};
-
-STRUCT(str)
-{
-    node_p el, th;
 };
 
 STRUCT(node_str)

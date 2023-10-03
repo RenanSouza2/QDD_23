@@ -11,23 +11,32 @@
 
 #include "../utils/debug.h"
 #include "../label/debug.h"
+#include "../amp/debug.h"
 
 void node_str_display(node_p ns)
 {
-    PRINT("\n");
     PRINT("\nnode (str) display: %p", ns);
     PRINT("\nlabel: ");
     label_display(node_label(ns));
+    
+    str_p str = node_str(ns);
+    PRINT("\nel: %p\tth: %p", str->el, str->th);
     PRINT("\n");
 }
 
 void node_amp_display(node_p na)
 {
-    PRINT("\n");
     PRINT("\nnode (amp) display: %p", na);
     PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
-    PRINT("\nlabel: %.2e %.2e", ND_AMP(na)->re, ND_AMP(na)->im);
+    PRINT("\namp: ");
+    amp_display(node_amp(na));
     PRINT("\n");
+}
+
+void node_display(node_p n)
+{
+    if(node_is_amp(n)) node_amp_display(n);
+    else               node_str_display(n);
 }
 
 void str_display(str_p str)
@@ -93,6 +102,25 @@ node_p node_first(node_p n)
     return list_head_first(n->lh);
 }
 
+bool node_amp_eq(node_p n1, node_p n2)
+{
+    return amp_eq(node_amp(n1), node_amp(n2));
+}
+
+bool node_el_eq(node_p n1, node_p n2)
+{
+    str_p str_1 = node_str(n1);
+    str_p str_2 = node_str(n2);
+    return str_1->el == str_2->el;
+}
+
+bool node_th_eq(node_p n1, node_p n2)
+{
+    str_p str_1 = node_str(n1);
+    str_p str_2 = node_str(n2);
+    return str_1->th == str_2->th;
+}
+
 
 
 void node_connect(node_p n1, node_p n0, int side)
@@ -104,9 +132,10 @@ void node_connect(node_p n1, node_p n0, int side)
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
 {
-    assert(ND_STR(n)->el == NULL);
-    assert(ND_STR(n)->th == NULL);
-    *ND_STR(n) = (str_t){n_el, n_th};
+    str_p str = node_str(n);
+    assert(str->el == NULL);
+    assert(str->th == NULL);
+    *str = (str_t){n_el, n_th};
     n_el->lh = list_head_insert(n_el->lh, n, ELSE);
     n_th->lh = list_head_insert(n_th->lh, n, THEN);
 }
@@ -127,16 +156,15 @@ void node_disconnect_both(node_p n)
     node_p n_th = str->th;
     assert(n_el);
     assert(n_th);
+    *str = (str_t){NULL, NULL};
     
     n_el->lh = list_head_remove(n_el->lh, n, ELSE);
     n_th->lh = list_head_remove(n_th->lh, n, THEN);
-
-    *str = (str_t){NULL, NULL};
 }
 
 
 
-void node_merge(node_p n1, node_p n2)
+bool node_merge(node_p n1, node_p n2)
 {
     assert(n1);
     assert(n2);
@@ -151,6 +179,9 @@ void node_merge(node_p n1, node_p n2)
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
-    free(n2);
-}
+    bool res = !node_is_amp(n2);
+    if(res) node_disconnect_both(n2);
 
+    free(n2);
+    return res;
+}
