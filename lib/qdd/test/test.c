@@ -11,11 +11,9 @@
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
-#define IDX(L) L.cl][L.lv
-
 qdd_p qdd_create_variadic(int qbits, ...)
 {
-    node_p *N[3][qbits+1];
+    node_p *N[qbits+1][3];
     memset(N, 0, sizeof(N));
 
     va_list args;
@@ -56,7 +54,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
 
     for(int i=0; i<=qbits; i++)
     for(int j=0; j<3; j++)
-    if(N[j][i]) free(N[j][i]);
+    if(N[i][j]) free(N[i][j]);
 
     return qdd_create(n, lb, qbits);
 }
