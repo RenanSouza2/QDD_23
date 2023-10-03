@@ -38,23 +38,24 @@ qdd_p qdd_create_variadic(int qbits, ...)
         label_t lab = va_arg(args, label_t);
         int size = va_arg(args, int);
 
-        N[IDX(lab)] = malloc(size * sizeof(node_p));
+        node_p *N_1 = N[IDX(lab)] = malloc(size * sizeof(node_p));
         for(int j=0; j<size; j++)
         {
-            N[IDX(lab)][j] = n = node_str_create(&lab);
+            N_1[j] = n = node_str_create(&lab);
             
             for(int side=0; side<2; side++)
             {
                 label_t lab_0 = va_arg(args, label_t);
-                assert(N[IDX(lab_0)]);
+                node_p *N_0 = N[IDX(lab_0)];
+                assert(N_0);
 
                 int index = va_arg(args, int);
-                node_connect(n, N[IDX(lab_0)][index], side);
+                node_connect(n, N_0[index], side);
             }
         }
     }
 
-    for(int i=0; i<qbits; i++)
+    for(int i=0; i<=qbits; i++)
     for(int j=0; j<3; j++)
     if(N[j][i]) free(N[j][i]);
 
@@ -85,6 +86,7 @@ void test_qdd_create_variadic()
     V1 = LAB(V, 1);
     V2 = LAB(V, 2);
 
+    printf("\n\t\t%s 1\t\t", __func__);
     qdd_p q = qdd_create_variadic(1, 
         2, AMP(0, 0), AMP(0, 1), 
         1,
@@ -103,6 +105,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
+    printf("\n\t\t%s 2\t\t", __func__);
     q = qdd_create_variadic(1, 
         1, AMP(0, 0), 
         0
@@ -113,6 +116,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
+    printf("\n\t\t%s 3\t\t", __func__);
     q = qdd_create_variadic(2, 
         4, AMP(0, 0), AMP(0, 1), AMP(0, 2), AMP(0, 3),
         2,
@@ -137,6 +141,7 @@ void test_qdd_create_variadic()
 
     assert(mem_empty());
     
+    printf("\n\t\t%s 4\t\t", __func__);
     q = qdd_create_variadic(2, 
         2, AMP(0, 0), AMP(0, 1),
         2,
@@ -158,6 +163,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
+    printf("\n\t\t%s 5\t\t", __func__);
     q = qdd_create_variadic(2,
         3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
         2,
