@@ -5,6 +5,7 @@
 #include "../label/struct.h"
 #include "../node/struct.h"
 #include "../tree/header.h"
+#include "../apply/struct.h"
 #include "../list/list_head/struct.h"
 
 #ifdef DEBUG
@@ -85,4 +86,18 @@ void qdd_reduce(qdd_p q)
         list_head_p lh_aux = list_head_reduce_equivalence(n0->lh);
         list_head_merge(lh_0, lh_aux);
     }
+}
+
+apply_t apply_tree_fit(apply_p A[][3], node_p n1, node_p n)
+{
+    if(n1 && node_first(n) != n1) return;
+
+    label_t lab = *node_label(n);
+    A[IDX(lab)] = apply_create(n, NULL);
+}
+
+void qdd_copy(qdd_p q)
+{
+    apply_p A[q->qbits + 1][3];
+    memset(A, 0, sizeof(A));
 }

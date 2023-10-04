@@ -28,7 +28,6 @@ qdd_p qdd_create_variadic(int qbits, ...)
         amp_t amp = va_arg(args, amp_t);
         N[0][0][i] = n = node_amp_create(&amp);
     }
-    list_body_p lb = list_body_create_vector(size, N[0][0]);
 
     int max = va_arg(args, int);
     for(int i=0; i<max; i++)
@@ -52,6 +51,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
         }
     }
 
+    list_body_p lb = list_body_create_vector(size, N[0][0]);
     for(int i=0; i<=qbits; i++)
     for(int j=0; j<3; j++)
     if(N[i][j]) free(N[i][j]);
