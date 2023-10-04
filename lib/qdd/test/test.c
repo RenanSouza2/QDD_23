@@ -8,6 +8,7 @@
 #include "../../label/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
+#include "../../list/list_body/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 

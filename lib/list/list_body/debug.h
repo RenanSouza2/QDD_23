@@ -15,6 +15,6 @@ bool list_body(list_body_p lb, int tot_b, ...);
 
 #endif
 
-#define LB(POINTER)    ((list_body_p)(POINTER))
+#define LB(POINTER) ((list_body_p)(POINTER))
 
 #endif

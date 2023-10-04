@@ -3,8 +3,6 @@
 
 #include "header.h"
 
-#define LB(POINTER)    ((list_body_p)(POINTER))
-
 STRUCT(list_body)
 {
     node_p n;

@@ -3,6 +3,4 @@
 
 #include "../../static_utils/struct.h"
 
-void hello_example();
-
 #endif

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include "debug.h"
@@ -57,8 +58,8 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
 
 void qdd_free(qdd_p q)
 {
-    tree_free(LB(q)->n);
-    list_body_free(LB(q)->lb);
+    tree_free(q->n);
+    list_body_free(q->lb);
     free(q);
 }
 
@@ -88,13 +89,15 @@ void qdd_reduce(qdd_p q)
     }
 }
 
-apply_t apply_tree_fit(apply_p A[][3], node_p n1, node_p n)
-{
-    if(n1 && node_first(n) != n1) return;
 
-    label_t lab = *node_label(n);
-    A[IDX(lab)] = apply_create(n, NULL);
-}
+
+// apply_t apply_tree_fit(apply_p A[][3], node_p n1, node_p n)
+// {
+//     if(n1 && node_first(n) != n1) return;
+//
+//     label_t lab = *node_label(n);
+//     A[IDX(lab)] = apply_create(n, NULL);
+// }
 
 void qdd_copy(qdd_p q)
 {
