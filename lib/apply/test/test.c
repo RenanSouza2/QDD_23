@@ -14,8 +14,8 @@ void test_apply_create()
     assert(a->n1 == ND(1));
     assert(a->n2 == ND(2));
     assert(a->n  == NULL);
-    assert(a->a1 == NULL);
-    assert(a->a2 == NULL);
+    assert(a->el == NULL);
+    assert(a->th == NULL);
     free(a);
 
     assert(mem_empty());

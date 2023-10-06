@@ -8,7 +8,7 @@
 STRUCT(apply)
 {
     node_p n, n1, n2;
-    apply_p a, a1, a2;
+    apply_p a, el, th;
 };
 
 #endif

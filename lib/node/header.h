@@ -17,6 +17,7 @@ label_p node_label(node_p n);
 
 node_p node_str_create(label_p lab);
 node_p node_amp_create(amp_p amp);
+node_p node_copy(node_p n);
 void node_free(node_p n);
 
 bool node_is_amp(node_p n);

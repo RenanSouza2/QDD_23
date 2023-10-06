@@ -66,6 +66,15 @@ node_p node_amp_create(amp_p amp)
     return ND(na);
 }
 
+node_p node_copy(node_p n)
+{
+    label_p lab = node_label(n);
+    if(label_is_amp(lab))
+        return node_amp_create(node_amp(n));
+
+    return node_str_create(lab);
+}
+
 void node_free(node_p n)
 {
     list_head_free(n->lh);
