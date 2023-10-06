@@ -5,13 +5,18 @@
 #include "../../node/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
-// apply_p apply_create(node_p n1, node_p n2)
 void test_apply_create()
 {
-    printf("\n%s\t\t", __func__);
+    printf("\n\t%s\t\t", __func__);
 
-    apply_p a = apply_create(ND(1), ND(2));
-    assert(a);
+    apply_p a = apply_create(ND(1), ND(2), AP(3));
+    assert(a->n  == NULL);
+    assert(a->n1 == ND(1));
+    assert(a->n2 == ND(2));
+    assert(a->n  == NULL);
+    assert(a->a1 == NULL);
+    assert(a->a2 == NULL);
+    free(a);
 
     assert(mem_empty());
 }

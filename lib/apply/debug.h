@@ -6,6 +6,8 @@
 #ifdef DEBUG
 #endif
 
-apply_p apply_create(node_p n1, node_p n2);
+#define AP(POINTER) ((apply_p)(POINTER))
+
+apply_p apply_create(node_p n1, node_p n2, apply_p a_next);
 
 #endif
