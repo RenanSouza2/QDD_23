@@ -9,13 +9,14 @@ void test_apply_create()
 {
     printf("\n\t%s\t\t", __func__);
 
-    apply_p a = apply_create(ND(1), ND(2), AP(3));
+    apply_p a = apply_create(ND(1), ND(2));
     assert(a->n  == NULL);
     assert(a->n1 == ND(1));
     assert(a->n2 == ND(2));
-    assert(a->n  == NULL);
     assert(a->el == NULL);
     assert(a->th == NULL);
+    assert(a->a1 == NULL);
+    assert(a->a2 == NULL);
     free(a);
 
     assert(mem_empty());

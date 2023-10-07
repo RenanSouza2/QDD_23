@@ -3,7 +3,7 @@
 
 void test_label_compare()
 {
-    printf("\n\ttest label compare\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     label_t lab_1 = LAB(V, 2);
     label_t lab_2 = LAB(C, 1);
@@ -40,7 +40,7 @@ void test_label_compare()
 
 void test_label()
 {
-    printf("\ntest label library\t\t");
+    printf("\n%s\t\t", __func__);
 
     test_label_compare();
 }
