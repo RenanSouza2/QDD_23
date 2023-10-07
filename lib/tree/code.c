@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "debug.h"
+#include "../apply/header.h"
 #include "../node/struct.h"
 #include "../list/list_body/struct.h"
 #include "../list/list_head/struct.h"
@@ -101,4 +102,13 @@ list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 list_head_p tree_enlist(node_p n)
 {
     return tree_enlist_rec(NULL, NULL, n);
+}
+
+node_p tree_copy(node_p n)
+{
+    apply_p a = apply_tree_fit(n);
+    apply_copy(a);
+    n = apply_tree_build(a);
+    apply_free(a);
+    return n;
 }

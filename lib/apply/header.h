@@ -6,6 +6,9 @@
 
 PLACEHOLDER(apply);
 
-apply_p apply_qdd_fit(qdd_p q);
+apply_p apply_tree_fit(node_p n);
+void apply_copy(apply_p a);
+node_p apply_tree_build(apply_p a);
+void apply_free(apply_p a);
 
 #endif
