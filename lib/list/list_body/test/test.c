@@ -268,8 +268,14 @@ void test_list_body_reduce_2_internal()
         node_amp_create(&AMP(0, 0)),
         node_amp_create(&AMP(0, 1))
     };
+
     // lb = list_body_create_vector(2, N);
     assert(list_body_reduce_2_internal(lb, node_amp_eq, N[0]) == false);
+    
+    
+
+    mem_report_full("1");
+    
     free(lb);
 
     assert(mem_empty());
