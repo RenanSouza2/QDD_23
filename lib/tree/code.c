@@ -8,6 +8,8 @@
 
 #ifdef DEBUG
 
+#include <string.h>
+
 #include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
@@ -65,6 +67,56 @@ bool tree(node_p n1, node_p n2)
     return tree_rec(NULL, n1, n2);
 }
 
+node_p tree_create_variadic(int qbits, va_list args)
+{
+    node_p *N[qbits+1][3];
+    memset(N, 0, sizeof(N));
+
+    int size = va_arg(args, int);
+    N[0][0] = malloc(size * sizeof(node_p));
+    node_p n;
+    for(int i=0; i<size; i++)
+    {
+        amp_t amp = va_arg(args, amp_t);
+        N[0][0][i] = n = node_amp_create(&amp);
+    }
+
+    int max = va_arg(args, int);
+    for(int i=0; i<max; i++)
+    {
+        label_t lab = va_arg(args, label_t);
+        int size = va_arg(args, int);
+
+        node_p *N_1 = N[IDX(lab)] = malloc(size * sizeof(node_p));
+        for(int j=0; j<size; j++)
+        {
+            N_1[j] = n = node_str_create(&lab);
+            for(int side=0; side<2; side++)
+            {
+                label_t lab_0 = va_arg(args, label_t);
+                node_p *N_0 = N[IDX(lab_0)];
+                assert(N_0);
+
+                int index = va_arg(args, int);
+                node_connect(n, N_0[index], side);
+            }
+        }
+    }
+
+    for(int i=0; i<=qbits; i++)
+    for(int j=0; j<3; j++)
+    if(N[i][j]) free(N[i][j]);
+
+    return n;
+}
+
+node_p tree_create_description(int qbits, ...)
+{
+    va_list args;
+    va_start(args, qbits);
+    return tree_create_variadic(qbits, args);
+}
+
 #endif
 
 void tree_free(node_p n)
@@ -102,6 +154,15 @@ list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 list_head_p tree_enlist(node_p n)
 {
     return tree_enlist_rec(NULL, NULL, n);
+}
+
+list_body_p tree_enlist_amplitude(node_p n)
+{
+    list_head_p lh = tree_enlist(n);
+    list_body_p lb = lh->lb[ELSE];
+    list_head_free(lh->lh);
+    free(lh);
+    return lb;
 }
 
 node_p tree_copy(node_p n)

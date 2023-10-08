@@ -5,8 +5,12 @@
 
 #ifdef DEBUG
 
+#include <stdarg.h>
+
 void tree_display(node_p n);
 bool tree(node_p n1, node_p n2);
+node_p tree_create_variadic(int qbits, va_list args);
+node_p tree_create_description(int qbits, ...);
 
 #endif
 

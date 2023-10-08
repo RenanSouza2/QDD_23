@@ -84,6 +84,16 @@ void test_tree_assert()
     assert(mem_empty());
 }
 
+void test_tree_copy()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    printf("\n\t\t%s 1\t\t", __func__);
+    
+
+    assert(mem_empty());
+}
+
 void test_tree()
 {
     printf("\n%s\t\t", __func__);

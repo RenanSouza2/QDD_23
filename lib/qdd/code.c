@@ -11,7 +11,18 @@
 
 #ifdef DEBUG
 
+#include <stdarg.h>
+
 #include "../../static_utils/mem_report/bin/header.h"
+#include "../tree/debug.h"
+
+qdd_p qdd_create_variadic(int qbits, ...)
+{
+    va_list args;
+    va_start(args, qbits);
+    node_p n = tree_create_variadic(qbits, args);
+    return qdd_encapsulate_tree(qbits, n);
+}
 
 #endif
 
@@ -63,6 +74,12 @@ void qdd_free(qdd_p q)
     free(q);
 }
 
+
+qdd_p qdd_encapsulate_tree(int qbits, node_p n)
+{
+    list_body_p lb = tree_enlist_amplitude(n);
+    return qdd_create(n, lb, qbits);
+}
 
 
 void qdd_reduce(qdd_p q)

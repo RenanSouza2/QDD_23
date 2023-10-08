@@ -7,5 +7,7 @@
 
 void tree_free(node_p n);
 list_head_p tree_enlist(node_p n);
+node_p tree_copy(node_p n);
+list_body_p tree_enlist_amplitude(node_p n);
 
 #endif
