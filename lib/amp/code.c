@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <assert.h>
 
 #include "debug.h"
 
@@ -22,6 +23,9 @@ void set_eps(number_t _eps)
 
 bool amp_eq(amp_p amp_1, amp_p amp_2)
 {
+    assert(amp_1);
+    assert(amp_2);
+
     number_t re = amp_1->re - amp_2->re;
     if(re < -eps || re > eps) return false;
 

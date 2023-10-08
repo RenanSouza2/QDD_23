@@ -7,6 +7,9 @@
 
 #include <stdarg.h>
 
+list_body_p list_body_create_test(int init, int max);
+list_body_p list_body_create_vector(int max, node_p N[]);
+
 void list_body_display(list_body_p lb);
 void list_body_display_full(list_body_p lb);
 
@@ -16,5 +19,7 @@ bool list_body(list_body_p lb, int tot_b, ...);
 #endif
 
 #define LB(POINTER) ((list_body_p)(POINTER))
+
+bool list_body_reduce_2_internal(list_body_p lb, node_eq_f fn, node_p n1);
 
 #endif

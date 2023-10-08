@@ -243,11 +243,11 @@ void list_head_reduce_redundance(list_head_p *lh_p)
 {
     if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
 
-    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE]));
+    while(*lh_p && list_body_reduce_1(&(*lh_p)->lb[ELSE]));
 
     if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
 
-    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
+    list_body_reduce_1_list(&(*lh_p)->lb[ELSE]->lb);
     list_head_reduce_redundance(&(*lh_p)->lh);
 }
 
@@ -259,7 +259,7 @@ list_head_p list_head_reduce_equivalence(list_head_p lh)
     for(int side = 0; side < 2; side ++)
     if(lh->lb[side])
     {
-        list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+        list_body_p lb_aux = list_body_reduce_2(lh->lb[side], fn[side]);
         if(lb_aux == NULL) continue;
 
         list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 

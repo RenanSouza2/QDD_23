@@ -12,6 +12,8 @@
 
 #endif
 
+
+
 apply_p apply_create(node_p n1, node_p n2)
 {
     apply_p a = malloc(sizeof(apply_t));
@@ -29,6 +31,8 @@ void apply_free(apply_p a)
     apply_free(a->a2);
     free(a);
 }
+
+
 
 apply_p apply_insert(apply_p *a_root, node_p n1, node_p n2)
 {

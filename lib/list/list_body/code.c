@@ -11,6 +11,15 @@
 #include "../../node/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
 
+list_body_p list_body_create_test(int init, int max)
+{
+    list_body_p lb = NULL;
+    for(long i=max; i>=init; i--)
+        lb = list_body_create(ND(i), lb);
+
+    return lb;
+}
+
 void list_body_display_item(list_body_p lb)
 {
     if(display_header("LIST BODY", lb)) return;
@@ -70,22 +79,6 @@ bool list_body(list_body_p lb, int tot_b, ...)
     return list_body_vargs(lb, tot_b, &args);
 }
 
-#endif
-
-list_body_p list_body_create_cold()
-{
-    list_body_p lb = malloc(sizeof(list_body_t));
-    assert(lb);
-    return lb;
-}
-
-list_body_p list_body_create(node_p n, list_body_p lb_next)
-{
-    list_body_p lb = list_body_create_cold();
-    *lb = (list_body_t){n, lb_next};
-    return lb;
-}
-
 list_body_p list_body_create_vector(int max, node_p N[])
 {
     list_body_p lb_0 = list_body_create(N[0], NULL);
@@ -97,8 +90,21 @@ list_body_p list_body_create_vector(int max, node_p N[])
     return lb_0;
 }
 
+#endif
+
+
+
+list_body_p list_body_create(node_p n, list_body_p lb_next)
+{
+    list_body_p lb = malloc(sizeof(list_body_t));
+    assert(lb);
+    *lb = (list_body_t){n, lb_next};
+    return lb;
+}
+
 list_body_p list_body_pop(list_body_p lb)
 {
+    assert(lb);
     list_body_p lb_aux = lb->lb;
     free(lb);
     return lb_aux;
@@ -113,6 +119,8 @@ void list_body_free(list_body_p lb)
 
 list_body_p list_body_remove(list_body_p lb, node_p n)
 {
+    assert(lb);
+
     if(lb->n == n)
         return list_body_pop(lb);
 
@@ -139,8 +147,34 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 
 
 
-bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
+bool list_body_reduce_1(list_body_p *lb_p)
 {
+    assert(lb_p);
+    if(*lb_p == NULL) return false;
+
+    node_p n1 = (*lb_p)->n;
+    str_p str = node_str(n1);
+    if(str->el != str->th) return false;
+
+    node_merge(str->el, n1);
+
+    return true;
+}
+
+void list_body_reduce_1_list(list_body_p *lb_p)
+{
+    while(list_body_reduce_1(lb_p));
+
+    if(*lb_p == NULL) return;
+
+    list_body_reduce_1_list(&(*lb_p)->lb);
+}
+
+bool list_body_reduce_2_internal(list_body_p lb, node_eq_f fn, node_p n1)
+{
+    assert(lb);
+    assert(n1);
+
     bool insert = false;
     for(; lb->lb; )
     {
@@ -159,7 +193,7 @@ bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
     return insert;
 }
 
-list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
+list_body_p list_body_reduce_2(list_body_p lb, node_eq_f fn)
 {
     if(lb == NULL) return NULL;
 
@@ -167,7 +201,7 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     for(; lb && lb->lb; lb = lb->lb)
     {
         node_p n1 = lb->n;
-        if(!list_body_reduce_equivalence_1(lb, fn, n1))
+        if(!list_body_reduce_2_internal(lb, fn, n1))
             continue;
             
         lb_res = list_body_create(n1, lb_res);
@@ -175,26 +209,4 @@ list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
     }
 
     return lb_res;
-}
-
-bool list_body_reduce_redundance(list_body_p *lb_p)
-{
-    if(*lb_p == NULL) return false;
-
-    node_p n1 = (*lb_p)->n;
-    str_p str = node_str(n1);
-    if(str->el != str->th) return false;
-
-    node_merge(str->el, n1);
-
-    return true;
-}
-
-void list_body_reduce_redundance_rec(list_body_p *lb_p)
-{
-    while(list_body_reduce_redundance(lb_p));
-
-    if(*lb_p == NULL) return;
-
-    list_body_reduce_redundance_rec(&(*lb_p)->lb);
 }

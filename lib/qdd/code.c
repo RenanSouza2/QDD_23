@@ -84,7 +84,7 @@ qdd_p qdd_encapsulate_tree(int qbits, node_p n)
 
 void qdd_reduce(qdd_p q)
 {
-    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
+    list_body_p lb_aux = list_body_reduce_2(q->lb, node_amp_eq);
     if(lb_aux == NULL) return;
 
     for(
