@@ -270,14 +270,9 @@ void test_list_body_reduce_2_internal()
     };
     // lb = list_body_create_vector(2, N);
     assert(list_body_reduce_2_internal(lb, node_amp_eq, N[0]) == false);
-    
-    mem_report_full();
-
-    // list_body_free(lb);
     free(lb);
 
     assert(mem_empty());
-    printf("\nHere");
 }
 
 void test_list_body_reduce_2()
