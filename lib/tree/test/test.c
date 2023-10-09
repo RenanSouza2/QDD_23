@@ -87,9 +87,44 @@ void test_tree_assert()
 void test_tree_copy()
 {
     printf("\n\t%s\t\t", __func__);
+    
+    label_t amp, V1, V2;
+    amp = LAB(0, 0);
+    V1  = LAB(V, 1);
+    V2  = LAB(V, 2);
 
     printf("\n\t\t%s 1\t\t", __func__);
-    
+    node_p n1 = tree_create(1, 
+        1, AMP(0, 0),
+        0
+    );
+    node_p n2 = tree_copy(n1);
+    assert(tree(n1, n2));
+    tree_free(n1);
+    tree_free(n2);
+
+    printf("\n\t\t%s 2\t\t", __func__);
+    n1 = tree_create(1, 
+        2, AMP(0, 0), AMP(0, 1),
+        1,
+        V1, 1, amp, 0, amp, 1
+    );
+    n2 = tree_copy(n1);
+    assert(tree(n1, n2));
+    tree_free(n1);
+    tree_free(n2);
+
+    printf("\n\t\t%s 3\t\t", __func__);
+    n1 = tree_create(2, 
+        2, AMP(0, 0), AMP(0, 1),
+        2,
+        V1, 1, amp, 0, amp, 1,
+        V2, 1, amp, 0, V1, 0
+    );
+    n2 = tree_copy(n1);
+    assert(tree(n1, n2));
+    tree_free(n1);
+    tree_free(n2);
 
     assert(mem_empty());
 }
@@ -100,6 +135,7 @@ void test_tree()
 
     test_tree_enlist();
     test_tree_assert();
+    test_tree_copy();
 
     assert(mem_empty());
 }

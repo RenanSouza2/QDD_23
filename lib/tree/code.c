@@ -111,7 +111,7 @@ node_p tree_create_variadic(int qbits, va_list args)
     return n;
 }
 
-node_p tree_create_description(int qbits, ...)
+node_p tree_create(int qbits, ...)
 {
     va_list args;
     va_start(args, qbits);
