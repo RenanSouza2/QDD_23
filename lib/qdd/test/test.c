@@ -50,8 +50,8 @@ void test_qdd_create_variadic()
     node_connect_both(n, n0, n1);
     
     assert(tree(q->n, n));
-    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
-    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
+    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 1)));
+    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 0)));
     qdd_free(q);
     tree_free(n);
 
