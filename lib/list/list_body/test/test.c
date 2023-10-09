@@ -30,6 +30,27 @@ void test_list_body_create()
     assert(mem_empty());
 }
 
+void test_list_body_create_vector()
+{
+    printf("\n\t%s\t\t", __func__);
+
+    node_p N[] = {
+        node_amp_create(&AMP(0, 0)),
+        node_amp_create(&AMP(0, 1))
+    };
+    list_body_p lb = list_body_create_vector(1, N);
+    assert(list_body(lb, 1, N[0]));
+    list_body_free(lb);
+
+    lb = list_body_create_vector(2, N);
+    assert(list_body(lb, 2, N[0], N[1]));
+    list_body_free(lb);
+    free(N[0]);
+    free(N[1]);
+
+    assert(mem_empty());
+}
+
 void test_list_body_pop()
 {
     printf("\n\t%s\t\t", __func__);
@@ -349,6 +370,7 @@ void test_list_body()
     printf("\n%s\t\t", __func__);
 
     test_list_body_create();
+    test_list_body_create_vector();
     test_list_body_pop();
     test_list_body_operations();
     test_list_body_reduce();
@@ -361,8 +383,7 @@ void test_list_body()
 int main() 
 {
     setbuf(stdout, NULL);
-    // test_list_body();
-    test_list_body_reduce_2_internal();
+    test_list_body();
     printf("\n\n\tTest successful\n\n");
     return 0;
 }
