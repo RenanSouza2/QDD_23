@@ -411,7 +411,6 @@ void test_list_head_reduce_2()
     assert(mem_empty());
 }
 
-
 void test_list_head_operations()
 {
     printf("\n\t%s\t\t", __func__);

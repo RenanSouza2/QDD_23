@@ -121,6 +121,8 @@ node_p tree_create_description(int qbits, ...)
 
 void tree_free(node_p n)
 {
+    assert(n);
+
     if(n->lh) return;
 
     if(node_is_amp(n))
@@ -153,6 +155,8 @@ list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 
 list_head_p tree_enlist(node_p n)
 {
+    assert(n);
+
     return tree_enlist_rec(NULL, NULL, n);
 }
 
