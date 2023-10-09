@@ -278,14 +278,9 @@ void test_list_body_reduce_2_internal()
     assert(list_body_reduce_2_internal(lb, node_amp_eq, N[0]) == true);
     assert(list_body(lb, 2, N[0], N[1]));
 
-    printf("\n------------");
-    for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->lb)
-        printf("\n%p", lb);
-    printf("\n------------");
-
     list_body_free(lb);
-    // free(N[0]);
-    // free(N[1]);
+    free(N[0]);
+    free(N[1]);
 
     assert(mem_empty());
 }
