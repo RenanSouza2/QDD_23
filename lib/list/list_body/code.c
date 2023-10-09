@@ -79,17 +79,6 @@ bool list_body(list_body_p lb, int tot_b, ...)
     return list_body_vargs(lb, tot_b, &args);
 }
 
-list_body_p list_body_create_vector(int max, node_p N[])
-{
-    list_body_p lb_0 = list_body_create(N[0], NULL);
-    
-    list_body_p lb = lb_0;
-    for(int i=1; i<max; i++)
-        lb = lb->lb = list_body_create(N[i], NULL);
-
-    return lb_0;
-}
-
 #endif
 
 
@@ -100,6 +89,17 @@ list_body_p list_body_create(node_p n, list_body_p lb_next)
     assert(lb);
     *lb = (list_body_t){n, lb_next};
     return lb;
+}
+
+list_body_p list_body_create_vector(int max, node_p N[])
+{
+    list_body_p lb_0 = list_body_create(N[0], NULL);
+    
+    list_body_p lb = lb_0;
+    for(int i=1; i<max; i++)
+        lb = lb->lb = list_body_create(N[i], NULL);
+
+    return lb_0;
 }
 
 list_body_p list_body_pop(list_body_p lb)

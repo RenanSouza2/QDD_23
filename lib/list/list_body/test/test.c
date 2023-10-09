@@ -266,17 +266,26 @@ void test_list_body_reduce_2_internal()
     printf("\n\t\t\t%s 2\t\t", __func__);
     node_p N[] = {
         node_amp_create(&AMP(0, 0)),
-        node_amp_create(&AMP(0, 1))
+        node_amp_create(&AMP(0, 1)),
+        node_amp_create(&AMP(0, 0))
     };
-
-    // lb = list_body_create_vector(2, N);
+    lb = list_body_create_vector(2, N);
     assert(list_body_reduce_2_internal(lb, node_amp_eq, N[0]) == false);
+    list_body_free(lb);
     
-    
+    printf("\n\t\t\t%s 3\t\t", __func__);
+    lb = list_body_create_vector(3, N);
+    assert(list_body_reduce_2_internal(lb, node_amp_eq, N[0]) == true);
+    assert(list_body(lb, 2, N[0], N[1]));
 
-    mem_report_full("1");
-    
-    free(lb);
+    printf("\n------------");
+    for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->lb)
+        printf("\n%p", lb);
+    printf("\n------------");
+
+    list_body_free(lb);
+    // free(N[0]);
+    // free(N[1]);
 
     assert(mem_empty());
 }

@@ -8,7 +8,6 @@
 #include <stdarg.h>
 
 list_body_p list_body_create_test(int init, int max);
-list_body_p list_body_create_vector(int max, node_p N[]);
 
 void list_body_display(list_body_p lb);
 void list_body_display_full(list_body_p lb);
