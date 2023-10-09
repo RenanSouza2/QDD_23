@@ -1,9 +1,10 @@
+#include <assert.h>
+
 #include "debug.h"
 
 #ifdef DEBUG
 
 #include <stdbool.h>
-#include <assert.h>
 
 #include "../utils/header.h"
 
