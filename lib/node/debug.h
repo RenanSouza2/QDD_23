@@ -8,6 +8,7 @@
 void node_str_display(node_p ns);
 void node_amp_display(node_p na);
 void node_display(node_p n);
+void node_vector_free(int len, node_p N[]);
 
 #endif
 

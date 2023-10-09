@@ -147,17 +147,18 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 
 
 
-bool list_body_reduce_1(list_body_p *lb_p)
+bool list_body_reduce_1(list_body_p *lb_root)
 {
-    assert(lb_p);
-    if(*lb_p == NULL) return false;
+    assert(lb_root);
 
-    node_p n1 = (*lb_p)->n;
+    list_body_p lb = *lb_root;
+    if(lb == NULL) return false;
+
+    node_p n1 = lb->n;
     str_p str = node_str(n1);
     if(str->el != str->th) return false;
 
     node_merge(str->el, n1);
-
     return true;
 }
 

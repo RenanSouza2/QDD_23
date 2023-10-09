@@ -93,7 +93,7 @@ void qdd_reduce(qdd_p q)
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
         node_p n0 = lh_0->lb[ELSE]->n;
-        list_head_reduce_redundance(&n0->lh);
+        list_head_reduce_1(&n0->lh);
 
         if(n0->lh == NULL)
         {
@@ -101,7 +101,7 @@ void qdd_reduce(qdd_p q)
             continue;
         }
 
-        list_head_p lh_aux = list_head_reduce_equivalence(n0->lh);
+        list_head_p lh_aux = list_head_reduce_2(n0->lh);
         list_head_merge(lh_0, lh_aux);
     }
 }

@@ -44,6 +44,12 @@ void str_display(str_p str)
     PRINT("%p\t\t%p", str->el, str->th);
 }
 
+void node_vector_free(int len, node_p N[])
+{
+    for(int i=0; i<len; i++)
+        free(N[i]);
+}
+
 #endif
 
 

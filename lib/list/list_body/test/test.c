@@ -19,14 +19,6 @@ void test_list_body_create()
     assert(lb->lb == LB(2));
     free(lb);
 
-    lb = list_body_create_vector(1, (node_p[]){ND(1)});
-    assert(list_body(lb, 1, ND(1)));
-    free(lb);
-
-    lb = list_body_create_vector(1, (node_p[]){ND(1), ND(2)});
-    assert(list_body(lb, 1, ND(1), ND(2)));
-    free(lb);
-
     assert(mem_empty());
 }
 
@@ -45,8 +37,7 @@ void test_list_body_create_vector()
     lb = list_body_create_vector(2, N);
     assert(list_body(lb, 2, N[0], N[1]));
     list_body_free(lb);
-    free(N[0]);
-    free(N[1]);
+    node_vector_free(2, N);
 
     assert(mem_empty());
 }
@@ -300,8 +291,7 @@ void test_list_body_reduce_2_internal()
     assert(list_body(lb, 2, N[0], N[1]));
 
     list_body_free(lb);
-    free(N[0]);
-    free(N[1]);
+    node_vector_free(2, N);
 
     assert(mem_empty());
 }
@@ -345,8 +335,7 @@ void test_list_body_reduce_2()
     assert(list_body(lb_res, 2, N[1], N[0]));
     list_body_free(lb);
     list_body_free(lb_res);
-    free(N[0]);
-    free(N[1]);
+    node_vector_free(2, N);
 
     assert(mem_empty());
 }

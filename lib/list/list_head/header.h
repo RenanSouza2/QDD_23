@@ -16,7 +16,7 @@ node_p list_head_first(list_head_p lh);
 list_head_p list_head_insert(list_head_p lh, node_p n, int side);
 list_head_p list_head_remove(list_head_p lh, node_p n, int side);
 list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2);
-void list_head_reduce_redundance(list_head_p *lh_p);
-list_head_p list_head_reduce_equivalence(list_head_p lh);
+void list_head_reduce_1(list_head_p *lh_p);
+list_head_p list_head_reduce_2(list_head_p lh);
 
 #endif

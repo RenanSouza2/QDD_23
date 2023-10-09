@@ -11,23 +11,6 @@
 
 
 
-list_head_p list_head_create_vector(int tot, node_p N[])
-{
-    list_head_p lh = NULL;
-    for(int i=0; i<tot; i++)
-        lh = list_head_insert(lh, N[i], i&1);
-
-    return lh;
-}
-
-void node_vector_free(int len, node_p N[])
-{
-    for(int i=0; i<len; i++)
-        free(N[i]);
-}
-
-
-
 void test_list_head_create()
 {
     printf("\n\t%s\t\t", __func__);
@@ -389,10 +372,41 @@ void test_list_head_invert()
     assert(mem_empty());
 }
 
-void test_list_head_reduce_redundance()
+void test_list_head_reduce_1()
 {
     printf("\n\t\t%s\t\t", __func__);
 
+    node_p n0, n1;
+    n0 = node_amp_create(&AMP(0, 0));
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect_both(n1, n0, n0);
+    list_head_reduce_1(&n0->lh);
+    assert(n0->lh == NULL);
+
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect_both(n1, n0, n0);
+    n1 = node_str_create(&LAB(V, 2));
+    node_connect_both(n1, n0, n0);
+    list_head_reduce_1(&n0->lh);
+    assert(n0->lh == NULL);
+    
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect_both(n1, n0, n0);
+    n1 = node_str_create(&LAB(V, 1));
+    node_connect(n1, n0, THEN);
+    list_head_reduce_1(&n0->lh);
+
+    node_free(n0);
+    node_free(n1);
+
+    assert(mem_empty());
+}
+
+void test_list_head_reduce_2()
+{
+    printf("\n\t\t%s\t\t", __func__);
+
+    // TODO
 
     assert(mem_empty());
 }
@@ -406,7 +420,8 @@ void test_list_head_operations()
     test_list_head_remove();
     test_list_head_merge();
     test_list_head_invert();
-    test_list_head_reduce_redundance();
+    test_list_head_reduce_1();
+    test_list_head_reduce_2();
 
     assert(mem_empty());
 }
