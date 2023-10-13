@@ -22,7 +22,7 @@ int main()
         printf("\tHere");
         qdd_reduce(q);
         printf("\tThere");
-        // qdd_display(q);
+        qdd_display(q);
         qdd_free(q);
     }
 

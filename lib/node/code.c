@@ -4,40 +4,14 @@
 #include "debug.h"
 #include "../list/list_head/struct.h"
 #include "../list/list_body/struct.h"
+#include "../utils/header.h"
 
 #ifdef DEBUG
 
 #include "../../static_utils/mem_report/bin/header.h"
 
-#include "../utils/debug.h"
 #include "../label/debug.h"
 #include "../amp/debug.h"
-
-void node_str_display(node_p ns)
-{
-    PRINT("\nnode (str) display: %p", ns);
-    PRINT("\nlabel: ");
-    label_display(node_label(ns));
-    
-    str_p str = node_str(ns);
-    PRINT("\nel: %p\tth: %p", str->el, str->th);
-    PRINT("\n");
-}
-
-void node_amp_display(node_p na)
-{
-    PRINT("\nnode (amp) display: %p", na);
-    PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
-    PRINT("\namp: ");
-    amp_display(node_amp(na));
-    PRINT("\n");
-}
-
-void node_display(node_p n)
-{
-    if(node_is_amp(n)) node_amp_display(n);
-    else               node_str_display(n);
-}
 
 void str_display(str_p str)
 {
@@ -85,6 +59,34 @@ void node_free(node_p n)
 {
     list_head_free(n->lh);
     free(n);
+}
+
+
+
+void node_str_display(node_p ns)
+{
+    PRINT("\nnode (str) display: %p", ns);
+    PRINT("\nlabel: ");
+    label_display(node_label(ns));
+    
+    str_p str = node_str(ns);
+    PRINT("\nel: %p\tth: %p", str->el, str->th);
+    PRINT("\n");
+}
+
+void node_amp_display(node_p na)
+{
+    PRINT("\nnode (amp) display: %p", na);
+    PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
+    PRINT("\namp: ");
+    amp_display(node_amp(na));
+    PRINT("\n");
+}
+
+void node_display(node_p n)
+{
+    if(node_is_amp(n)) node_amp_display(n);
+    else               node_str_display(n);
 }
 
 

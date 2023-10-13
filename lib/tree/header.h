@@ -12,6 +12,8 @@ node_p tree_create_vector(int qbits, amp_p amp);
 node_p tree_create_fn(int qbits, int index, amp_index_f fn);
 void tree_free(node_p n);
 
+void tree_display(node_p n);
+
 list_head_p tree_enlist(node_p n);
 node_p tree_copy(node_p n);
 list_body_p tree_enlist_amplitude(node_p n);

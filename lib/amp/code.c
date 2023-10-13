@@ -2,16 +2,9 @@
 #include <assert.h>
 
 #include "debug.h"
-
-#ifdef DEBUG
-
 #include "../utils/header.h"
 
-void amp_display(amp_p amp)
-{
-    PRINT("%.1e, %.1e", amp->re, amp->im);
-}
-
+#ifdef DEBUG
 #endif
 
 number_t eps = 1e-5;
@@ -31,4 +24,9 @@ bool amp_eq(amp_p amp_1, amp_p amp_2)
 
     number_t im = amp_1->im - amp_2->im;
     return !(im < -eps || im > eps);
+}
+
+void amp_display(amp_p amp)
+{
+    PRINT("%.1e, %.1e", amp->re, amp->im);
 }

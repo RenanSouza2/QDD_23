@@ -39,12 +39,6 @@ void list_body_display(list_body_p lb)
     }
 }
 
-void list_body_display_full(list_body_p lb)
-{
-    for(; lb; lb = lb->lb)
-        node_display(lb->n);
-}
-
 bool list_body_vargs(list_body_p lb, int tot_b, va_list * args)
 {
     int i = 0;
@@ -113,6 +107,14 @@ list_body_p list_body_pop(list_body_p lb)
 void list_body_free(list_body_p lb)
 {
     while(lb) lb = list_body_pop(lb);
+}
+
+
+
+void list_body_display_full(list_body_p lb)
+{
+    for(; lb; lb = lb->lb)
+        node_display(lb->n);
 }
 
 

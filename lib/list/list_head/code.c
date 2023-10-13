@@ -5,6 +5,7 @@
 
 #include "debug.h"
 #include "../list_body/struct.h"
+#include "../../utils/header.h"
 
 #ifdef DEBUG
 
@@ -20,25 +21,6 @@ void list_head_display_item(list_head_p lh)
     PRINT("\nlb[ELSE]  : %p", lh->lb[ELSE]);
     PRINT("\nlb[THEN]  : %p", lh->lb[THEN]);
     PRINT("\nlh  : %p", lh->lh);
-}
-
-void list_head_display(list_head_p lh)
-{
-    if(lh == NULL) PRINT("\nnull list");
-
-   for(; lh; lh = lh->lh)
-    {
-        PRINT("\n--------");
-        for(int side=0; side<2; side++)
-        if(lh->lb[side])
-        {
-            PRINT("\n");
-            label_display(&lh->lab);
-            PRINT(" %s", side ? "THEN" : "ELSE");
-            list_body_display_full(lh->lb[side]);
-        }
-    }
-    printf("\t\t");
 }
 
 bool list_head(list_head_p lh, int tot_h, ...)
@@ -85,22 +67,6 @@ bool list_head(list_head_p lh, int tot_h, ...)
     }
 
     return true;
-}
-
-list_head_p list_head_invert(list_head_p lh)
-{
-    list_head_p lh_new = NULL;
-
-    while(lh)
-    {
-        list_head_p lh_aux = lh->lh;
-
-        lh->lh = lh_new;
-        lh_new = lh;
-
-        lh = lh_aux;
-    }
-    return lh_new;
 }
 
 list_head_p list_head_create_vector(int tot, node_p N[])
@@ -154,6 +120,43 @@ void list_head_free(list_head_p lh)
     for(; lh; lh = list_head_pop(lh))
     for(int side = 0; side < 2; side ++)
         list_body_free(lh->lb[side]);
+}
+
+
+
+list_head_p list_head_invert(list_head_p lh)
+{
+    list_head_p lh_new = NULL;
+
+    while(lh)
+    {
+        list_head_p lh_aux = lh->lh;
+
+        lh->lh = lh_new;
+        lh_new = lh;
+
+        lh = lh_aux;
+    }
+    return lh_new;
+}
+
+void list_head_display(list_head_p lh)
+{
+    if(lh == NULL) PRINT("\nnull list");
+
+   for(; lh; lh = lh->lh)
+    {
+        PRINT("\n--------");
+        for(int side=0; side<2; side++)
+        if(lh->lb[side])
+        {
+            PRINT("\n");
+            label_display(&lh->lab);
+            PRINT(" %s", side ? "THEN" : "ELSE");
+            list_body_display_full(lh->lb[side]);
+        }
+    }
+    printf("\t\t");
 }
 
 

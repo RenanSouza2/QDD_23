@@ -12,6 +12,8 @@ list_head_p list_head_create_body(list_body_p lb, list_head_p lh_next, int side)
 void list_head_free(list_head_p lh);
 
 node_p list_head_first(list_head_p lh);
+list_head_p list_head_invert(list_head_p lh);
+void list_head_display(list_head_p lh);
 
 list_head_p list_head_insert(list_head_p lh, node_p n, int side);
 list_head_p list_head_remove(list_head_p lh, node_p n, int side);

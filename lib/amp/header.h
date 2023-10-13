@@ -8,5 +8,6 @@
 PLACEHOLDER(amp);
 
 bool amp_eq(amp_p amp_1, amp_p amp_2);
+void amp_display(amp_p amp);
 
 #endif

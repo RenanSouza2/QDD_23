@@ -1,35 +1,13 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../utils/header.h"
 
 #ifdef DEBUG
-
-#include <stdbool.h>
-
-#include "../utils/header.h"
 
 #define R 2
 #define V 1
 #define C 0
-
-void label_display(label_p lab)
-{
-    if(label_is_amp(lab))
-    {
-        PRINT("AMPLITUDE");
-        return;
-    }
-
-    switch (lab->cl)
-    {
-        case C: PRINT("C"); break;
-        case V: PRINT("V"); break;
-        case R: PRINT("R"); break;
-    
-        default: assert(false);
-    }
-    PRINT("%d", lab->lv);
-}
 
 #endif
 
@@ -51,4 +29,23 @@ int label_is_amp(label_p lab)
 {
     assert(lab);
     return LONG(lab) == 0;
+}
+
+void label_display(label_p lab)
+{
+    if(label_is_amp(lab))
+    {
+        PRINT("AMPLITUDE");
+        return;
+    }
+
+    switch (lab->cl)
+    {
+        case C: PRINT("C"); break;
+        case V: PRINT("V"); break;
+        case R: PRINT("R"); break;
+    
+        default: assert(false);
+    }
+    PRINT("%d", lab->lv);
 }

@@ -6,23 +6,16 @@
 #include "../node/struct.h"
 #include "../list/list_body/struct.h"
 #include "../list/list_head/struct.h"
+#include "../utils/header.h"
 
 #ifdef DEBUG
 
 #include <string.h>
 
-#include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
 #include "../list/list_head/debug.h"
 #include "../../static_utils/mem_report/bin/header.h"
-
-void tree_display(node_p n)
-{
-    list_head_p lh = tree_enlist(n);
-    lh = list_head_invert(lh);
-    list_head_display(lh);
-}
 
 bool tree_rec(node_p n, node_p n1, node_p n2)
 {
@@ -35,9 +28,9 @@ bool tree_rec(node_p n, node_p n1, node_p n2)
     {
         PRINT("\nERROR TREE ASSSERT 1 | LABEL MISMATCH | ");
         label_display(node_label(n1));
-        printf(" ");
+        PRINT(" ");
         label_display(node_label(n2));
-        printf("\t\t");
+        PRINT("\t\t");
         return false;
     }
     
@@ -133,13 +126,10 @@ node_p tree_create_vector(int qbits, amp_p amp)
     return n1;
 }
 
-#include <stdio.h>
-
-typedef amp_t (*amp_index_f)(int index);
 node_p tree_create_fn(int qbits, int index, amp_index_f fn)
 {
     if(qbits==20)
-        printf("\n%d", index);
+        PRINT("\n%d", index);
     if(qbits == 0)
     {
         amp_t amp = fn(index);
@@ -175,6 +165,17 @@ void tree_free(node_p n)
     tree_free(n1);
     tree_free(n2);
 }
+
+
+
+void tree_display(node_p n)
+{
+    list_head_p lh = tree_enlist(n);
+    lh = list_head_invert(lh);
+    list_head_display(lh);
+}
+
+
 
 list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
 {

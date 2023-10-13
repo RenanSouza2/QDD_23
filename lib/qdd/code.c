@@ -63,6 +63,13 @@ void qdd_free(qdd_p q)
 
 
 
+void qdd_display(qdd_p q)
+{
+    tree_display(q->n);
+}
+
+
+
 void qdd_reduce(qdd_p q)
 {
     list_body_p lb_aux = list_body_reduce_2(q->lb, node_amp_eq);
