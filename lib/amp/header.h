@@ -1,9 +1,9 @@
 #ifndef __AMP_H__
 #define __AMP_H__
 
-#include "../../static_utils/struct.h"
+#include <stdbool.h>
 
-typedef double number_t;
+#include "../../static_utils/struct.h"
 
 PLACEHOLDER(amp);
 

@@ -120,6 +120,40 @@ node_p tree_create(int qbits, ...)
 
 #endif
 
+node_p tree_create_vector(int qbits, amp_p amp)
+{
+    if(qbits == 0)
+        return node_amp_create(amp);
+
+    node_p n1, n0_el, n0_th;
+    n1 = node_str_create(&LAB(V, qbits));
+    n0_el = tree_create_vector(qbits-1,  amp);
+    n0_th = tree_create_vector(qbits-1, &amp[1 << (qbits-1)]);
+    node_connect_both(n1, n0_el, n0_th);
+    return n1;
+}
+
+#include <stdio.h>
+
+typedef amp_t (*amp_index_f)(int index);
+node_p tree_create_fn(int qbits, int index, amp_index_f fn)
+{
+    if(qbits==20)
+        printf("\n%d", index);
+    if(qbits == 0)
+    {
+        amp_t amp = fn(index);
+        return node_amp_create(&amp);
+    }
+
+    node_p n1, n0_el, n0_th;
+    n1 = node_str_create(&LAB(V, qbits));
+    n0_el = tree_create_fn(qbits-1, index, fn);
+    n0_th = tree_create_fn(qbits-1, 1 << (qbits-1), fn);
+    node_connect_both(n1, n0_el, n0_th);
+    return n1;
+}
+
 void tree_free(node_p n)
 {
     assert(n);
