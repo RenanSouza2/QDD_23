@@ -3,6 +3,4 @@
 
 #include "struct.h"
 
-void label_display(label_p lab);
-
 #endif

@@ -8,57 +8,9 @@
 #include "../../label/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
+#include "../../list/list_body/debug.h"
 #include "../../list/list_head/debug.h"
 #include "../../../static_utils/mem_report/bin/header.h"
-
-qdd_p qdd_create_variadic(int qbits, ...)
-{
-    node_p *N[qbits+1][3];
-    memset(N, 0, sizeof(N));
-
-    va_list args;
-    va_start(args, qbits);
-
-    node_p n;
-    int size = va_arg(args, int);
-
-    N[0][0] = malloc(size * sizeof(node_p));
-    for(int i=0; i<size; i++)
-    {
-        amp_t amp = va_arg(args, amp_t);
-        N[0][0][i] = n = node_amp_create(&amp);
-    }
-    list_body_p lb = list_body_create_vector(size, N[0][0]);
-
-    int max = va_arg(args, int);
-    for(int i=0; i<max; i++)
-    {
-        label_t lab = va_arg(args, label_t);
-        int size = va_arg(args, int);
-
-        node_p *N_1 = N[IDX(lab)] = malloc(size * sizeof(node_p));
-        for(int j=0; j<size; j++)
-        {
-            N_1[j] = n = node_str_create(&lab);
-            
-            for(int side=0; side<2; side++)
-            {
-                label_t lab_0 = va_arg(args, label_t);
-                node_p *N_0 = N[IDX(lab_0)];
-                assert(N_0);
-
-                int index = va_arg(args, int);
-                node_connect(n, N_0[index], side);
-            }
-        }
-    }
-
-    for(int i=0; i<=qbits; i++)
-    for(int j=0; j<3; j++)
-    if(N[i][j]) free(N[i][j]);
-
-    return qdd_create(n, lb, qbits);
-}
 
 
 
@@ -98,8 +50,8 @@ void test_qdd_create_variadic()
     node_connect_both(n, n0, n1);
     
     assert(tree(q->n, n));
-    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
-    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
+    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 1)));
+    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 0)));
     qdd_free(q);
     tree_free(n);
 

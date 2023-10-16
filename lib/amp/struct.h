@@ -5,6 +5,8 @@
 
 #define AMP(RE, IM) (amp_t){RE, IM}
 
+typedef double number_t;
+
 STRUCT(amp)
 {
     number_t re, im;

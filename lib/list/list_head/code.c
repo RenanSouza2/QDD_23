@@ -5,6 +5,7 @@
 
 #include "debug.h"
 #include "../list_body/struct.h"
+#include "../../utils/header.h"
 
 #ifdef DEBUG
 
@@ -20,25 +21,6 @@ void list_head_display_item(list_head_p lh)
     PRINT("\nlb[ELSE]  : %p", lh->lb[ELSE]);
     PRINT("\nlb[THEN]  : %p", lh->lb[THEN]);
     PRINT("\nlh  : %p", lh->lh);
-}
-
-void list_head_display(list_head_p lh)
-{
-    if(lh == NULL) PRINT("\nnull list");
-
-   for(; lh; lh = lh->lh)
-    {
-        PRINT("\n--------");
-        for(int side=0; side<2; side++)
-        if(lh->lb[side])
-        {
-            PRINT("\n");
-            label_display(&lh->lab);
-            PRINT(" %s", side ? "THEN" : "ELSE");
-            list_body_display_full(lh->lb[side]);
-        }
-    }
-    printf("\t\t");
 }
 
 bool list_head(list_head_p lh, int tot_h, ...)
@@ -87,6 +69,61 @@ bool list_head(list_head_p lh, int tot_h, ...)
     return true;
 }
 
+list_head_p list_head_create_vector(int tot, node_p N[])
+{
+    list_head_p lh = NULL;
+    for(int i=0; i<tot; i++)
+        lh = list_head_insert(lh, N[i], i&1);
+
+    return lh;
+}
+
+#endif
+
+list_head_p list_head_create(node_p n, list_head_p lh_next, int side)
+{
+    assert(n);
+
+    list_head_p lh = malloc(sizeof(list_head_t));
+    assert(lh);
+    
+    label_p lab = node_label(n);
+    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
+    lh->lb[side] = list_body_create(n, NULL);
+    return lh;
+}
+
+list_head_p list_head_create_body(list_body_p lb, list_head_p lh_next, int side)
+{
+    assert(lb);
+
+    list_head_p lh = malloc(sizeof(list_head_t));
+    assert(lh);
+
+    label_p lab = node_label(lb->n);
+    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
+    lh->lb[side] = lb;
+    return lh;
+}
+
+list_head_p list_head_pop(list_head_p lh)
+{
+    assert(lh);
+
+    list_head_p lh_aux = lh->lh;
+    free(lh);
+    return lh_aux;
+}
+
+void list_head_free(list_head_p lh)
+{
+    for(; lh; lh = list_head_pop(lh))
+    for(int side = 0; side < 2; side ++)
+        list_body_free(lh->lb[side]);
+}
+
+
+
 list_head_p list_head_invert(list_head_p lh)
 {
     list_head_p lh_new = NULL;
@@ -103,61 +140,46 @@ list_head_p list_head_invert(list_head_p lh)
     return lh_new;
 }
 
-#endif
-
-list_head_p list_head_create_cold()
+void list_head_display(list_head_p lh)
 {
-    list_head_p lh = malloc(sizeof(list_head_t));
-    assert(lh);
-    return lh;
-}
+    if(lh == NULL) PRINT("\nnull list");
 
-list_head_p list_head_create(node_p n, list_head_p lh_next, int side)
-{
-    list_head_p lh = list_head_create_cold();
-    label_p lab = node_label(n);
-    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
-    lh->lb[side] = list_body_create(n, NULL);
-    return lh;
-}
-
-list_head_p list_head_create_body(list_body_p lb, list_head_p lh_next, int side)
-{
-    list_head_p lh = list_head_create_cold();
-    label_p lab = node_label(lb->n);
-    *lh = (list_head_t){*lab, {NULL, NULL}, lh_next};
-    lh->lb[side] = lb;
-    return lh;
-}
-
-list_head_p list_head_pop(list_head_p lh)
-{
-    list_head_p lh_aux = lh->lh;
-    free(lh);
-    return lh_aux;
-}
-
-void list_head_free(list_head_p lh)
-{
-    for(; lh; lh = list_head_pop(lh))
-    for(int side = 0; side < 2; side ++)
-        list_body_free(lh->lb[side]);
+   for(; lh; lh = lh->lh)
+    {
+        PRINT("\n--------");
+        for(int side=0; side<2; side++)
+        if(lh->lb[side])
+        {
+            PRINT("\n");
+            label_display(&lh->lab);
+            PRINT(" %s", side ? "THEN" : "ELSE");
+            list_body_display_full(lh->lb[side]);
+        }
+    }
+    printf("\t\t");
 }
 
 
 
 label_p list_label(list_head_p lh)
 {
+    assert(lh);
     return &lh->lab;
 }
 
 int label_list_compare(label_p lab, list_head_p lh)
 {
+    assert(lab);
+    assert(lh);
+
     return label_compare(lab, list_label(lh));
 }
 
 int list_compare(list_head_p lh_1, list_head_p lh_2)
 {
+    assert(lh_1);
+    assert(lh_2);
+
     return label_compare(list_label(lh_1), list_label(lh_2));
 }
 
@@ -171,6 +193,7 @@ node_p list_head_first(list_head_p lh)
 
 bool list_head_occupied(list_head_p lh)
 {
+    assert(lh);
     return lh->lb[ELSE] || lh->lb[THEN];
 }
 
@@ -198,6 +221,9 @@ list_head_p list_head_insert(list_head_p lh, node_p n, int side)
 
 list_head_p list_head_remove(list_head_p lh, node_p n, int side)
 {
+    assert(lh);
+    assert(n);
+
     label_p lab = node_label(n);
     switch(label_list_compare(lab, lh))
     {
@@ -239,27 +265,34 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
 
 
 
-void list_head_reduce_redundance(list_head_p *lh_p)
+void list_head_reduce_1(list_head_p *lh_root)
 {
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+    assert(lh_root);
 
-    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE]));
+    for(
+        list_head_p lh = *lh_root;
+        lh && list_body_reduce_1(&lh->lb[ELSE]);
+        lh = *lh_root
+    );
 
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+    list_head_p lh = *lh_root;
+    if(lh == NULL || lh->lb[ELSE] == NULL) return;
 
-    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
-    list_head_reduce_redundance(&(*lh_p)->lh);
+    list_body_reduce_1_list(&lh->lb[ELSE]);
+    list_head_reduce_1(&lh->lh);
 }
 
-list_head_p list_head_reduce_equivalence(list_head_p lh)
+list_head_p list_head_reduce_2(list_head_p lh)
 {
+    assert(lh);
+
     list_head_p lh_0 = NULL;
     node_eq_f fn[] = {node_th_eq, node_el_eq};
     for(; lh; lh = lh->lh)
     for(int side = 0; side < 2; side ++)
     if(lh->lb[side])
     {
-        list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+        list_body_p lb_aux = list_body_reduce_2(lh->lb[side], fn[side]);
         if(lb_aux == NULL) continue;
 
         list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 

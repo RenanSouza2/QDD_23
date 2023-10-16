@@ -4,14 +4,64 @@
 #include "debug.h"
 #include "../list/list_head/struct.h"
 #include "../list/list_body/struct.h"
+#include "../utils/header.h"
 
 #ifdef DEBUG
 
 #include "../../static_utils/mem_report/bin/header.h"
 
-#include "../utils/debug.h"
 #include "../label/debug.h"
 #include "../amp/debug.h"
+
+void str_display(str_p str)
+{
+    PRINT("%p\t\t%p", str->el, str->th);
+}
+
+void node_vector_free(int len, node_p N[])
+{
+    for(int i=0; i<len; i++)
+        free(N[i]);
+}
+
+#endif
+
+
+
+node_p node_str_create(label_p lab)
+{
+    node_str_p ns = malloc(sizeof(node_str_t));
+    assert(ns);
+
+    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
+    return ND(ns);
+}
+
+node_p node_amp_create(amp_p amp)
+{
+    node_amp_p na = malloc(sizeof(node_amp_t));
+    assert(na);
+
+    *na = (node_amp_t){{NULL, {0, 0}}, *amp};
+    return ND(na);
+}
+
+node_p node_copy(node_p n)
+{
+    label_p lab = node_label(n);
+    if(label_is_amp(lab))
+        return node_amp_create(node_amp(n));
+
+    return node_str_create(lab);
+}
+
+void node_free(node_p n)
+{
+    list_head_free(n->lh);
+    free(n);
+}
+
+
 
 void node_str_display(node_p ns)
 {
@@ -37,39 +87,6 @@ void node_display(node_p n)
 {
     if(node_is_amp(n)) node_amp_display(n);
     else               node_str_display(n);
-}
-
-void str_display(str_p str)
-{
-    PRINT("%p\t\t%p", str->el, str->th);
-}
-
-#endif
-
-
-
-node_p node_str_create(label_p lab)
-{
-    node_str_p ns = malloc(sizeof(node_str_t));
-    assert(ns);
-
-    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
-    return ND(ns);
-}
-
-node_p node_amp_create(amp_p amp)
-{
-    node_amp_p na = malloc(sizeof(node_amp_t));
-    assert(na);
-
-    *na = (node_amp_t){{NULL, {0, 0}}, *amp};
-    return ND(na);
-}
-
-void node_free(node_p n)
-{
-    list_head_free(n->lh);
-    free(n);
 }
 
 
