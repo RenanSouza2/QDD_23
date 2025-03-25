@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
-#include <assert.h>
 
 #include "debug.h"
 #include "../list_body/struct.h"

@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <assert.h>
 
 #include "debug.h"
 #include "../list/list_head/struct.h"

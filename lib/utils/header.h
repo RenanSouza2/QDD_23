@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <assert.h>
 
 #define DEFAULT "\033[0m"
 #define RED     "\033[0;31m"

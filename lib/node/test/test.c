@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <assert.h>
 
 #include "../debug.h"
 #include "../../list/list_body/debug.h"
