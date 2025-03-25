@@ -5,13 +5,13 @@
 
 #include "debug.h"
 #include "../list_body/struct.h"
+#include "../../../mods/clu/header.h"
 
 #ifdef DEBUG
 
 #include "../list_body/debug.h"
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
 
 void list_head_display_item(list_head_p lh)
 {

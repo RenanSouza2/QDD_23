@@ -3,13 +3,13 @@
 
 #include "debug.h"
 #include "../../node/struct.h"
+#include "../../../mods/clu/header.h"
 
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
 #include "../../node/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
 
 void list_body_display_item(list_body_p lb)
 {

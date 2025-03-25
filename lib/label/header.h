@@ -1,7 +1,7 @@
 #ifndef __LABEL_H__
 #define __LABEL_H__
 
-#include "../../static_utils/struct.h"
+#include "../macros/struct.h"
 
 #define R 2
 #define V 1

@@ -9,7 +9,7 @@
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
 #include "../../list/list_head/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
+#include "../../../mods/clu/header.h"
 
 #define IDX(L) L.cl][L.lv
 
@@ -73,7 +73,7 @@ void test_qdd_create()
     assert(q->qbits == 3);
     free(q);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_qdd_create_variadic()
@@ -135,7 +135,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
     
     q = qdd_create_variadic(2, 
         2, AMP(0, 0), AMP(0, 1),
@@ -182,7 +182,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_qdd_vector()
@@ -204,7 +204,7 @@ void test_qdd_vector()
     qdd_free(q0);
     qdd_free(q1);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -253,7 +253,7 @@ void test_qdd_reduce()
     qdd_free(q);
     qdd_free(q_exp);
     
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_qdd()
@@ -265,7 +265,7 @@ void test_qdd()
     test_qdd_vector();
     test_qdd_reduce();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 

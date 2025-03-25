@@ -11,7 +11,7 @@
 #include "../node/debug.h"
 #include "../label/debug.h"
 #include "../list/list_head/debug.h"
-#include "../../static_utils/mem_report/bin/header.h"
+#include "../../mods/clu/header.h"
 
 void tree_display(node_p n)
 {

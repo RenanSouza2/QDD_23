@@ -1,7 +1,7 @@
 #ifndef __LIST_HEAD_H__
 #define __LIST_HEAD_H__
 
-#include "../../../static_utils/struct.h"
+#include "../../macros/struct.h"
 #include "../list_body/header.h"
 #include "../../node/header.h"
 

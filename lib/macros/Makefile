@@ -23,16 +23,11 @@ clean c:
 _clean:
 	echo "cleaning $(DIR)"
 	rm -f *.o
-	$(MAKE) clean --directory=test
 
 
 
 .PHONY: test
 test t:
-	$(MAKE) debug.o --directory=$(LIB_ROOT) -s
-	$(MAKE) _test -s
-
 _test:
-	$(MAKE) --directory=test
 
 export

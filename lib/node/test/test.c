@@ -4,7 +4,7 @@
 #include "../debug.h"
 #include "../../list/list_body/debug.h"
 #include "../../list/list_head/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
+#include "../../../mods/clu/header.h"
 
 
 
@@ -21,7 +21,7 @@ void test_node_create_str()
     assert(ND_STR(ne)->th == NULL);
 
     free(ne);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_create_amp()
@@ -38,7 +38,7 @@ void test_node_create_amp()
     assert(ND_AMP(na)->im == 2);
 
     free(na);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_life_cycle()
@@ -48,7 +48,7 @@ void test_node_life_cycle()
     test_node_create_str();
     test_node_create_amp();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_amp_eq()
@@ -66,7 +66,7 @@ void test_amp_eq()
     free(n1);
     free(n2);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_str_eq()
@@ -94,7 +94,7 @@ void test_str_eq()
     free(n1);
     free(n2);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_access()
@@ -104,7 +104,7 @@ void test_node_access()
     test_amp_eq();
     test_str_eq();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -131,7 +131,7 @@ void test_node_connect_one()
     node_free(n_el);
     node_free(n_th);
     free(n);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_connect_both()
@@ -155,7 +155,7 @@ void test_node_connect_both()
     node_free(n_el);
     node_free(n_th);
     free(n);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_connect()
@@ -165,7 +165,7 @@ void test_node_connect()
     test_node_connect_one();
     test_node_connect_both();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -190,7 +190,7 @@ void test_node_disconnect_one()
     free(n_el);
     free(n_th);
     free(n);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_disconnect_both()
@@ -211,7 +211,7 @@ void test_node_disconnect_both()
     free(n_el);
     free(n_th);
     free(n);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_disconnect()
@@ -221,7 +221,7 @@ void test_node_disconnect()
     test_node_disconnect_one();
     test_node_disconnect_both();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -284,7 +284,7 @@ void test_node_merge()
     }
     node_free(n1);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_node_connection()
@@ -295,7 +295,7 @@ void test_node_connection()
     test_node_disconnect();
     test_node_merge();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -308,7 +308,7 @@ void test_node()
     test_node_access();
     test_node_connection();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 

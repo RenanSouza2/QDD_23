@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-#include "../../static_utils/struct.h"
+#include "../macros/struct.h"
 #include "../label/header.h"
 #include "../amp/header.h"
 

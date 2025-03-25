@@ -1,7 +1,7 @@
 #ifndef __TREE_H__
 #define __TREE_H__
 
-#include "../../static_utils/struct.h"
+#include "../macros/struct.h"
 #include "../list/list_head/header.h"
 #include "../node/header.h"
 

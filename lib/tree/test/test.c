@@ -5,7 +5,7 @@
 #include "../../label/struct.h"
 #include "../../amp/struct.h"
 #include "../../list/list_head/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
+#include "../../../mods/clu/header.h"
 
 
 
@@ -26,7 +26,7 @@ void test_tree_enlist()
     tree_free(n);
     list_head_free(lh);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_tree_assert()
@@ -81,7 +81,7 @@ void test_tree_assert()
     tree_free(na);
     tree_free(nb);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_tree()
@@ -91,7 +91,7 @@ void test_tree()
     test_tree_enlist();
     test_tree_assert();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 

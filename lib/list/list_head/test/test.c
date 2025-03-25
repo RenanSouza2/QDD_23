@@ -7,7 +7,7 @@
 #include "../../list_body/debug.h"
 #include "../../../utils/debug.h"
 #include "../../../node/debug.h"
-#include "../../../../static_utils/mem_report/bin/header.h"
+#include "../../../../mods/clu/header.h"
 
 
 
@@ -53,7 +53,7 @@ void test_list_head_create()
     list_head_free(lh);
     free(n);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -131,7 +131,7 @@ void test_list_head_insert()
 
     list_head_free(lh);
     node_vector_free(7, N);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_head_remove()
@@ -246,7 +246,7 @@ void test_list_head_remove()
 
     free(lh);
     node_vector_free(11, N);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_head_merge()
@@ -267,7 +267,7 @@ void test_list_head_merge()
     list_head_free(lh_1);
     free(n1);
     free(n2);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 
 
 
@@ -286,7 +286,7 @@ void test_list_head_merge()
     list_head_free(lh_1);
     free(n1);
     free(n2);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 
 
 
@@ -306,7 +306,7 @@ void test_list_head_merge()
     list_head_free(lh_1);
     free(n1);
     free(n2);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 
 
 
@@ -326,7 +326,7 @@ void test_list_head_merge()
     list_head_free(lh_1);
     free(n1);
     free(n2);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 
 
 
@@ -358,7 +358,7 @@ void test_list_head_merge()
     list_head_free(lh_1);
     node_vector_free(3, N1);
     node_vector_free(4, N2);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_head_invert()
@@ -386,7 +386,7 @@ void test_list_head_invert()
     list_head_free(lh);
     node_vector_free(2, N);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_head_reduce_redundance()
@@ -394,7 +394,7 @@ void test_list_head_reduce_redundance()
     printf("\n\t\t%s\t\t", __func__);
 
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -408,7 +408,7 @@ void test_list_head_operations()
     test_list_head_invert();
     test_list_head_reduce_redundance();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -420,7 +420,7 @@ void test_list_head()
     test_list_head_create();
     test_list_head_operations();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 

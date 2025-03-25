@@ -9,7 +9,7 @@
 
 #ifdef DEBUG
 
-#include "../../static_utils/mem_report/bin/header.h"
+#include "../../mods/clu/header.h"
 
 #endif
 

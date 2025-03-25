@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-#include "../../static_utils/struct.h"
+#include "../macros/struct.h"
 
 int display_header(char s[], handler_p p);
 

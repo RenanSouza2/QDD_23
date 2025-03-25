@@ -6,7 +6,7 @@
 #include "../debug.h"
 #include "../../list_head/debug.h"
 #include "../../../node/debug.h"
-#include "../../../../static_utils/mem_report/bin/header.h"
+#include "../../../../mods/clu/header.h"
 
 
 list_body_p list_body_create_test(int init, int max)
@@ -37,7 +37,7 @@ void test_list_body_create()
     assert(list_body(lb, 1, ND(1), ND(2)));
     free(lb);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -62,7 +62,7 @@ void test_list_body_remove()
     assert(lb == NULL);
 
     free(lb);
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_body_merge()
@@ -109,7 +109,7 @@ void test_list_body_merge()
     assert(list_body(lb_1, 1, ND(2)));
     list_body_free(lb_1);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_body_operations()
@@ -119,7 +119,7 @@ void test_list_body_operations()
     test_list_body_remove();
     test_list_body_merge();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -166,7 +166,7 @@ void test_list_body_reduce_equivalence()
     free(N[0]);
     free(N[1]);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_body_reduce_redundance()
@@ -257,7 +257,7 @@ void test_list_body_reduce_redundance()
     node_free(n0);
     node_free(n2);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_body_reduce_redundance_rec()
@@ -295,7 +295,7 @@ void test_list_body_reduce_redundance_rec()
     node_free(n1);
     node_free(n3);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_list_body_reduce()
@@ -306,7 +306,7 @@ void test_list_body_reduce()
     test_list_body_reduce_redundance();
     test_list_body_reduce_redundance_rec();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
@@ -319,7 +319,7 @@ void test_list_body()
     test_list_body_operations();
     test_list_body_reduce();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 
