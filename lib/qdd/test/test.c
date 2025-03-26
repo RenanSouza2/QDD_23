@@ -40,7 +40,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
         N[IDX(lab)] = malloc(size * sizeof(node_p));
         for(int j=0; j<size; j++)
         {
-            N[IDX(lab)][j] = n = node_str_create(&lab);
+            N[IDX(lab)][j] = n = node_branch_create(&lab);
             
             for(int side=0; side<2; side++)
             {
@@ -91,7 +91,7 @@ void test_qdd_create_variadic()
     );
 
     node_p n, n0, n1;
-    n  = node_str_create(&V1);
+    n  = node_branch_create(&V1);
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_amp_create(&AMP(0, 1));
     node_connect_both(n, n0, n1);
@@ -118,10 +118,10 @@ void test_qdd_create_variadic()
         V1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
         V2, 1, V1, 0, V1, 1
     );
-    n = node_str_create(&V2);
+    n = node_branch_create(&V2);
     for(int i=0; i<2; i++)
     {
-        n1 = node_str_create(&V1);
+        n1 = node_branch_create(&V1);
         node_connect(n, n1, i);
 
         for(int j=0; j<2; j++)
@@ -146,11 +146,11 @@ void test_qdd_create_variadic()
     node_p n2;
     n1 = node_amp_create(&AMP(0, 0));
     n2 = node_amp_create(&AMP(0, 1));
-    n = node_str_create(&V1);
+    n = node_branch_create(&V1);
     node_connect_both(n, n1, n2);
     
     n2 = n;
-    n = node_str_create(&V2);
+    n = node_branch_create(&V2);
     node_connect_both(n, n1, n2);
     
     assert(tree(q->n, n));
@@ -166,15 +166,15 @@ void test_qdd_create_variadic()
 
     n0 = node_amp_create(&AMP(0, 0));
     n1 = node_amp_create(&AMP(0, 1));
-    n2 = node_str_create(&V1);
+    n2 = node_branch_create(&V1);
     node_connect_both(n2, n0, n1);
     
     node_p n3;
     n1 = node_amp_create(&AMP(0, 2));
-    n3 = node_str_create(&V1);
+    n3 = node_branch_create(&V1);
     node_connect_both(n3, n0, n1);
 
-    n = node_str_create(&V2);
+    n = node_branch_create(&V2);
     node_connect_both(n, n2, n3);
 
     assert(tree(q->n, n)); 

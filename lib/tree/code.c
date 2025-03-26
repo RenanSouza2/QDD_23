@@ -76,9 +76,9 @@ void tree_free(node_p n)
         return;
     }
 
-    str_p str = node_str(n);
-    node_p n1 = str->el;
-    node_p n2 = str->th;
+    branch_p branch = node_branch(n);
+    node_p n1 = branch->el;
+    node_p n2 = branch->th;
     node_disconnect_both(n);
     free(n);
 
@@ -93,9 +93,9 @@ list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
     lh = list_head_insert(lh, n, ELSE);
     if(node_is_amp(n)) return lh;
 
-    str_p str = node_str(n);
-    lh = tree_enlist_rec(lh, n, str->el);
-    return tree_enlist_rec(lh, n, str->th);
+    branch_p branch = node_branch(n);
+    lh = tree_enlist_rec(lh, n, branch->el);
+    return tree_enlist_rec(lh, n, branch->th);
 }
 
 list_head_p tree_enlist(node_p n)

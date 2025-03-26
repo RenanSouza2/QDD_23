@@ -6,7 +6,7 @@
 #include "../label/struct.h"
 #include "../amp/struct.h"
 
-STRUCT(str)
+STRUCT(branch)
 {
     node_p el, th;
 };
@@ -17,10 +17,10 @@ STRUCT(node)
     label_t lab;
 };
 
-STRUCT(node_str)
+STRUCT(node_branch)
 {
     node_t n;
-    str_t s;
+    branch_t s;
 };
 
 STRUCT(node_amp)

@@ -185,10 +185,10 @@ bool list_body_reduce_redundance(list_body_p *lb_p)
     if(*lb_p == NULL) return false;
 
     node_p n1 = (*lb_p)->n;
-    branch_p str = node_branch(n1);
-    if(str->el != str->th) return false;
+    branch_p branch = node_branch(n1);
+    if(branch->el != branch->th) return false;
 
-    node_merge(str->el, n1);
+    node_merge(branch->el, n1);
 
     return true;
 }

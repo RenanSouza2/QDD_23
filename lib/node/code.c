@@ -3,7 +3,10 @@
 #include "debug.h"
 #include "../list/list_head/struct.h"
 #include "../list/list_body/struct.h"
+#include "../macros/assert.h"
 #include "../../mods/clu/header.h"
+
+
 
 #ifdef DEBUG
 
@@ -11,14 +14,16 @@
 #include "../label/debug.h"
 #include "../amp/debug.h"
 
-void node_str_display(node_p ns)
+
+
+void node_branch_display(node_p ns)
 {
-    PRINT("\nnode (str) display: %p", ns);
+    PRINT("\nnode (branch) display: %p", ns);
     PRINT("\nlabel: ");
     label_display(node_label(ns));
     
-    str_p str = node_str(ns);
-    PRINT("\nel: %p\tth: %p", str->el, str->th);
+    branch_p branch = node_branch(ns);
+    PRINT("\nel: %p\tth: %p", branch->el, branch->th);
     PRINT("\n");
 }
 
@@ -34,24 +39,24 @@ void node_amp_display(node_p na)
 void node_display(node_p n)
 {
     if(node_is_amp(n)) node_amp_display(n);
-    else               node_str_display(n);
+    else               node_branch_display(n);
 }
 
-void str_display(str_p str)
+void branch_display(branch_p branch)
 {
-    PRINT("%p\t\t%p", str->el, str->th);
+    PRINT("%p\t\t%p", branch->el, branch->th);
 }
 
 #endif
 
 
 
-node_p node_str_create(label_p lab)
+node_p node_branch_create(label_p lab)
 {
-    node_str_p ns = malloc(sizeof(node_str_t));
+    node_branch_p ns = malloc(sizeof(node_branch_t));
     assert(ns);
 
-    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
+    *ns = (node_branch_t){{NULL, *lab}, {NULL, NULL}};
     return ND(ns);
 }
 
@@ -83,7 +88,7 @@ bool node_is_amp(node_p n)
     return label_is_amp(lab);
 }
 
-str_p node_str(node_p n)
+branch_p node_branch(node_p n)
 {
     assert(!node_is_amp(n));
     return ND_STR(n);
@@ -107,16 +112,16 @@ bool node_amp_eq(node_p n1, node_p n2)
 
 bool node_el_eq(node_p n1, node_p n2)
 {
-    str_p str_1 = node_str(n1);
-    str_p str_2 = node_str(n2);
-    return str_1->el == str_2->el;
+    branch_p branch_1 = node_branch(n1);
+    branch_p branch_2 = node_branch(n2);
+    return branch_1->el == branch_2->el;
 }
 
 bool node_th_eq(node_p n1, node_p n2)
 {
-    str_p str_1 = node_str(n1);
-    str_p str_2 = node_str(n2);
-    return str_1->th == str_2->th;
+    branch_p branch_1 = node_branch(n1);
+    branch_p branch_2 = node_branch(n2);
+    return branch_1->th == branch_2->th;
 }
 
 
@@ -130,10 +135,10 @@ void node_connect(node_p n1, node_p n0, int side)
 
 void node_connect_both(node_p n, node_p n_el, node_p n_th)
 {
-    str_p str = node_str(n);
-    assert(str->el == NULL);
-    assert(str->th == NULL);
-    *str = (str_t){n_el, n_th};
+    branch_p branch = node_branch(n);
+    assert(branch->el == NULL);
+    assert(branch->th == NULL);
+    *branch = (branch_t){n_el, n_th};
     n_el->lh = list_head_insert(n_el->lh, n, ELSE);
     n_th->lh = list_head_insert(n_th->lh, n, THEN);
 }
@@ -149,12 +154,12 @@ void node_disconnect(node_p n, int side)
 
 void node_disconnect_both(node_p n)
 {
-    str_p str = node_str(n);
-    node_p n_el = str->el;
-    node_p n_th = str->th;
+    branch_p branch = node_branch(n);
+    node_p n_el = branch->el;
+    node_p n_th = branch->th;
     assert(n_el);
     assert(n_th);
-    *str = (str_t){NULL, NULL};
+    *branch = (branch_t){NULL, NULL};
     
     n_el->lh = list_head_remove(n_el->lh, n, ELSE);
     n_th->lh = list_head_remove(n_th->lh, n, THEN);
@@ -171,14 +176,15 @@ bool node_merge(node_p n1, node_p n2)
     for(int side = 0; side < 2; side++)
     for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
     {
-        str_p str = node_str(lb->n);
-        if(str->el == n2) str->el = n1;
-        if(str->th == n2) str->th = n1;
+        branch_p branch = node_branch(lb->n);
+        if(branch->el == n2) branch->el = n1;
+        if(branch->th == n2) branch->th = n1;
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
     bool res = !node_is_amp(n2);
-    if(res) node_disconnect_both(n2);
+    if(res)
+        node_disconnect_both(n2);
 
     free(n2);
     return res;

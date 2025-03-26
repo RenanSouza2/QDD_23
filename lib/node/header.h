@@ -8,19 +8,19 @@
 #include "../amp/header.h"
 
 PLACEHOLDER(node);
-PLACEHOLDER(str);
+PLACEHOLDER(branch);
 
 #define ELSE 0
 #define THEN 1
 
 label_p node_label(node_p n);
 
-node_p node_str_create(label_p lab);
+node_p node_branch_create(label_p lab);
 node_p node_amp_create(amp_p amp);
 void node_free(node_p n);
 
 bool node_is_amp(node_p n);
-str_p node_str(node_p n);
+branch_p node_branch(node_p n);
 amp_p node_amp(node_p n);
 bool node_amp_eq(node_p n1, node_p n2);
 bool node_el_eq(node_p n1, node_p n2);

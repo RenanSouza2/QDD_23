@@ -5,11 +5,12 @@
 #include "../node/struct.h"
 #include "../tree/header.h"
 #include "../list/list_head/struct.h"
-
-#ifdef DEBUG
-
+#include "../macros/assert.h"
 #include "../../mods/clu/header.h"
 
+
+
+#ifdef DEBUG
 #endif
 
 
@@ -40,7 +41,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
         assert(lb_tmp);
         node_p n2 = lb_tmp->n;
 
-        node_p n = node_str_create(&(label_t){V, i});
+        node_p n = node_branch_create(&(label_t){V, i});
         node_connect_both(n, n1, n2);
 
         *lb_aux = (list_body_t){n, list_body_pop(lb_aux->lb)};
@@ -62,9 +63,100 @@ void qdd_free(qdd_p q)
 
 
 
+bool list_body_reduce_equivalence_item(list_body_p lb, node_eq_f fn, node_p n1)
+{
+    bool insert = false;
+    for(; lb->lb; )
+    {
+        node_p n2 = lb->lb->n;
+        if(!fn(n1, n2)) 
+        {
+            lb = lb->lb;
+            continue;
+        }
+
+        insert = true;
+        if(!node_merge(n1, n2))
+            lb->lb = list_body_pop(lb->lb);
+    }
+
+    return insert;
+}
+
+// returns the list of the nodes reduced
+list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn)
+{
+    if(lb == NULL)
+        return NULL;
+
+    list_body_p lb_res = NULL;
+    for(; lb && lb->lb; lb = lb->lb)
+    {
+        node_p n1 = lb->n;
+        if(list_body_reduce_equivalence_item(lb, fn, n1))
+            lb_res = list_body_create(n1, lb_res);
+    }
+
+    return lb_res;
+}
+
+bool list_body_reduce_path_item(list_body_p *lb_root)
+{
+    list_body_p lb = *lb_root;
+    if(lb == NULL)
+        return false;
+
+    node_p n1 = lb->n;
+    branch_p branch = node_branch(n1);
+    if(branch->el != branch->th)
+        return false;
+
+    node_merge(branch->el, n1);
+    return true;
+}
+
+list_body_p list_body_reduce_path(list_body_p lb)
+{
+    list_body_t lb_0;
+    lb_0.lb = lb;
+
+    for(lb = &lb_0; lb->lb; )
+    {
+        node_p node = lb->lb->n;
+        branch_p branch = node_branch(node);
+        if(branch->el != branch->th)
+        {
+            lb = lb->lb;
+            continue;
+        }
+
+        
+    }
+
+    while(list_body_reduce_path_item(lb_p));
+
+    if(*lb_p == NULL) return;
+
+    list_body_reduce_path(&(*lb_p)->lb);
+}
+
+void list_head_reduce_redundance(list_head_p *lh_p)
+{
+    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+
+    while(*lh_p && list_body_reduce_path(&(*lh_p)->lb[ELSE]));
+
+    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+
+    list_body_reduce_path(&(*lh_p)->lb[ELSE]->lb);
+    list_head_reduce_redundance(&(*lh_p)->lh);
+}
+
+
+
 void qdd_reduce(qdd_p q)
 {
-    list_body_p lb_aux = list_body_reduce_equivalence(q->lb, node_amp_eq);
+    list_body_p lb_aux = list_body_reduce_node(q->lb, node_amp_eq);
     if(lb_aux == NULL) return;
 
     for(
@@ -88,7 +180,7 @@ void qdd_reduce(qdd_p q)
         for(int side = 0; side < 2; side ++)
         if(lh->lb[side])
         {
-            list_body_p lb_aux = list_body_reduce_equivalence(lh->lb[side], fn[side]);
+            list_body_p lb_aux = list_body_reduce_node(lh->lb[side], fn[side]);
             if(lb_aux == NULL) continue;
 
             list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 

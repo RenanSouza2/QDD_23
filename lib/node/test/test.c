@@ -11,7 +11,7 @@ void test_node_create_str()
 {
     printf("\n\t\t%s\t\t", __func__);
 
-    node_p ne = node_str_create(&LAB(V, 2));
+    node_p ne = node_branch_create(&LAB(V, 2));
 
     assert(ne->lh == NULL);
     assert(ne->lab.cl == V);
@@ -68,14 +68,14 @@ void test_amp_eq()
     assert(clu_mem_is_empty());
 }
 
-void test_str_eq()
+void test_branch_eq()
 {
     printf("\n\t\t%s\t\t", __func__);
 
     node_p n0, n1, n2;
     n0 = node_amp_create(&AMP(0, 0));
-    n1 = node_str_create(&LAB(V, 1));
-    n2 = node_str_create(&LAB(V, 1));
+    n1 = node_branch_create(&LAB(V, 1));
+    n2 = node_branch_create(&LAB(V, 1));
 
     // typedef bool (*node_eq_f)(node_p, node_p);
     node_eq_f fn[] = {node_el_eq, node_th_eq};
@@ -101,7 +101,7 @@ void test_node_access()
     printf("\n\t%s\t\t", __func__);
 
     test_amp_eq();
-    test_str_eq();
+    test_branch_eq();
 
     assert(clu_mem_is_empty());
 }
@@ -112,15 +112,15 @@ void test_node_connect_one()
 {
     printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n = node_str_create(&LAB(V, 2));
-    node_p n_el = node_str_create(&LAB(V, 1));
+    node_p n = node_branch_create(&LAB(V, 2));
+    node_p n_el = node_branch_create(&LAB(V, 1));
     node_connect(n, n_el, ELSE);
     assert(ND_STR(n)->el == n_el);
     assert(list_head(n_el->lh, 1, 
         LAB(V, 2), 1, n, 0
     ));
     
-    node_p n_th = node_str_create(&LAB(V, 1));
+    node_p n_th = node_branch_create(&LAB(V, 1));
     node_connect(n, n_th, THEN);
     assert(ND_STR(n)->th == n_th);
     assert(list_head(n_th->lh, 1, 
@@ -137,9 +137,9 @@ void test_node_connect_both()
 {
     printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n    = node_str_create(&LAB(V, 2));
-    node_p n_el = node_str_create(&LAB(V, 1));
-    node_p n_th = node_str_create(&LAB(V, 1));
+    node_p n    = node_branch_create(&LAB(V, 2));
+    node_p n_el = node_branch_create(&LAB(V, 1));
+    node_p n_th = node_branch_create(&LAB(V, 1));
     
     node_connect_both(n, n_el, n_th);
     assert(ND_STR(n)->el == n_el);
@@ -173,9 +173,9 @@ void test_node_disconnect_one()
 {
     printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n    = node_str_create(&LAB(V, 2));
-    node_p n_el = node_str_create(&LAB(V, 1));
-    node_p n_th = node_str_create(&LAB(V, 1));
+    node_p n    = node_branch_create(&LAB(V, 2));
+    node_p n_el = node_branch_create(&LAB(V, 1));
+    node_p n_th = node_branch_create(&LAB(V, 1));
     node_connect_both(n, n_el, n_th);
 
     node_disconnect(n, ELSE);
@@ -196,9 +196,9 @@ void test_node_disconnect_both()
 {
     printf("\n\t\t\t%s\t\t", __func__);
 
-    node_p n    = node_str_create(&LAB(V, 2));
-    node_p n_el = node_str_create(&LAB(V, 1));
-    node_p n_th = node_str_create(&LAB(V, 1));
+    node_p n    = node_branch_create(&LAB(V, 2));
+    node_p n_el = node_branch_create(&LAB(V, 1));
+    node_p n_th = node_branch_create(&LAB(V, 1));
     node_connect_both(n, n_el, n_th);
 
     node_disconnect_both(n);
@@ -236,10 +236,10 @@ void test_node_merge()
 
     printf("\n\t\t\t%s 2\t\t", __func__);
     node_p N1[] = {
-        node_str_create(&LAB(V, 1)),
-        node_str_create(&LAB(V, 1)),
-        node_str_create(&LAB(V, 2)),
-        node_str_create(&LAB(V, 2)),
+        node_branch_create(&LAB(V, 1)),
+        node_branch_create(&LAB(V, 1)),
+        node_branch_create(&LAB(V, 2)),
+        node_branch_create(&LAB(V, 2)),
     };
     n2 = node_amp_create(&(amp_t){0, 0});
     node_connect(N1[0], n2, ELSE);
@@ -258,10 +258,10 @@ void test_node_merge()
 
     printf("\n\t\t\t%s 3\t\t", __func__);
     node_p N2[] = {
-        node_str_create(&LAB(V, 1)),
-        node_str_create(&LAB(V, 1)),
-        node_str_create(&LAB(V, 2)),
-        node_str_create(&LAB(V, 2)),
+        node_branch_create(&LAB(V, 1)),
+        node_branch_create(&LAB(V, 1)),
+        node_branch_create(&LAB(V, 2)),
+        node_branch_create(&LAB(V, 2)),
     };
     n2 = node_amp_create(&(amp_t){0, 0});
     for(int i=0; i<4; i++)
