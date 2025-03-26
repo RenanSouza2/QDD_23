@@ -34,14 +34,14 @@ void test_tree_assert()
 
     printf("\n\t\t%s 1\t\t", __func__);
     node_p na, n1, n2;
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 1));
+    n1 = node_amp_create(&AMP_IMMED(0, 0));
+    n2 = node_amp_create(&AMP_IMMED(0, 1));
     na = node_branch_create(&LAB(V, 1));
     node_connect_both(na, n1, n2);
     
     node_p nb;
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 1));
+    n1 = node_amp_create(&AMP_IMMED(0, 0));
+    n2 = node_amp_create(&AMP_IMMED(0, 1));
     nb = node_branch_create(&LAB(V, 1));
     node_connect_both(nb, n1, n2);
 
@@ -51,25 +51,25 @@ void test_tree_assert()
 
     printf("\n\t\t%s 2\t\t", __func__);
     node_p n3;
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 1));
+    n1 = node_amp_create(&AMP_IMMED(0, 0));
+    n2 = node_amp_create(&AMP_IMMED(0, 1));
     n3 = node_branch_create(&LAB(V, 1));
     node_connect_both(n3, n1, n2);
 
     node_p n4;
-    n2 = node_amp_create(&AMP(0, 2));
+    n2 = node_amp_create(&AMP_IMMED(0, 2));
     n4 = node_branch_create(&LAB(V, 1));
     node_connect_both(n4, n1, n2);
 
     na = node_branch_create(&LAB(V, 2));
     node_connect_both(na, n3, n4);
     
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 2));
+    n1 = node_amp_create(&AMP_IMMED(0, 0));
+    n2 = node_amp_create(&AMP_IMMED(0, 2));
     n4 = node_branch_create(&LAB(V, 1));
     node_connect_both(n4, n1, n2);
 
-    n2 = node_amp_create(&AMP(0, 1));
+    n2 = node_amp_create(&AMP_IMMED(0, 1));
     n3 = node_branch_create(&LAB(V, 1));
     node_connect_both(n3, n1, n2);
 

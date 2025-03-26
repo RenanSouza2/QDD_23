@@ -3,6 +3,10 @@
 
 #include "struct.h"
 
-void label_display(label_p lab);
+#include <stdbool.h>
+
+void label_display(label_t lab);
+
+bool label(label_t lab_1, label_t lab_2);
 
 #endif

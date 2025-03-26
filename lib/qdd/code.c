@@ -154,13 +154,69 @@ void list_head_reduce_redundance(list_head_p *lh_p)
 
 
 
+bool list_body_reduce_rep_item(node_p node_1, list_body_p lb, node_eq_f node_eq, bool remove)
+{
+    bool insert = false;
+    for(; lb->next; )
+    {
+        node_p node_2 = lb->node;
+        if(!node_eq(node_1, node_2))
+        {
+            lb = lb->next;
+            continue;
+        }
+
+        insert = true;
+        node_merge(node_1, node_2);
+        if(remove)
+            lb->next = list_body_pop(lb->next);
+    }
+
+    return insert;
+}
+
+list_body_p list_body_reduce_rep(list_body_p lb, node_eq_f node_eq, bool remove)
+{
+    list_body_p lb_res = NULL;
+    for(; lb; lb = lb->next)
+        if(list_body_reduce_rep_item(lb->node, lb, node_eq, remove))
+            lb_res = list_body_create(lb->node, lb_res);
+
+    return lb_res;
+}
+
+// LB is a copy of the list
+list_body_p list_body_reduce_useless(node_p node_0, list_body_p lb)
+{
+    for(; lb; lb = list_body_pop(lb))
+    {
+        node_p node = lb->node;
+        node_p *branch = BRANCH(node);
+        if(branch[ELSE] == branch[THEN])
+            node_merge(node_0, node);
+    }
+}
+
+void list_head_reduce_redundance(list_head_p *lh_p)
+{
+    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+
+    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE]));
+
+    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+
+    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
+    list_head_reduce_redundance(&(*lh_p)->lh);
+}
+
 void qdd_reduce(qdd_p q)
 {
-    list_body_p lb_aux = list_body_reduce_node(q->lb, node_amp_eq);
-    if(lb_aux == NULL) return;
+    list_body_p lb = list_body_reduce_node(q->lb, node_amp_eq);
+    if(lb == NULL)
+        return;
 
     for(
-        list_head_p lh_0 = list_head_create_body(lb_aux, NULL, ELSE);
+        list_head_p lh_0 = list_head_create_body(lb, NULL, ELSE);
         lh_0;
         lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
     ) {
@@ -175,7 +231,7 @@ void qdd_reduce(qdd_p q)
             return;
         }
 
-        node_eq_f fn[] = {node_th_eq, node_el_eq};
+        node_eq_f fn[] = {node_eq_th, node_eq_el};
         for(list_head_p lh = n0->lh; lh; lh = lh->lh)
         for(int side = 0; side < 2; side ++)
         if(lh->lb[side])

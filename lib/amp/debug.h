@@ -5,6 +5,8 @@
 
 #ifdef DEBUG
 
+#define AMP_IMMED(RE, IM) ((amp_t){RE, IM})
+
 void amp_display(amp_p amp);
 
 #endif

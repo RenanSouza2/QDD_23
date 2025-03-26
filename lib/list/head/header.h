@@ -2,13 +2,14 @@
 #define __LIST_HEAD_H__
 
 #include "../../macros/struct.h"
+
 #include "../body/header.h"
 #include "../../node/header.h"
 
 PLACEHOLDER(list_head);
 
-list_head_p list_head_create(node_p n, list_head_p lh_next, int side);
-list_head_p list_head_create_body(list_body_p lb, list_head_p lh_next, int side);
+list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next);
+list_head_p list_head_create(node_p node, int side, list_head_p next);
 void list_head_free(list_head_p lh);
 
 node_p list_head_first(list_head_p lh);

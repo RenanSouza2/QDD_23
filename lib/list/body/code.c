@@ -13,6 +13,33 @@
 #include "../../node/debug.h"
 
 
+list_body_p list_body_create_variadic_item(va_list *args)
+{
+    node_p node = va_arg(*args, node_p);
+    return list_body_create(node, NULL);
+}
+
+list_body_p list_body_create_variadic(int n, va_list *args)
+{
+    if(n == 0)
+        return NULL;
+
+    list_body_p lb_0, lb;
+    lb_0 = lb = list_body_create_variadic_item(args);
+    for(int i=0; i<n; i++)
+        lb = lb->next = list_body_create_variadic_item(args);
+
+    return lb_0;
+}
+
+list_body_p list_body_create_immed(int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    return list_body_create_variadic(n, &args);
+}
+
+
 
 void list_body_display_item(list_body_p lb)
 {
@@ -29,7 +56,7 @@ void list_body_display(list_body_p lb)
     for(i=0; lb; i++, lb = lb->next)
     {
         PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
-        label_display(node_label(lb->node));
+        label_display(lb->node->lab);
     }
 }
 
@@ -94,7 +121,7 @@ list_body_p list_body_create(node_p node, list_body_p next)
     return lb;
 }
 
-list_body_p list_body_create_vector(int size, node_p node[])
+list_body_p list_body_create_vec(int size, node_p node[])
 {
     list_body_p lb_0 = list_body_create(node[0], NULL);
     
@@ -103,6 +130,21 @@ list_body_p list_body_create_vector(int size, node_p node[])
         lb = lb->next = list_body_create(node[i], NULL);
 
     return lb_0;
+}
+
+list_body_p list_body_copy(list_body_p lb)
+{
+    CLU_IS_SAFE(lb);
+
+    if(lb == NULL)
+        return NULL;
+
+    list_body_p lb_res_0, lb_res;
+    lb_res = lb_res_0 = list_body_create(lb->node, NULL);
+    for(lb = lb->next; lb; lb = lb->next)
+        lb_res = lb_res->next = list_body_create(lb->node, NULL);
+
+    return lb_res_0;
 }
 
 list_body_p list_body_pop(list_body_p lb)
@@ -153,61 +195,4 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 
     lb_2->next = lb_1;
     return lb_2_0;
-}
-
-
-
-bool list_body_reduce_node_item(list_body_p lb, node_eq_f node_eq, bool remove, node_p node_1)
-{
-    CLU_IS_SAFE(lb);
-    CLU_IS_SAFE(node_1);
-
-    bool insert = false;
-    while(lb->next)
-    {
-        node_p node_2 = lb->next->node;
-        if(!node_eq(node_1, node_2))
-        {
-            lb = lb->next;
-            continue;
-        }
-
-        insert = true;
-        node_merge(node_1, node_2);
-
-        if(remove)
-            lb->next = list_body_pop(lb->next);
-    }
-
-    return insert;
-}
-
-list_body_p list_body_reduce_node(list_body_p lb, node_eq_f node_eq, bool remove)
-{
-    CLU_IS_SAFE(lb);
-
-    list_body_p lb_res = NULL;
-    for(; lb && lb->next; lb = lb->next)
-    {
-        node_p node_1 = lb->node;
-        if(!list_body_reduce_node_item(lb, node_eq, remove, node_1))
-            lb_res = list_body_create(node_1, lb_res);
-    }
-
-    return lb_res;
-}
-
-list_body_p list_body_reduce_path(node_p node_0, list_body_p lb)
-{
-    list_body_t lb_0;
-    lb_0.next = lb;
-    for(lb = &lb_0; ; )
-    {
-        node_p node = lb->next->node;
-        node_p branch[] = NODE_BRANCH(lb->node);
-        if(branch[ELSE] != branch[THEN])
-            lb = lb->next;
-        else
-            node_merge(node_0, node);
-    }
 }

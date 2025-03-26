@@ -55,13 +55,13 @@ void test_amp_eq()
     printf("\n\t\t%s\t\t", __func__);
 
     node_p n1, n2;
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 0));
-    assert(node_amp_eq(n1, n2) == true);
+    n1 = node_amp_create(&AMP_IMMED(0, 0));
+    n2 = node_amp_create(&AMP_IMMED(0, 0));
+    assert(node_eq_amp(n1, n2) == true);
     free(n2);
 
-    n2 = node_amp_create(&AMP(0, 1));
-    assert(node_amp_eq(n1, n2) == false);
+    n2 = node_amp_create(&AMP_IMMED(0, 1));
+    assert(node_eq_amp(n1, n2) == false);
     free(n1);
     free(n2);
 
@@ -73,12 +73,12 @@ void test_branch_eq()
     printf("\n\t\t%s\t\t", __func__);
 
     node_p n0, n1, n2;
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 1));
 
     // typedef bool (*node_eq_f)(node_p, node_p);
-    node_eq_f fn[] = {node_el_eq, node_th_eq};
+    node_eq_f fn[] = {node_eq_el, node_eq_th};
     for(int side=0; side<2; side++)
     {
         assert(fn[side](n1, n2) == true);

@@ -11,15 +11,17 @@
 #define V 1
 #define C 0
 
-void label_display(label_p lab)
+
+
+void label_display(label_t lab)
 {
-    if(label_is_amp(lab))
+    if(label_is_amp(&lab))
     {
         PRINT("AMPLITUDE");
         return;
     }
 
-    switch (lab->cl)
+    switch (lab.cl)
     {
         case C: PRINT("C"); break;
         case V: PRINT("V"); break;
@@ -27,7 +29,23 @@ void label_display(label_p lab)
     
         default: assert(false);
     }
-    PRINT("%d", lab->lv);
+    PRINT("%d", lab.lv);
+}
+
+
+
+bool label(label_t lab_1, label_t lab_2)
+{
+    if(label_compare(&lab_1, &lab_2) != 0)
+    {
+        printf("\n\n\tLABEL ASSERTION ERROR\t| LABEL MISMATCH | ");
+        label_display(lab_1);
+        PRINT(" ");
+        label_display(lab_2);
+        return false;
+    }
+
+    return true;
 }
 
 #endif

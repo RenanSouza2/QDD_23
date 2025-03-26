@@ -133,14 +133,14 @@ void test_list_body_reduce_equivalence(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p n0_0, n0_1, n1, n2;
-    n0_0 = node_amp_create(&AMP(0, 0));
-    n0_1 = node_amp_create(&AMP(0, 1));
+    n0_0 = node_amp_create(&AMP_IMMED(0, 0));
+    n0_1 = node_amp_create(&AMP_IMMED(0, 1));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 1));
     node_connect_both(n1, n0_0, n0_1);
     node_connect_both(n2, n0_0, n0_1);
     
-    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_th_eq);
+    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_eq_th);
     assert(list_head(n0_0->lh, 1,
         LAB(V, 1), 1, n2, 0
     ));
@@ -155,13 +155,13 @@ void test_list_body_reduce_equivalence(bool show)
 
     if(show) printf("\n\t\t%s 2\t\t", __func__);
     node_p N[] = {
-        node_amp_create(&AMP(0, 0)),
-        node_amp_create(&AMP(0, 1)),
-        node_amp_create(&AMP(0, 0)),
-        node_amp_create(&AMP(0, 1))
+        node_amp_create(&AMP_IMMED(0, 0)),
+        node_amp_create(&AMP_IMMED(0, 1)),
+        node_amp_create(&AMP_IMMED(0, 0)),
+        node_amp_create(&AMP_IMMED(0, 1))
     };
     lb = list_body_create_vector(4, N);
-    list_body_p lb_res = list_body_reduce_equivalence(lb, node_amp_eq);
+    list_body_p lb_res = list_body_reduce_equivalence(lb, node_eq_amp);
     assert(list_body(lb, 2, N[0], N[1]));
     assert(list_body(lb_res, 2, N[1], N[0]));
     list_body_free(lb);
@@ -178,7 +178,7 @@ void test_list_body_reduce_redundance(bool show)
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p n0, n1;
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     node_connect(n1, n0, ELSE);
     assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
@@ -189,7 +189,7 @@ void test_list_body_reduce_redundance(bool show)
     node_free(n1);
     
     if(show) printf("\n\t\t%s 2\t\t", __func__);
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     node_connect(n1, n0, THEN);
     assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
@@ -200,7 +200,7 @@ void test_list_body_reduce_redundance(bool show)
     node_free(n1);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     node_connect_both(n1, n0, n0);
     assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
@@ -209,7 +209,7 @@ void test_list_body_reduce_redundance(bool show)
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     node_p n2;
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 1));
     node_connect(n2, n0, ELSE);
@@ -222,7 +222,7 @@ void test_list_body_reduce_redundance(bool show)
     node_free(n2);
 
     if(show) printf("\n\t\t%s 5\t\t", __func__);
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 1));
     node_connect(n2, n0, THEN);
@@ -235,7 +235,7 @@ void test_list_body_reduce_redundance(bool show)
     node_free(n2);
 
     if(show) printf("\n\t\t%s 6\t\t", __func__);
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 2));
     node_connect(n2, n1, ELSE);
@@ -248,7 +248,7 @@ void test_list_body_reduce_redundance(bool show)
     node_free(n2);
 
     if(show) printf("\n\t\t%s 7\t\t", __func__);
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 2));
     node_connect(n2, n1, THEN);
@@ -268,7 +268,7 @@ void test_list_body_reduce_redundance_rec()
     printf("\n\t\t%s\t\t", __func__);
 
     node_p n0, n1;
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
 
     node_p n2;
@@ -283,7 +283,7 @@ void test_list_body_reduce_redundance_rec()
     node_free(n1);
 
     node_p n3;
-    n0 = node_amp_create(&AMP(0, 0));
+    n0 = node_amp_create(&AMP_IMMED(0, 0));
     n1 = node_branch_create(&LAB(V, 1));
     n2 = node_branch_create(&LAB(V, 1));
     n3 = node_branch_create(&LAB(V, 1));

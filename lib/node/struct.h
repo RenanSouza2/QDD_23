@@ -14,14 +14,19 @@ STRUCT(node)
 
 STRUCT(node_branch)
 {
-    node_t n;
+    node_t s;
     node_p branch[2];
 };
 
 STRUCT(node_amp)
 {
-    node_t n;
+    node_t s;
     amp_t amp;
 };
+
+#define NODE(PTR) ((node_p)(PTR))
+#define AMP(PTR) ((amp_p)(NODE(PTR)+1))
+#define BRANCH(PTR) ((node_p*)(NODE(PTR)+1))
+#define SIDE(PTR, PTR_1) (BRANCH(ND)[0] != ND1)
 
 #endif
