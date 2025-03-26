@@ -142,39 +142,41 @@ list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 
 
 
-bool list_body_reduce_equivalence_1(list_body_p lb, node_eq_f fn, node_p n1)
+bool list_body_reduce_node_item(list_body_p lb, node_eq_f node_eq, bool remove, node_p node_1)
 {
+    CLU_IS_SAFE(lb);
+    CLU_IS_SAFE(node_1);
+
     bool insert = false;
-    for(; lb->lb; )
+    while(lb->lb)
     {
-        node_p n2 = lb->lb->n;
-        if(!fn(n1, n2)) 
+        node_p node_2 = lb->lb->n;
+        if(!node_eq(node_1, node_2))
         {
             lb = lb->lb;
             continue;
         }
 
         insert = true;
-        if(!node_merge(n1, n2))
+        node_merge(node_1, node_2);
+
+        if(remove)
             lb->lb = list_body_pop(lb->lb);
     }
 
     return insert;
 }
 
-list_body_p list_body_reduce_equivalence(list_body_p lb, node_eq_f fn)
+list_body_p list_body_reduce_node(list_body_p lb, node_eq_f node_eq, bool remove)
 {
-    if(lb == NULL) return NULL;
+    CLU_IS_SAFE(lb);
 
     list_body_p lb_res = NULL;
     for(; lb && lb->lb; lb = lb->lb)
     {
-        node_p n1 = lb->n;
-        if(!list_body_reduce_equivalence_1(lb, fn, n1))
-            continue;
-            
-        lb_res = list_body_create(n1, lb_res);
-        if(lb->lb == NULL) break;
+        node_p node_1 = lb->n;
+        if(!list_body_reduce_node_item(lb, node_eq, remove, node_1))
+            lb_res = list_body_create(node_1, lb_res);
     }
 
     return lb_res;

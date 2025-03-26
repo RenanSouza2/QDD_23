@@ -11,10 +11,9 @@ void node_display(node_p n);
 
 #endif
 
-#define ND(POINTER)       ((node_p)(POINTER))
-#define ND_STR(POINTER)   ((branch_p)(ND(POINTER)+1))
-#define ND_AMP(POINTER)   ((amp_p)(ND(POINTER)+1))
-#define V_STR(POINTER)    ((node_p*)ND_STR(POINTER))
-#define SIDE(ND,ND1)      (ND_STR(ND)->el != ND1)
+#define NODE(POINTER) ((node_p)(POINTER))
+#define NODE_AMP(POINTER) ((amp_p)(ND(POINTER)+1))
+#define NODE_BRANCH(POINTER) ((branch_p)(ND(POINTER)+1))
+#define SIDE(NODE, NODE_1) (NODE_BRANCH(ND)->el != ND1)
 
 #endif

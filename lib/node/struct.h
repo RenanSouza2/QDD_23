@@ -6,11 +6,6 @@
 #include "../label/struct.h"
 #include "../amp/struct.h"
 
-STRUCT(branch)
-{
-    node_p el, th;
-};
-
 STRUCT(node)
 {
     list_head_p lh;
@@ -20,13 +15,13 @@ STRUCT(node)
 STRUCT(node_branch)
 {
     node_t n;
-    branch_t s;
+    node_p node[2];
 };
 
 STRUCT(node_amp)
 {
     node_t n;
-    amp_t a;
+    amp_t amp;
 };
 
 #endif

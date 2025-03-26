@@ -16,6 +16,10 @@
 
 
 
+#define NODE_BRANCH(NODE) (((node_branch_p)(NODE))->branch)
+
+
+
 void node_branch_display(node_p ns)
 {
     PRINT("\nnode (branch) display: %p", ns);
@@ -77,27 +81,10 @@ void node_free(node_p n)
 
 
 
-label_p node_label(node_p n)
-{
-    return &n->lab;
-}
-
 bool node_is_amp(node_p n)
 {
     label_p lab = node_label(n);
     return label_is_amp(lab);
-}
-
-branch_p node_branch(node_p n)
-{
-    assert(!node_is_amp(n));
-    return ND_STR(n);
-}
-
-amp_p node_amp(node_p n)
-{
-    assert(node_is_amp(n));
-    return ND_AMP(n);
 }
 
 node_p node_first(node_p n)
@@ -167,25 +154,27 @@ void node_disconnect_both(node_p n)
 
 
 
-bool node_merge(node_p n1, node_p n2)
+void node_merge(node_p n1, node_p n2)
 {
     assert(n1);
     assert(n2);
 
     for(list_head_p lh = n2->lh; lh; lh = lh->lh)
+    {
+        for(list_body_p lb = lh->lb[ELSE]; lb; lb = lb->lb)
+            NODE_BRANCH(lb->n)->
+    }
     for(int side = 0; side < 2; side++)
     for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
     {
         branch_p branch = node_branch(lb->n);
-        if(branch->el == n2) branch->el = n1;
-        if(branch->th == n2) branch->th = n1;
+        if(side == ELSE) branch->el = n1;
+        else             branch->th = n1;
     }
 
     n1->lh = list_head_merge(n1->lh, n2->lh);
-    bool res = !node_is_amp(n2);
-    if(res)
+    if(!node_is_amp(n2))
         node_disconnect_both(n2);
 
     free(n2);
-    return res;
 }

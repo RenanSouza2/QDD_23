@@ -7,7 +7,7 @@
 
 STRUCT(list_body)
 {
-    node_p n;
+    node_p node;
     list_body_p lb;
 };
 
