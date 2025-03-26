@@ -38,7 +38,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     node_p N[Q];
     for(int i=0; i<Q; i++)
         N[i] = node_amp_create(amp[i]);    
-    list_body_p lb = list_body_create_vector(Q, N);
+    list_body_p lb = list_body_create_vec(Q, N);
 
     for(int i=1; i<=qbits; i++)
     for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->next)
@@ -61,7 +61,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     node_p node = lb->node;
     free(lb);
 
-    lb = list_body_create_vector(Q, N);
+    lb = list_body_create_vec(Q, N);
     return qdd_create(node, lb, qbits);
 }
 
@@ -75,6 +75,7 @@ void qdd_free(qdd_p q)
 }
 
 
+typedef bool (*node_eq_f)(node_p, node_p);
 
 bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
 {
