@@ -4,13 +4,18 @@
 
 #include "debug.h"
 #include "../list_body/struct.h"
+#include "../../macros/assert.h"
 #include "../../../mods/clu/header.h"
+
+
 
 #ifdef DEBUG
 
 #include "../list_body/debug.h"
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
+
+
 
 void list_head_display_item(list_head_p lh)
 {
@@ -103,6 +108,8 @@ list_head_p list_head_invert(list_head_p lh)
 }
 
 #endif
+
+
 
 list_head_p list_head_create_cold()
 {

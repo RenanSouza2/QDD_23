@@ -4,6 +4,8 @@
 #include "../../macros/test.h"
 #include "../../../mods/clu/header.h"
 
+
+
 void test_label_compare(bool show)
 {
     printf("\n\ttest label compare\t\t");
@@ -29,8 +31,32 @@ void test_label_compare(bool show)
     TEST_LABEL_COMPARE(1, V, 2, <, V, 3);
     TEST_LABEL_COMPARE(1, V, 2, <, R, 3);
 
+    #undef TEST_LABEL_COMPARE
+
     assert(clu_mem_is_empty());
 }
+
+void test_label_is_amp(bool show)
+{
+    printf("\n\ttest label compare\t\t");
+
+    #define TEST_LABEL_IS_AMP(TAG, CL, LV, RES)             \
+    {                                                       \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        label_t lab = LAB(CL, LV);                          \
+        bool res = label_is_amp(&lab);                      \
+        assert(res == RES);                                 \
+    }
+
+    TEST_LABEL_IS_AMP(1, 0, 0, true);
+    TEST_LABEL_IS_AMP(2, V, 1, false);
+
+    #undef TEST_LABEL_IS_AMP
+
+    assert(clu_mem_is_empty());
+}
+
+
 
 void test_label()
 {
@@ -42,6 +68,8 @@ void test_label()
 
     assert(clu_mem_is_empty());
 }
+
+
 
 int main() 
 {

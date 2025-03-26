@@ -4,11 +4,15 @@
 #include "../../node/struct.h"
 #include "../../../mods/clu/header.h"
 
+
+
 #ifdef DEBUG
 
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
 #include "../../node/debug.h"
+
+
 
 void list_body_display_item(list_body_p lb)
 {
@@ -71,17 +75,17 @@ bool list_body(list_body_p lb, int tot_b, ...)
 
 #endif
 
-list_body_p list_body_create_cold()
-{
-    list_body_p lb = malloc(sizeof(list_body_t));
-    assert(lb);
-    return lb;
-}
+
 
 list_body_p list_body_create(node_p n, list_body_p lb_next)
 {
-    list_body_p lb = list_body_create_cold();
-    *lb = (list_body_t){n, lb_next};
+    list_body_p lb = malloc(sizeof(list_body_t));
+    assert(lb);
+
+    *lb = (list_body_t){
+        .n = n, 
+        .lb = lb_next
+    };
     return lb;
 }
 
@@ -105,7 +109,8 @@ list_body_p list_body_pop(list_body_p lb)
 
 void list_body_free(list_body_p lb)
 {
-    while(lb) lb = list_body_pop(lb);
+    while(lb)
+        lb = list_body_pop(lb);
 }
 
 
@@ -120,7 +125,6 @@ list_body_p list_body_remove(list_body_p lb, node_p n)
         if(lb->lb->n == n)
             break;
 
-    assert(lb->lb);
     lb->lb = list_body_pop(lb->lb);
     return lb_0;
 }
@@ -181,7 +185,7 @@ bool list_body_reduce_redundance(list_body_p *lb_p)
     if(*lb_p == NULL) return false;
 
     node_p n1 = (*lb_p)->n;
-    str_p str = node_str(n1);
+    branch_p str = node_branch(n1);
     if(str->el != str->th) return false;
 
     node_merge(str->el, n1);

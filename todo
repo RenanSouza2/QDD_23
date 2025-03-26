@@ -1,1 +1,4 @@
 use uint64
+rename list_body to body
+rename list_head to head
+node_branch and node_amp as macros
