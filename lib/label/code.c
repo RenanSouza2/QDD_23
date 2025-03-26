@@ -61,7 +61,7 @@ int label_compare(label_p lab_1, label_p lab_2)
     return 0;
 }
 
-int label_is_amp(label_p lab)
+bool label_is_amp(label_p lab)
 {
     return LONG(lab) == 0;
 }

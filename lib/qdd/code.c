@@ -185,6 +185,8 @@ list_head_p node_reduce(node_p node_0)
 
 void qdd_reduce(qdd_p q)
 {
+    CLU_IS_SAFE(q);
+
     list_body_p lb = list_body_reduce_node(q->lb, node_eq_amp, true);
     if(lb == NULL)
         return;
@@ -196,6 +198,9 @@ void qdd_reduce(qdd_p q)
     ) {
         node_p node = lh->lb[ELSE]->node;
         list_head_p lh_aux = node_reduce(node);
+        if(node->lh == NULL)
+            q->node = node;
+
         lh = list_head_merge(lh,lh_aux);
     }
 }
