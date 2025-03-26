@@ -10,7 +10,7 @@ STRUCT(list_head)
 {
     label_t lab;
     list_body_p lb[2];
-    list_head_p lh;
+    list_head_p next;
 };
 
 #endif

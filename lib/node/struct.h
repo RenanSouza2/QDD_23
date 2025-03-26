@@ -15,7 +15,7 @@ STRUCT(node)
 STRUCT(node_branch)
 {
     node_t n;
-    node_p node[2];
+    node_p branch[2];
 };
 
 STRUCT(node_amp)
