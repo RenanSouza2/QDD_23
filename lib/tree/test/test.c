@@ -3,7 +3,7 @@
 #include "../debug.h"
 #include "../../label/struct.h"
 #include "../../amp/struct.h"
-#include "../../list/list_head/debug.h"
+#include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
 
 

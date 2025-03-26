@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #include "../debug.h"
-#include "../../list_head/debug.h"
+#include "../../head/debug.h"
 #include "../../../node/debug.h"
 #include "../../../../mods/clu/header.h"
 

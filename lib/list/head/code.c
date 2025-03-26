@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #include "debug.h"
-#include "../list_body/struct.h"
+#include "../body/struct.h"
 #include "../../macros/assert.h"
 #include "../../../mods/clu/header.h"
 
@@ -11,7 +11,7 @@
 
 #ifdef DEBUG
 
-#include "../list_body/debug.h"
+#include "../body/debug.h"
 #include "../../utils/debug.h"
 #include "../../label/debug.h"
 

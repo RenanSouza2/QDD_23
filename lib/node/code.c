@@ -1,8 +1,8 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../list/list_head/struct.h"
-#include "../list/list_body/struct.h"
+#include "../list/head/struct.h"
+#include "../list/body/struct.h"
 #include "../macros/assert.h"
 #include "../../mods/clu/header.h"
 

@@ -7,7 +7,7 @@
 #include "../../label/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
-#include "../../list/list_head/debug.h"
+#include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
 
 #define IDX(L) L.cl][L.lv

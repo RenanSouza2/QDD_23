@@ -3,7 +3,7 @@
 
 #include "header.h"
 
-#include "../list_body/header.h"
+#include "../body/header.h"
 #include "../../label/struct.h"
 
 STRUCT(list_head)

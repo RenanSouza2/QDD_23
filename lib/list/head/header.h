@@ -2,7 +2,7 @@
 #define __LIST_HEAD_H__
 
 #include "../../macros/struct.h"
-#include "../list_body/header.h"
+#include "../body/header.h"
 #include "../../node/header.h"
 
 PLACEHOLDER(list_head);

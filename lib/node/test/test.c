@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 #include "../debug.h"
-#include "../../list/list_body/debug.h"
-#include "../../list/list_head/debug.h"
+#include "../../list/body/debug.h"
+#include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
 
 

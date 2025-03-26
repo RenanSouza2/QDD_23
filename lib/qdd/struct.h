@@ -3,7 +3,7 @@
 
 #include "header.h"
 
-#include "../list/list_body/struct.h"
+#include "../list/body/struct.h"
 
 STRUCT(qdd)
 {

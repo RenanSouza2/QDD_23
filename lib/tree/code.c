@@ -2,15 +2,15 @@
 
 #include "debug.h"
 #include "../node/struct.h"
-#include "../list/list_body/struct.h"
-#include "../list/list_head/struct.h"
+#include "../list/body/struct.h"
+#include "../list/head/struct.h"
 
 #ifdef DEBUG
 
 #include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
-#include "../list/list_head/debug.h"
+#include "../list/head/debug.h"
 #include "../../mods/clu/header.h"
 
 void tree_display(node_p n)
