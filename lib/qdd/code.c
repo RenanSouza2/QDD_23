@@ -15,12 +15,20 @@
 
 
 
-qdd_p qdd_create(node_p n, list_body_p lb, int qbits)
+qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
 {
+    CLU_IS_SAFE(node);
+    CLU_IS_SAFE(lb);
+
     qdd_p q = malloc(sizeof(qdd_t));
     assert(q);
 
-    *q = (qdd_t){n, lb, qbits};
+    *q = (qdd_t)
+    {
+        .node = node, 
+        .lb = lb,
+        qbits = qbits
+    };
     return q;
 }
 
@@ -29,138 +37,55 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     int Q = 1 << qbits;
     node_p N[Q];
     for(int i=0; i<Q; i++)
-        N[i] = node_amp_create(&amp[i]);    
+        N[i] = node_amp_create(amp[i]);    
     list_body_p lb = list_body_create_vector(Q, N);
 
     for(int i=1; i<=qbits; i++)
-    for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->lb)
+    for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->next)
     { 
-        node_p n1 = lb_aux->n;
+        node_p node_1 = lb_aux->node;
 
-        list_body_p lb_tmp = lb_aux->lb;
+        list_body_p lb_tmp = lb_aux->next;
         assert(lb_tmp);
-        node_p n2 = lb_tmp->n;
+        node_p node_2 = lb_tmp->node;
 
-        node_p n = node_branch_create(&(label_t){V, i});
-        node_connect_both(n, n1, n2);
+        node_p node = node_branch_create((label_t){V, i});
+        node_connect_both(node, node_1, node_2);
 
-        *lb_aux = (list_body_t){n, list_body_pop(lb_aux->lb)};
+        *lb_aux = (list_body_t){
+            .node = node,
+            .next = list_body_pop(lb_aux->next)
+        };
     }
-    assert(lb->lb == NULL);
-    node_p n = lb->n;
+    assert(lb->next == NULL);
+    node_p node = lb->node;
     free(lb);
 
     lb = list_body_create_vector(Q, N);
-    return qdd_create(n, lb, qbits);
+    return qdd_create(node, lb, qbits);
 }
 
 void qdd_free(qdd_p q)
 {
-    tree_free(LB(q)->n);
-    list_body_free(LB(q)->lb);
+    CLU_IS_SAFE(q);
+
+    tree_free(q->node);
+    list_body_free(q->lb);
     free(q);
 }
 
 
 
-bool list_body_reduce_equivalence_item(list_body_p lb, node_eq_f fn, node_p n1)
+bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
 {
-    bool insert = false;
-    for(; lb->lb; )
-    {
-        node_p n2 = lb->lb->n;
-        if(!fn(n1, n2)) 
-        {
-            lb = lb->lb;
-            continue;
-        }
+    CLU_IS_SAFE(lb);
+    CLU_IS_SAFE(node_1);
 
-        insert = true;
-        if(!node_merge(n1, n2))
-            lb->lb = list_body_pop(lb->lb);
-    }
-
-    return insert;
-}
-
-// returns the list of the nodes reduced
-list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn)
-{
-    if(lb == NULL)
-        return NULL;
-
-    list_body_p lb_res = NULL;
-    for(; lb && lb->lb; lb = lb->lb)
-    {
-        node_p n1 = lb->n;
-        if(list_body_reduce_equivalence_item(lb, fn, n1))
-            lb_res = list_body_create(n1, lb_res);
-    }
-
-    return lb_res;
-}
-
-bool list_body_reduce_path_item(list_body_p *lb_root)
-{
-    list_body_p lb = *lb_root;
-    if(lb == NULL)
-        return false;
-
-    node_p n1 = lb->n;
-    branch_p branch = node_branch(n1);
-    if(branch->el != branch->th)
-        return false;
-
-    node_merge(branch->el, n1);
-    return true;
-}
-
-list_body_p list_body_reduce_path(list_body_p lb)
-{
-    list_body_t lb_0;
-    lb_0.lb = lb;
-
-    for(lb = &lb_0; lb->lb; )
-    {
-        node_p node = lb->lb->n;
-        branch_p branch = node_branch(node);
-        if(branch->el != branch->th)
-        {
-            lb = lb->lb;
-            continue;
-        }
-
-        
-    }
-
-    while(list_body_reduce_path_item(lb_p));
-
-    if(*lb_p == NULL) return;
-
-    list_body_reduce_path(&(*lb_p)->lb);
-}
-
-void list_head_reduce_redundance(list_head_p *lh_p)
-{
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
-
-    while(*lh_p && list_body_reduce_path(&(*lh_p)->lb[ELSE]));
-
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
-
-    list_body_reduce_path(&(*lh_p)->lb[ELSE]->lb);
-    list_head_reduce_redundance(&(*lh_p)->lh);
-}
-
-
-
-bool list_body_reduce_rep_item(node_p node_1, list_body_p lb, node_eq_f node_eq, bool remove)
-{
     bool insert = false;
     for(; lb->next; )
     {
-        node_p node_2 = lb->node;
-        if(!node_eq(node_1, node_2))
+        node_p node_2 = lb->next->node;
+        if(!fn(node_1, node_2)) 
         {
             lb = lb->next;
             continue;
@@ -168,6 +93,7 @@ bool list_body_reduce_rep_item(node_p node_1, list_body_p lb, node_eq_f node_eq,
 
         insert = true;
         node_merge(node_1, node_2);
+
         if(remove)
             lb->next = list_body_pop(lb->next);
     }
@@ -175,72 +101,101 @@ bool list_body_reduce_rep_item(node_p node_1, list_body_p lb, node_eq_f node_eq,
     return insert;
 }
 
-list_body_p list_body_reduce_rep(list_body_p lb, node_eq_f node_eq, bool remove)
+// returns the list of the nodes reduced
+list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn, bool remove)
 {
+    CLU_IS_SAFE(lb);
+
+    if(lb == NULL)
+        return NULL;
+
     list_body_p lb_res = NULL;
-    for(; lb; lb = lb->next)
-        if(list_body_reduce_rep_item(lb->node, lb, node_eq, remove))
-            lb_res = list_body_create(lb->node, lb_res);
+    for(; lb && lb->next; lb = lb->next)
+    {
+        node_p node_1 = lb->node;
+        if(list_body_reduce_node_item(lb, fn, node_1, remove))
+            lb_res = list_body_create(node_1, lb_res);
+    }
 
     return lb_res;
 }
 
-// LB is a copy of the list
-list_body_p list_body_reduce_useless(node_p node_0, list_body_p lb)
+void list_body_reduce_path(node_p node_0, list_body_p lb)
 {
-    for(; lb; lb = list_body_pop(lb))
+    CLU_IS_SAFE(lb);
+
+    if(lb == NULL)
+        return;
+
+    for(; lb->next; lb = list_body_pop(lb))
     {
-        node_p node = lb->node;
-        node_p *branch = BRANCH(node);
-        if(branch[ELSE] == branch[THEN])
+        node_p node = lb->next->node;
+        if(BRANCH(node)[ELSE] == BRANCH(node)[THEN])
             node_merge(node_0, node);
     }
 }
 
-void list_head_reduce_redundance(list_head_p *lh_p)
+list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 {
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+    if(*lh_root == NULL)
+        return NULL;
 
-    while(*lh_p && list_body_reduce_redundance(&(*lh_p)->lb[ELSE]));
+    list_head_p lh;
+    list_body_p lb;
+    while(
+        (lh = *lh_root) &&
+        (lb = lh->lb[ELSE]) &&
+        (
+            BRANCH(lb->node)[ELSE] ==
+            BRANCH(lb->node)[THEN]
+        )
+    )
+        node_merge(node_0, lb->node);
 
-    if(*lh_p == NULL || (*lh_p)->lb[ELSE] == NULL) return;
+    lh = *lh_root;
+    if(lh == NULL)
+        return NULL;
 
-    list_body_reduce_redundance_rec(&(*lh_p)->lb[ELSE]->lb);
-    list_head_reduce_redundance(&(*lh_p)->lh);
+    list_body_p lb_aux = list_body_reduce_node(lh->lb[ELSE], node_eq_th,false);
+    list_head_p lh_res_el = list_head_create_body(lb_aux, ELSE, NULL);
+
+    lb_aux = list_body_reduce_node(lh->lb[THEN], node_eq_el, false);
+    list_head_p lh_res_th = list_head_create_body(lb_aux, ELSE, NULL);
+    
+    return list_head_merge(lh_res_el, lh_res_th);
 }
+
+list_head_p node_reduce(node_p node_0)
+{
+    CLU_IS_SAFE(node_0);
+
+    list_head_p lh_res = list_head_reduce(node_0, &node_0->lh);
+    if(node_0->lh == NULL)
+        return lh_res;
+
+    for(list_head_p lh = node_0->lh; lh->next; lh = lh->next)
+    {
+        list_head_p lh_aux = list_head_reduce(node_0, &lh->next);
+        lh_res = list_head_merge(lh_res, lh_aux);
+    }
+    return lh_res;
+}
+
+
 
 void qdd_reduce(qdd_p q)
 {
-    list_body_p lb = list_body_reduce_node(q->lb, node_amp_eq);
+    list_body_p lb = list_body_reduce_node(q->lb, node_eq_amp, true);
     if(lb == NULL)
         return;
 
     for(
-        list_head_p lh_0 = list_head_create_body(lb, NULL, ELSE);
-        lh_0;
-        lh_0 = list_head_remove(lh_0, lh_0->lb[ELSE]->n, ELSE)
+        list_head_p lh = list_head_create_body(lb, ELSE, NULL);
+        lh;
+        lh = list_head_remove(lh, lh->lb[ELSE]->node, ELSE)
     ) {
-        node_p n0 = lh_0->lb[ELSE]->n;
-        list_head_reduce_redundance(&n0->lh);
-
-        if(n0->lh == NULL)
-        {
-            q->n = n0;
-            free(lh_0->lb[ELSE]);
-            free(lh_0);
-            return;
-        }
-
-        node_eq_f fn[] = {node_eq_th, node_eq_el};
-        for(list_head_p lh = n0->lh; lh; lh = lh->lh)
-        for(int side = 0; side < 2; side ++)
-        if(lh->lb[side])
-        {
-            list_body_p lb_aux = list_body_reduce_node(lh->lb[side], fn[side]);
-            if(lb_aux == NULL) continue;
-
-            list_head_p lh_aux = list_head_create_body(lb_aux, NULL, ELSE); 
-            lh_0 = list_head_merge(lh_0, lh_aux);
-        }
+        node_p node = lh->lb[ELSE]->node;
+        list_head_p lh_aux = node_reduce(node);
+        lh = list_head_merge(lh,lh_aux);
     }
 }
