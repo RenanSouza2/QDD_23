@@ -142,52 +142,52 @@ void test_list_body_remove(bool show)
     assert(clu_mem_is_empty());
 }
 
-// void test_list_body_merge(bool show)
-// {
-//     printf("\n\t%s\t\t", __func__);
+void test_list_body_merge(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
 
-//     if(show) printf("\n\t\t%s 1\t\t", __func__);
-//     list_body_p lb_1 = list_body_create_test(1, 2);
-//     list_body_p lb_2 = list_body_create_test(3, 4);
-//     lb_1 = list_body_merge(lb_1, lb_2);
-//     assert(list_body_immed(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    list_body_p lb_1 = list_body_create_test(1, 2);
+    list_body_p lb_2 = list_body_create_test(3, 4);
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_immed(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
+    list_body_free(lb_1);
 
-//     if(show) printf("\n\t\t%s 2\t\t", __func__);
-//     lb_1 = list_body_create_test(1, 2);
-//     lb_2 = list_body_create(ND(3), NULL);
-//     lb_1 = list_body_merge(lb_1, lb_2);
-//     assert(list_body_immed(lb_1, 3, ND(3), ND(1), ND(2)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lb_1 = list_body_create_test(1, 2);
+    lb_2 = list_body_create(ND(3), NULL);
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_immed(lb_1, 3, ND(3), ND(1), ND(2)));
+    list_body_free(lb_1);
 
-//     if(show) printf("\n\t\t%s 3\t\t", __func__);
-//     lb_1 = list_body_create(ND(1), NULL);
-//     lb_2 = list_body_create_test(2, 3);
-//     lb_1 = list_body_merge(lb_1, lb_2);
-//     assert(list_body_immed(lb_1, 3, ND(2), ND(3), ND(1)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    lb_1 = list_body_create(ND(1), NULL);
+    lb_2 = list_body_create_test(2, 3);
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_immed(lb_1, 3, ND(2), ND(3), ND(1)));
+    list_body_free(lb_1);
 
-//     if(show) printf("\n\t\t%s 4\t\t", __func__);
-//     lb_1 = list_body_create(ND(1), NULL);
-//     lb_2 = list_body_create(ND(2), NULL);
-//     lb_1 = list_body_merge(lb_1, lb_2);
-//     assert(list_body_immed(lb_1, 2, ND(2), ND(1)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb_1 = list_body_create(ND(1), NULL);
+    lb_2 = list_body_create(ND(2), NULL);
+    lb_1 = list_body_merge(lb_1, lb_2);
+    assert(list_body_immed(lb_1, 2, ND(2), ND(1)));
+    list_body_free(lb_1);
 
-//     if(show) printf("\n\t\t%s 5\t\t", __func__);
-//     lb_2 = list_body_create(ND(2), NULL);
-//     lb_1 = list_body_merge(NULL, lb_2);
-//     assert(list_body_immed(lb_1, 1, ND(2)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 5\t\t", __func__);
+    lb_2 = list_body_create(ND(2), NULL);
+    lb_1 = list_body_merge(NULL, lb_2);
+    assert(list_body_immed(lb_1, 1, ND(2)));
+    list_body_free(lb_1);
 
-//     if(show) printf("\n\t\t%s 6\t\t", __func__);
-//     lb_1 = list_body_create(ND(2), NULL);
-//     lb_1 = list_body_merge(lb_1, NULL);
-//     assert(list_body_immed(lb_1, 1, ND(2)));
-//     list_body_free(lb_1);
+    if(show) printf("\n\t\t%s 6\t\t", __func__);
+    lb_1 = list_body_create(ND(2), NULL);
+    lb_1 = list_body_merge(lb_1, NULL);
+    assert(list_body_immed(lb_1, 1, ND(2)));
+    list_body_free(lb_1);
 
-//     assert(clu_mem_is_empty());
-// }
+    assert(clu_mem_is_empty());
+}
 
 
 
@@ -201,7 +201,7 @@ void test_list_body()
     test_list_body_create_vec(show);
 
     test_list_body_remove(show);
-    // test_list_body_merge(show);
+    test_list_body_merge(show);
 
     assert(clu_mem_is_empty());
 }
