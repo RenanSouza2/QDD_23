@@ -146,45 +146,40 @@ void test_list_body_merge(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb_1 = list_body_create_test(1, 2);
-    list_body_p lb_2 = list_body_create_test(3, 4);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_immed(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
-    list_body_free(lb_1);
+    #define TEST_LIST_BODY_MERGE(TAG, ...)  \
+    {   \
+        list_body_p lb[3];  \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        list_body_create_vec_immed(lb, 3, __VA_ARGS__); \
+        lb[0] = list_body_merge(lb[0], lb[1]);  \
+        assert(list_body_str(lb[0], lb[2]));    \
+    }
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb_1 = list_body_create_test(1, 2);
-    lb_2 = list_body_create(ND(3), NULL);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_immed(lb_1, 3, ND(3), ND(1), ND(2)));
-    list_body_free(lb_1);
-
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb_1 = list_body_create(ND(1), NULL);
-    lb_2 = list_body_create_test(2, 3);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_immed(lb_1, 3, ND(2), ND(3), ND(1)));
-    list_body_free(lb_1);
-
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    lb_1 = list_body_create(ND(1), NULL);
-    lb_2 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body_immed(lb_1, 2, ND(2), ND(1)));
-    list_body_free(lb_1);
-
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
-    lb_2 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(NULL, lb_2);
-    assert(list_body_immed(lb_1, 1, ND(2)));
-    list_body_free(lb_1);
-
-    if(show) printf("\n\t\t%s 6\t\t", __func__);
-    lb_1 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(lb_1, NULL);
-    assert(list_body_immed(lb_1, 1, ND(2)));
-    list_body_free(lb_1);
+    TEST_LIST_BODY_MERGE(1,
+        0,
+        0,
+        0
+    );
+    TEST_LIST_BODY_MERGE(2,
+        1, ND(1),
+        0,
+        1, ND(1)
+    );
+    TEST_LIST_BODY_MERGE(3,
+        0,
+        1, ND(1),
+        1, ND(1)
+    );
+    TEST_LIST_BODY_MERGE(4,
+        1, ND(1),
+        1, ND(2),
+        2, ND(2), ND(1)
+    );
+    TEST_LIST_BODY_MERGE(5,
+        1, ND(1),
+        2, ND(2), ND(3),
+        3, ND(2), ND(3), ND(1)
+    );
 
     assert(clu_mem_is_empty());
 }

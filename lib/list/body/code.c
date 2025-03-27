@@ -104,7 +104,7 @@ bool list_body_str_inner(list_body_p lb_1, list_body_p lb_2)
     CLU_IS_SAFE(lb_1);
     CLU_IS_SAFE(lb_2);
 
-    for(int i=0; lb_1; i++)
+    for(int i=0; lb_1 && lb_2; i++)
     {
         if(lb_1->node != lb_2->node)
         {
