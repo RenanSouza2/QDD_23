@@ -18,7 +18,7 @@ void test_example()
 }
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_example();

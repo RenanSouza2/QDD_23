@@ -170,7 +170,7 @@ list_body_p list_body_create(node_p node, list_body_p next)
     assert(lb);
 
     *lb = (list_body_t){
-        .node = node, 
+        .node = node,
         .next = next
     };
     return lb;
@@ -181,7 +181,7 @@ list_body_p list_body_create_vec(int size, node_p node[])
     assert(size);
 
     list_body_p lb_0 = list_body_create(node[0], NULL);
-    
+
     list_body_p lb = lb_0;
     for(int i=1; i<size; i++)
         lb = lb->next = list_body_create(node[i], NULL);

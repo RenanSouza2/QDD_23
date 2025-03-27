@@ -41,16 +41,16 @@ bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
     }
 
     assert(node_2);
-    
+
     if(node && (list_head_first(node_1->lh) != node))
         return true;
-    
+
     if(!label(node_1->lab, node_2->lab))
     {
         PRINT("\n\tTREE ASSERTION ERROR\t| LABEL MISMATCH ");
         return false;
     }
-    
+
     if(label_is_amp(&node_2->lab))
     {
         if(!amp_eq(AMP(node_1), AMP(node_2)))

@@ -18,7 +18,7 @@ void test_tree_enlist()
     node_connect_both(n, n1, n2);
 
     list_head_p lh = tree_enlist(n);
-    assert(list_head(lh, 2, 
+    assert(list_head(lh, 2,
         LAB(0, 0), 2, n2, n1, 0,
         LAB(V, 1), 1, n, 0
     ));
@@ -38,7 +38,7 @@ void test_tree_assert()
     n2 = node_amp_create(&AMP_IMMED(0, 1));
     na = node_branch_create(&LAB(V, 1));
     node_connect_both(na, n1, n2);
-    
+
     node_p nb;
     n1 = node_amp_create(&AMP_IMMED(0, 0));
     n2 = node_amp_create(&AMP_IMMED(0, 1));
@@ -63,7 +63,7 @@ void test_tree_assert()
 
     na = node_branch_create(&LAB(V, 2));
     node_connect_both(na, n3, n4);
-    
+
     n1 = node_amp_create(&AMP_IMMED(0, 0));
     n2 = node_amp_create(&AMP_IMMED(0, 2));
     n4 = node_branch_create(&LAB(V, 1));
@@ -75,7 +75,7 @@ void test_tree_assert()
 
     nb = node_branch_create(&LAB(V, 2));
     node_connect_both(nb, n3, n4);
-    
+
     assert(tree(na, nb));
     tree_free(na);
     tree_free(nb);
@@ -94,7 +94,7 @@ void test_tree()
 }
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_tree();

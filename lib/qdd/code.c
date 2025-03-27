@@ -25,7 +25,7 @@ qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
 
     *q = (qdd_t)
     {
-        .node = node, 
+        .node = node,
         .lb = lb,
         qbits = qbits
     };
@@ -37,12 +37,12 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
     int Q = 1 << qbits;
     node_p N[Q];
     for(int i=0; i<Q; i++)
-        N[i] = node_amp_create(amp[i]);    
+        N[i] = node_amp_create(amp[i]);
     list_body_p lb = list_body_create_vec(Q, N);
 
     for(int i=1; i<=qbits; i++)
     for(list_body_p lb_aux = lb; lb_aux; lb_aux = lb_aux->next)
-    { 
+    {
         node_p node_1 = lb_aux->node;
 
         list_body_p lb_tmp = lb_aux->next;
@@ -86,7 +86,7 @@ bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, boo
     for(; lb->next; )
     {
         node_p node_2 = lb->next->node;
-        if(!fn(node_1, node_2)) 
+        if(!fn(node_1, node_2))
         {
             lb = lb->next;
             continue;
@@ -156,7 +156,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
     lh = *lh_root;
     if(lh == NULL)
         return NULL;
-        
+
     list_body_reduce_path(node_0, lh->lb[ELSE]);
 
     list_body_p lb_aux = list_body_reduce_node(lh->lb[ELSE], node_eq_th,false);
@@ -164,7 +164,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 
     lb_aux = list_body_reduce_node(lh->lb[THEN], node_eq_el, false);
     list_head_p lh_res_th = list_head_create_body(lb_aux, ELSE, NULL);
-    
+
     return list_head_merge(lh_res_el, lh_res_th);
 }
 

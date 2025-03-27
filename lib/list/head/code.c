@@ -189,14 +189,14 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
 
     if(lh == NULL)
         return list_head_create(node, side, NULL);
-    
+
     switch (label_compare(&node->lab, &lh->lab))
     {
         case -1:
         {
             return list_head_create(node, side, lh);
         }
-        
+
         case 0:
         {
             lh->lb[side] = list_body_create(node, lh->lb[side]);
@@ -246,7 +246,7 @@ list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2)
             lh_1->next = list_head_merge(lh_1->next, lh_2);
             return lh_1;
         }
-    
+
         case 0:
         {
             lh_1->lb[ELSE] = list_body_merge(lh_1->lb[ELSE], lh_2->lb[ELSE]);

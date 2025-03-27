@@ -26,7 +26,7 @@ void label_display(label_t lab)
         case C: PRINT("C"); break;
         case V: PRINT("V"); break;
         case R: PRINT("R"); break;
-    
+
         default: assert(false);
     }
     PRINT("%d", lab.lv);

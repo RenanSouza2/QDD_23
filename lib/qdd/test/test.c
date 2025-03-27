@@ -41,7 +41,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
         for(int j=0; j<size; j++)
         {
             N[IDX(lab)][j] = n = node_branch_create(&lab);
-            
+
             for(int side=0; side<2; side++)
             {
                 label_t lab_0 = va_arg(args, label_t);
@@ -65,7 +65,7 @@ qdd_p qdd_create_variadic(int qbits, ...)
 void test_qdd_create()
 {
     printf("\n\t%s\t\t", __func__);
-    
+
     qdd_p q = qdd_create(ND(1), LB(2), 3);
     assert(q->n  == ND(1));
     assert(q->lb == LB(2));
@@ -84,8 +84,8 @@ void test_qdd_create_variadic()
     V1 = LAB(V, 1);
     V2 = LAB(V, 2);
 
-    qdd_p q = qdd_create_variadic(1, 
-        2, AMPI(0, 0), AMPI(0, 1), 
+    qdd_p q = qdd_create_variadic(1,
+        2, AMPI(0, 0), AMPI(0, 1),
         1,
         V1, 1, amp, 0, amp, 1
     );
@@ -95,15 +95,15 @@ void test_qdd_create_variadic()
     n0 = node_amp_create(&AMPI(0, 0));
     n1 = node_amp_create(&AMPI(0, 1));
     node_connect_both(n, n0, n1);
-    
+
     assert(tree(q->n, n));
     assert(amp_eq(node_amp(q->lb->n), &AMPI(0, 0)));
     assert(amp_eq(node_amp(q->lb->lb->n), &AMPI(0, 1)));
     qdd_free(q);
     tree_free(n);
 
-    q = qdd_create_variadic(1, 
-        1, AMPI(0, 0), 
+    q = qdd_create_variadic(1,
+        1, AMPI(0, 0),
         0
     );
     n = node_amp_create(&AMPI(0, 0));
@@ -112,7 +112,7 @@ void test_qdd_create_variadic()
     qdd_free(q);
     tree_free(n);
 
-    q = qdd_create_variadic(2, 
+    q = qdd_create_variadic(2,
         4, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3),
         2,
         V1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
@@ -135,24 +135,24 @@ void test_qdd_create_variadic()
     tree_free(n);
 
     assert(clu_mem_is_empty());
-    
-    q = qdd_create_variadic(2, 
+
+    q = qdd_create_variadic(2,
         2, AMPI(0, 0), AMPI(0, 1),
         2,
         V1, 1, amp, 0, amp, 1,
         V2, 1, amp, 0, V1, 0
     );
-    
+
     node_p n2;
     n1 = node_amp_create(&AMPI(0, 0));
     n2 = node_amp_create(&AMPI(0, 1));
     n = node_branch_create(&V1);
     node_connect_both(n, n1, n2);
-    
+
     n2 = n;
     n = node_branch_create(&V2);
     node_connect_both(n, n1, n2);
-    
+
     assert(tree(q->n, n));
     qdd_free(q);
     tree_free(n);
@@ -168,7 +168,7 @@ void test_qdd_create_variadic()
     n1 = node_amp_create(&AMPI(0, 1));
     n2 = node_branch_create(&V1);
     node_connect_both(n2, n0, n1);
-    
+
     node_p n3;
     n1 = node_amp_create(&AMPI(0, 2));
     n3 = node_branch_create(&V1);
@@ -177,7 +177,7 @@ void test_qdd_create_variadic()
     n = node_branch_create(&V2);
     node_connect_both(n, n2, n3);
 
-    assert(tree(q->n, n)); 
+    assert(tree(q->n, n));
     qdd_free(q);
     tree_free(n);
 
@@ -191,7 +191,7 @@ void test_qdd_vector()
     label_t amp, V1;
     amp = LAB(0, 0);
     V1 = LAB(V, 1);
-    
+
     qdd_p q0 = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
     qdd_p q1 = qdd_create_variadic(1,
         2, AMPI(0, 0), AMPI(0, 1),
@@ -251,7 +251,7 @@ void test_qdd_reduce()
     assert(tree(q->n, q_exp->n));
     qdd_free(q);
     qdd_free(q_exp);
-    
+
     assert(clu_mem_is_empty());
 }
 
@@ -269,7 +269,7 @@ void test_qdd()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_qdd();

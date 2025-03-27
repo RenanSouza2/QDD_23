@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
- 
+
 #include "../debug.h"
 #include "../../body/debug.h"
 #include "../../../amp/debug.h"
@@ -112,23 +112,23 @@ void test_list_head_create_body(bool show)
 //     printf("\n\t\t\t%s 1\t\t", __func__);
 //     list_head_p lh = NULL;
 //     lh = list_head_insert(lh, N[0], ELSE);
-//     assert(list_head(lh, 1, 
+//     assert(list_head(lh, 1,
 //         LAB(V, 2), 1, N[0], 0
 //     ));
 
 //     printf("\n\t\t\t%s 2\t\t", __func__);
 //     lh = list_head_insert(lh, N[1], THEN);
-//     assert(list_head(lh, 1, 
-//         LAB(V, 2), 1, N[0], 1, N[1] 
+//     assert(list_head(lh, 1,
+//         LAB(V, 2), 1, N[0], 1, N[1]
 //     ));
 
 //     printf("\n\t\t\t%s 3\t\t", __func__);
 //     lh = list_head_insert(lh, N[2], ELSE);
 //     assert(list_head(lh, 2,
 //         LAB(V, 1), 1, N[2], 0,
-//         LAB(V, 2), 1, N[0], 1, N[1] 
+//         LAB(V, 2), 1, N[0], 1, N[1]
 //     ));
-    
+
 //     printf("\n\t\t\t%s 4\t\t", __func__);
 //     lh = list_head_insert(lh, N[3], THEN);
 //     assert(list_head(lh, 3,
@@ -176,101 +176,101 @@ void test_list_head_create_body(bool show)
 //         node_branch_create(&LAB(V, 1)), // 0
 //         node_branch_create(&LAB(V, 1)), // 1
 //         node_branch_create(&LAB(V, 1)), // 2
-       
+
 //         node_branch_create(&LAB(V, 2)), // 3
 //         node_branch_create(&LAB(V, 2)), // 4
-       
+
 //         node_branch_create(&LAB(V, 3)), // 5
 //         node_branch_create(&LAB(V, 3)), // 6
 //         node_branch_create(&LAB(V, 3)), // 7
-       
+
 //         node_branch_create(&LAB(V, 4)), // 8
 //         node_branch_create(&LAB(V, 4)), // 9
 //         node_branch_create(&LAB(V, 4)), // 10
 //     };
 //     list_head_p lh = list_head_create_vector(11, N);
-//     assert(list_head(lh, 4, 
-//         LAB(V, 1), 2, N[ 2], N[0], 1, N[1], 
-//         LAB(V, 2), 1, N[ 4],       1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
+//     assert(list_head(lh, 4,
+//         LAB(V, 1), 2, N[ 2], N[0], 1, N[1],
+//         LAB(V, 2), 1, N[ 4],       1, N[3],
+//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  1\t\t", __func__);
 //     lh = list_head_remove(lh, N[2], ELSE);
-//     assert(list_head(lh, 4, 
-//         LAB(V, 1), 1, N[ 0],       1, N[1], 
-//         LAB(V, 2), 1, N[ 4],       1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
+//     assert(list_head(lh, 4,
+//         LAB(V, 1), 1, N[ 0],       1, N[1],
+//         LAB(V, 2), 1, N[ 4],       1, N[3],
+//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  2\t\t", __func__);
 //     lh = list_head_remove(lh, N[0], ELSE);
-//     assert(list_head(lh, 4, 
-//         LAB(V, 1), 0,              1, N[1], 
-//         LAB(V, 2), 1, N[ 4],       1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
+//     assert(list_head(lh, 4,
+//         LAB(V, 1), 0,              1, N[1],
+//         LAB(V, 2), 1, N[ 4],       1, N[3],
+//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 
 //     printf("\n\t\t\t%s  3\t\t", __func__);
 //     lh = list_head_remove(lh, N[1], THEN);
-//     assert(list_head(lh, 3, 
-//         LAB(V, 2), 1, N[ 4],       1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
+//     assert(list_head(lh, 3,
+//         LAB(V, 2), 1, N[ 4],       1, N[3],
+//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  4\t\t", __func__);
 //     lh = list_head_remove(lh, N[4], ELSE);
-//     assert(list_head(lh, 3, 
-//         LAB(V, 2), 0,              1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5], 
+//     assert(list_head(lh, 3,
+//         LAB(V, 2), 0,              1, N[3],
+//         LAB(V, 3), 1, N[ 6],       2, N[7], N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  5\t\t", __func__);
 //     lh = list_head_remove(lh, N[7], THEN);
-//     assert(list_head(lh, 3, 
-//         LAB(V, 2), 0,              1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       1, N[5], 
+//     assert(list_head(lh, 3,
+//         LAB(V, 2), 0,              1, N[3],
+//         LAB(V, 3), 1, N[ 6],       1, N[5],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  6\t\t", __func__);
 //     lh = list_head_remove(lh, N[5], THEN);
-//     assert(list_head(lh, 3, 
-//         LAB(V, 2), 0,              1, N[3], 
-//         LAB(V, 3), 1, N[ 6],       0, 
+//     assert(list_head(lh, 3,
+//         LAB(V, 2), 0,              1, N[3],
+//         LAB(V, 3), 1, N[ 6],       0,
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  7\t\t", __func__);
 //     lh = list_head_remove(lh, N[6], ELSE);
-//     assert(list_head(lh, 2, 
+//     assert(list_head(lh, 2,
 //         LAB(V, 2), 0,              1, N[3],
 //         LAB(V, 4), 2, N[10], N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  8\t\t", __func__);
 //     lh = list_head_remove(lh, N[10], ELSE);
-//     assert(list_head(lh, 2, 
+//     assert(list_head(lh, 2,
 //         LAB(V, 2), 0,       1, N[3],
 //         LAB(V, 4), 1, N[8], 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s  9\t\t", __func__);
 //     lh = list_head_remove(lh, N[8], ELSE);
-//     assert(list_head(lh, 2, 
+//     assert(list_head(lh, 2,
 //         LAB(V, 2), 0, 1, N[3],
 //         LAB(V, 4), 0, 1, N[9]
 //     ));
 
 //     printf("\n\t\t\t%s 10\t\t", __func__);
 //     lh = list_head_remove(lh, N[9], THEN);
-//     assert(list_head(lh, 1, 
+//     assert(list_head(lh, 1,
 //         LAB(V, 2), 0, 1, N[3]
 //     ));
 
@@ -294,7 +294,7 @@ void test_list_head_create_body(bool show)
 //     node_p n2 = node_branch_create(&LAB(V, 1));
 //     list_head_p lh_2 = list_head_create(n2, NULL, THEN);
 //     lh_1 = list_head_merge(lh_1, lh_2);
-//     assert(list_head(lh_1, 1, 
+//     assert(list_head(lh_1, 1,
 //         LAB(V, 1), 1, n1, 1, n2
 //     ));
 
@@ -313,7 +313,7 @@ void test_list_head_create_body(bool show)
 //     lh_2 = list_head_create(n2, NULL, ELSE);
 
 //     lh_1 = list_head_merge(lh_1, lh_2);
-//     assert(list_head(lh_1, 1, 
+//     assert(list_head(lh_1, 1,
 //         LAB(V, 1), 2, n2, n1, 0
 //     ));
 
@@ -332,7 +332,7 @@ void test_list_head_create_body(bool show)
 //     lh_2 = list_head_create(n2, NULL, THEN);
 
 //     lh_1 = list_head_merge(lh_1, lh_2);
-//     assert(list_head(lh_1, 2, 
+//     assert(list_head(lh_1, 2,
 //         LAB(V, 1), 1, n1, 0,
 //         LAB(V, 2), 0,     1, n2
 //     ));
@@ -352,8 +352,8 @@ void test_list_head_create_body(bool show)
 //     lh_2 = list_head_create(n2, NULL, THEN);
 
 //     lh_1 = list_head_merge(lh_1, lh_2);
-//     assert(list_head(lh_1, 2, 
-//         LAB(V, 1), 0,     1, n2, 
+//     assert(list_head(lh_1, 2,
+//         LAB(V, 1), 0,     1, n2,
 //         LAB(V, 2), 1, n1, 0
 //     ));
 
@@ -402,7 +402,7 @@ void test_list_head_create_body(bool show)
 //     node_p n = node_branch_create(&LAB(V, 1));
 //     list_head_p lh = list_head_create(n, NULL, ELSE);
 //     lh = list_head_invert(lh);
-//     assert(list_head(lh, 1, 
+//     assert(list_head(lh, 1,
 //         LAB(V, 1), 1, n, 0
 //     ));
 //     list_head_free(lh);
@@ -413,7 +413,7 @@ void test_list_head_create_body(bool show)
 //     };
 //     lh = list_head_create_vector(2, N);
 //     lh = list_head_invert(lh);
-//     assert(list_head(lh, 2, 
+//     assert(list_head(lh, 2,
 //         LAB(V, 2), 0,       1, N[1],
 //         LAB(V, 1), 1, N[0], 0
 //     ));
@@ -436,7 +436,7 @@ void test_list_head_create_body(bool show)
 void test_list_head()
 {
     printf("\n%s\t\t", __func__);
-    
+
     bool show = true;
 
     test_list_head_create_body(show);
@@ -452,7 +452,7 @@ void test_list_head()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_head();

@@ -29,7 +29,7 @@ void test_node_create_amp()
 
     amp_t amp = (amp_t){1, 2};
     node_p na = node_amp_create(&amp);
-    
+
     assert(na->lh == NULL);
     assert(na->lab.cl == 0);
     assert(na->lab.lv == 0);
@@ -82,10 +82,10 @@ void test_branch_eq()
     for(int side=0; side<2; side++)
     {
         assert(fn[side](n1, n2) == true);
-        
+
         node_connect(n1, n0, side);
         assert(fn[side](n1, n2) == false);
-        
+
         node_connect(n2, n0, side);
         assert(fn[side](n1, n2) == true);
     }
@@ -116,14 +116,14 @@ void test_node_connect_one()
     node_p n_el = node_branch_create(&LAB(V, 1));
     node_connect(n, n_el, ELSE);
     assert(ND_STR(n)->el == n_el);
-    assert(list_head(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1,
         LAB(V, 2), 1, n, 0
     ));
-    
+
     node_p n_th = node_branch_create(&LAB(V, 1));
     node_connect(n, n_th, THEN);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1,
         LAB(V, 2), 0, 1, n
     ));
 
@@ -140,14 +140,14 @@ void test_node_connect_both()
     node_p n    = node_branch_create(&LAB(V, 2));
     node_p n_el = node_branch_create(&LAB(V, 1));
     node_p n_th = node_branch_create(&LAB(V, 1));
-    
+
     node_connect_both(n, n_el, n_th);
     assert(ND_STR(n)->el == n_el);
     assert(ND_STR(n)->th == n_th);
-    assert(list_head(n_el->lh, 1, 
+    assert(list_head(n_el->lh, 1,
         LAB(V, 2), 1, n, 0
     ));
-    assert(list_head(n_th->lh, 1, 
+    assert(list_head(n_th->lh, 1,
         LAB(V, 2), 0, 1, n
     ));
 
@@ -181,7 +181,7 @@ void test_node_disconnect_one()
     node_disconnect(n, ELSE);
     assert(ND_STR(n)->el == NULL);
     assert(n_el->lh == NULL);
-    
+
     node_disconnect(n, THEN);
     assert(ND_STR(n)->th == NULL);
     assert(n_th->lh == NULL);
@@ -248,7 +248,7 @@ void test_node_merge()
         node_connect(N1[i], n2, i&1);
     node_merge(n1, n2);
     assert(list_head(n1->lh, 2,
-        LAB(V, 1), 1, N1[0], 2, N1[1], N1[0], 
+        LAB(V, 1), 1, N1[0], 2, N1[1], N1[0],
         LAB(V, 2), 1, N1[2], 1, N1[3]
     ));
     for(list_head_p lh = n1->lh; lh; lh = lh->lh)
@@ -268,7 +268,7 @@ void test_node_merge()
         node_connect(N2[i], n2, i&1);
     node_merge(n1, n2);
     assert(list_head(n1->lh, 2,
-        LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0], 
+        LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0],
         LAB(V, 2), 2, N2[2], N1[2], 2, N2[3], N1[3]
     ));
     for(list_head_p lh = n1->lh; lh; lh = lh->lh)
@@ -312,7 +312,7 @@ void test_node()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_node();

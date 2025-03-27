@@ -71,7 +71,7 @@ void test_label()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     TEST_TIMEOUT_OPEN(5)

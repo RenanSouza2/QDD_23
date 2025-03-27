@@ -23,7 +23,7 @@ void node_branch_display(node_p node)
     PRINT("\nnode (branch): %p", node);
     PRINT("\nlabel: ");
     label_display(node->lab);
-    
+
     PRINT("\nel: %p\tth: %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
     PRINT("\n");
 }
@@ -60,11 +60,11 @@ node_p node_branch_create(label_t lab)
 
     *node = (node_branch_t)
     {
-        .s = 
+        .s =
         {
-            .lh = NULL, 
+            .lh = NULL,
             .lab = lab
-        }, 
+        },
         .branch = {NULL, NULL}
     };
     return ND(node);
@@ -76,10 +76,10 @@ node_p node_amp_create(amp_t amp)
     assert(na);
 
     *na = (node_amp_t){
-        .s = 
+        .s =
         {
-            .lh = NULL, 
-            .lab = 
+            .lh = NULL,
+            .lab =
             {
                 .cl = 0,
                 .lv = 0

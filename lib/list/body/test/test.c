@@ -51,7 +51,7 @@ void test_list_body_create(bool show)
 void test_list_body_create_vec(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-    
+
     for(long int i=1; i<5; i++)
         CLU_REGISTER(ND(i));
 
@@ -72,7 +72,7 @@ void test_list_body_create_vec(bool show)
     TEST_REVERT_OPEN
     list_body_create_vec(0, NULL);
     TEST_REVERT_CLOSE
-    
+
     for(long int i=1; i<5; i++)
         CLU_UNREGISTER(ND(i));
 
@@ -135,7 +135,7 @@ void test_list_body_remove(bool show)
     list_body_remove(lb, NULL);
     TEST_REVERT_CLOSE
     list_body_free(lb);
-    
+
     for(long int i=1; i<4; i++)
         CLU_UNREGISTER(ND(i));
 
@@ -203,7 +203,7 @@ void test_list_body()
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     test_list_body();

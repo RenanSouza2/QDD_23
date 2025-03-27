@@ -28,15 +28,15 @@ void test_amp_eq(bool show)
 void test_amp()
 {
     printf("\n%s\t\t", __func__);
-    
+
     bool show = false;
 
     test_amp_eq(show);
-    
+
     assert(clu_mem_is_empty());
 }
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
     TEST_TIMEOUT_OPEN(5)
