@@ -19,6 +19,6 @@ bool list_body_immed(list_body_p lb, int n, ...);
 
 #endif
 
-#define LB(POINTER)    ((list_body_p)(POINTER))
+#define LB(HANDLER)    ((list_body_p)(HANDLER))
 
 #endif

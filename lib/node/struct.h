@@ -25,7 +25,7 @@ STRUCT(node_amp)
 };
 
 #define ND(NODE) ((node_p)(NODE))
-#define AMP(NODE) ((amp_p)(ND(NODE)+1))
+#define AMP(NODE) (*(amp_p)(ND(NODE)+1))
 #define BRANCH(NODE) ((node_p*)(ND(NODE)+1))
 #define SIDE(NODE_TOP, NODE_BOT) (BRANCH(NODE_TOP)[0] != NODE_BOT)
 

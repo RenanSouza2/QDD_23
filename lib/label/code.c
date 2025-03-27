@@ -50,6 +50,8 @@ bool label(label_t lab_1, label_t lab_2)
 
 #endif
 
+
+
 #define LONG(LABEL) (*((long*)(LABEL)))
 
 int label_compare(label_p lab_1, label_p lab_2)

@@ -16,8 +16,6 @@ list_head_p list_head_invert(list_head_p lh);
 
 #endif
 
-#define LH(POINTER) ((list_head_p)(POINTER))
-
-list_head_p list_head_create_cold();
+#define LH(HANDLER) ((list_head_p)(HANDLER))
 
 #endif

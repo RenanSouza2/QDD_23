@@ -5,9 +5,13 @@
 
 #ifdef DEBUG
 
+#include <stdbool.h>
+
 #include "../macros/struct.h"
 
-int display_header(char s[], handler_p p);
+bool display_handler(char tag[], handler_p h);
+
+bool int_str(int a, int b);
 
 #endif
 

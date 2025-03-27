@@ -21,7 +21,7 @@
 
 void list_head_display_item(list_head_p lh)
 {
-    if(display_header("LIST HEAD", lh))
+    if(display_handler("LIST HEAD", lh))
         return;
 
     PRINT("\nlb[ELSE] : %p", lh->lb[ELSE]);
@@ -115,7 +115,11 @@ list_head_p list_head_invert(list_head_p lh)
 list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 {
     CLU_IS_SAFE(lb);
+    CLU_IS_SAFE(lb->node);
     CLU_IS_SAFE(next);
+
+    assert(lb);
+    assert(lb->node);
 
     list_head_p lh = malloc(sizeof(list_head_t));
     assert(lh);

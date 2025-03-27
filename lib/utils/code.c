@@ -5,10 +5,22 @@
 
 #ifdef DEBUG
 
-int display_header(char s[], handler_p p)
+bool display_handler(char tag[], handler_p h)
 {
-    PRINT("\nAddress (%s): %p", s, p);
-    return p == NULL;
+    PRINT("\nAddress (%s): %p", tag, h);
+    return h == NULL;
+}
+
+
+bool int_str(int a, int b)
+{
+    if(a != b)
+    {
+        printf("\n\n\tINT ASSERTION ERROR\t| VALUE MISMATH\t| %d %d", a, b);
+        return false;
+    }
+
+    return true;
 }
 
 #endif

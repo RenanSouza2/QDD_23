@@ -9,18 +9,16 @@ void test_amp_eq(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    #define TEST_AMP_EQ(TAG, RE1, IM1, RE2, IM2, RES)       \
+    #define TEST_AMP_EQ(TAG, AMP_1, AMP_2, RES)       \
     {                                                       \
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
-        amp_t amp_1 = (amp_t){RE1, IM1};                    \
-        amp_t amp_2 = (amp_t){RE2, IM2};                    \
-        int res = amp_eq(&amp_1, &amp_2);                   \
+        int res = amp_eq(AMP_1, AMP_2);                     \
         assert(res == RES);                                 \
     }
 
-    TEST_AMP_EQ(1, 1, 0, 1, 0, true);
-    TEST_AMP_EQ(2, 1, 0, 1, 1, false);
-    TEST_AMP_EQ(3, 1, 0, 0, 1, false);
+    TEST_AMP_EQ(1, AMPI(1, 0), AMPI(1, 0), true);
+    TEST_AMP_EQ(2, AMPI(1, 0), AMPI(1, 1), false);
+    TEST_AMP_EQ(3, AMPI(1, 0), AMPI(0, 1), false);
 
     #undef TEST_AMP_EQ
 

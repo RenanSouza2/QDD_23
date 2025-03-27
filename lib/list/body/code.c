@@ -61,7 +61,7 @@ void list_body_display_item(list_body_p lb)
 {
     CLU_IS_SAFE(lb);
 
-    if(display_header("LIST BODY", lb)) return;
+    if(display_handler("LIST BODY", lb)) return;
 
     PRINT("\nnode: %p", lb->node);
     PRINT("\nnext: %p", lb->next);
