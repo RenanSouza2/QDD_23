@@ -19,6 +19,45 @@
 
 
 
+list_head_p list_head_create_variadic_item(va_list *args)
+{
+    label_t lab = va_arg(*args, label_t);
+    list_body_p lb_el = list_body_create_variadic(args);
+    list_body_p lb_th = list_body_create_variadic(args);
+    
+    list_head_p lh = malloc(sizeof(list_head_t));
+    assert(lh);
+    *lh = (list_head_t)
+    {
+        .lab = lab,
+        .lb = {lb_el, lb_th},
+        .next = NULL
+    };
+    return lh;
+}
+
+list_head_p list_head_create_variadic_n(int n, va_list *args)
+{
+    if(n == 0)
+        return NULL;
+
+    list_head_p lh_0, lh;
+    lh_0 = lh = list_head_create_variadic_item(args);
+    for(int i=1; i<n; i++)
+        lh= lh->next = list_head_create_variadic_item(args);
+
+    return lh_0;
+}
+
+list_head_p list_head_create_immed(int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    return list_head_create_variadic_n(n, &args);
+}
+
+
+
 void list_head_display_item(list_head_p lh)
 {
     if(display_handler("LIST HEAD", lh))
@@ -48,48 +87,6 @@ void list_head_display(list_head_p lh)
     printf("\t\t");
 }
 
-bool list_head(list_head_p lh, int tot_h, ...)
-{
-    va_list args;
-    va_start(args, tot_h);
-
-    int i=0;
-
-    for(; lh && (i<tot_h); i++, lh = lh->next)
-    {
-        label_t lab = va_arg(args, label_t);
-        if(!label(lh->lab, lab))
-        {
-            PRINT("\nLIST HEAD ASSERTION ERROR\t| LABEL MISMATCH ");
-            return false;
-        }
-
-        for(int side=0; side<2; side++)
-        {
-            int tot_b = va_arg(args, int);
-            if(!list_body_variadic(lh->lb[side], tot_b, &args))
-            {
-                PRINT("\nLIST HEAD ASSERTION ERROR\t| LIST BODY %s MISMATCH | %d %d\t\t", side ? "THEN" : "ELSE", i, tot_h);
-                return false;
-            }
-        }
-    }
-
-    if(lh)
-    {
-        PRINT("\nERROR LIST HEAD VECTOR 4 | LIST LONGER | %d\t\t", tot_h);
-        return false;
-    }
-
-    if(i < tot_h)
-    {
-        PRINT("\nERROR LIST HEAD VECTOR 5 | LIST SHORTER | %d %d\t\t", i, tot_h);
-        return false;
-    }
-
-    return true;
-}
-
 
 
 list_head_p list_head_invert(list_head_p lh)
@@ -106,6 +103,71 @@ list_head_p list_head_invert(list_head_p lh)
         lh = lh_aux;
     }
     return lh_new;
+}
+
+
+
+bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
+{
+    for(int i=0; lh_1 && lh_2; i++)
+    {
+        if(!clu_handler_is_safe(lh_1))
+        {
+            printf("\n\tLIST HEAD ASSERTION ERROR\t| LH UNSAFE | %d", i);
+            return false;
+        }
+
+        if(!label(lh_1->lab, lh_2->lab))
+        {
+            printf("\n\tLIST HEAD ASSERTION ERROR\t| LABEL MISMATCH");
+            return false;
+        }
+
+        for(int side=0; side<2; side++)
+        {
+            if(!list_body(lh_1->lb[side], lh_2->lb[side]))
+            {
+                printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST BODY MISMATCH | %d ", i);
+                label_display(lh_1->lab);
+                return false;
+            }
+        }
+
+        lh_1 = list_head_pop(lh_1);
+        lh_2 = list_head_pop(lh_2);
+    }
+
+    if(lh_1)
+    {
+        printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST LONGER");
+        return false;
+    }
+
+    if(lh_2)
+    {
+        printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST shorter");
+        return false;
+    }
+
+    return true;
+}
+
+bool list_head(list_head_p lh_1, list_head_p lh_2)
+{
+    if(!list_head_inner(lh_1, lh_2)) // TODO reevaluate
+    {
+        return false; 
+    }
+
+    return true;
+}
+
+bool list_head_immed(list_head_p lh, int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    list_head_p lh_2 = list_head_create_variadic_n(n, &args);
+    return list_head(lh, lh_2);
 }
 
 #endif
@@ -143,6 +205,8 @@ list_head_p list_head_create(node_p node, int side, list_head_p next)
 list_head_p list_head_pop(list_head_p lh)
 {
     CLU_IS_SAFE(lh);
+
+    assert(lh);
 
     list_head_p lh_aux = lh->next;
     free(lh);

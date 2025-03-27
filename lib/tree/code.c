@@ -73,7 +73,7 @@ bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
     return true;
 }
 
-bool tree_str(node_p n1, node_p n2)
+bool tree(node_p n1, node_p n2)
 {
     return tree_str_rec(NULL, n1, n2);
 }

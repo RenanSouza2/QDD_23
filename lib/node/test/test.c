@@ -7,7 +7,7 @@
 
 
 
-void test_node_create_str()
+void test_node_create()
 {
     printf("\n\t\t%s\t\t", __func__);
 
@@ -44,7 +44,7 @@ void test_node_life_cycle()
 {
     printf("\n\t%s\t\t", __func__);
 
-    test_node_create_str();
+    test_node_create();
     test_node_create_amp();
 
     assert(clu_mem_is_empty());

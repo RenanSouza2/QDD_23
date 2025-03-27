@@ -84,8 +84,7 @@ void list_body_display_node(list_body_p lb)
 {
     CLU_IS_SAFE(lb);
 
-    int i;
-    for(i=0; lb; i++, lb = lb->next)
+    for(int i=0; lb; i++, lb = lb->next)
         PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
 }
 
@@ -118,14 +117,20 @@ bool list_body_str_inner(list_body_p lb_1, list_body_p lb_2)
 
     if(lb_1)
     {
-        PRINT("\n\n\tERROR LIST BODY VECTOR 2 | LIST LONGER\t\t");
+        PRINT("\n\n\ttLIST BODY ASSERTION ERROR\t| LIST LONGER\t\t");
+        return false;
+    }
+
+    if(lb_2)
+    {
+        PRINT("\n\n\ttLIST BODY ASSERTION ERROR\t| LIST SHORTER\t\t");
         return false;
     }
 
     return true;
 }
 
-bool list_body_str(list_body_p lb_1, list_body_p lb_2)
+bool list_body(list_body_p lb_1, list_body_p lb_2)
 {
     CLU_IS_SAFE(lb_1);
     CLU_IS_SAFE(lb_2);
@@ -146,7 +151,7 @@ bool list_body_str(list_body_p lb_1, list_body_p lb_2)
 bool list_body_variadic(list_body_p lb, int n, va_list *args)
 {
     list_body_p lb_2 = list_body_create_variadic_n(n, args);
-    return list_body_str(lb, lb_2);
+    return list_body(lb, lb_2);
 }
 
 bool list_body_immed(list_body_p lb, int n, ...)
@@ -169,7 +174,8 @@ list_body_p list_body_create(node_p node, list_body_p next)
     list_body_p lb = malloc(sizeof(list_body_t));
     assert(lb);
 
-    *lb = (list_body_t){
+    *lb = (list_body_t)
+    {
         .node = node,
         .next = next
     };

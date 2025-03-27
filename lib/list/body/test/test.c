@@ -94,7 +94,7 @@ void test_list_body_remove(bool show)
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
         list_body_create_vec_immed(lb, 2, __VA_ARGS__);     \
         lb[0] = list_body_remove(lb[0], NODE);              \
-        assert(list_body_str(lb[0], lb[1]));                \
+        assert(list_body(lb[0], lb[1]));                \
     }
 
     TEST_LIST_BODY_REMOVE(1, ND(1),
@@ -152,7 +152,7 @@ void test_list_body_merge(bool show)
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
         list_body_create_vec_immed(lb, 3, __VA_ARGS__); \
         lb[0] = list_body_merge(lb[0], lb[1]);  \
-        assert(list_body_str(lb[0], lb[2]));    \
+        assert(list_body(lb[0], lb[2]));    \
     }
 
     TEST_LIST_BODY_MERGE(1,
