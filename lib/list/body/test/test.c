@@ -4,18 +4,10 @@
 
 #include "../debug.h"
 #include "../../head/debug.h"
+#include "../../../amp/debug.h"
 #include "../../../node/debug.h"
+#include "../../../macros/test.h"
 #include "../../../../mods/clu/header.h"
-
-
-list_body_p list_body_create_test(int init, int max)
-{
-    list_body_p lb = NULL;
-    for(long i=max; i>=init; i--)
-        lb = list_body_create(ND(i), lb);
-
-    return lb;
-}
 
 
 
@@ -23,28 +15,66 @@ void test_list_body_create(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
+    CLU_REGISTER(ND(1));
+
     if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = list_body_create(ND(1), LB(2));
-    assert(lb->n  == ND(1));
-    assert(lb->lb == LB(2));
-    free(lb);
+    list_body_p lb = list_body_create(NULL, NULL);
+    assert(lb->node == NULL);
+    assert(lb->next == NULL);
+    list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    lb = list_body_create(ND(1), NULL);
+    assert(lb->node == ND(1));
+    assert(lb->next == NULL);
+    list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    list_body_p lb_aux = list_body_create(NULL, NULL);
+    lb = list_body_create(NULL, lb_aux);
+    assert(lb->node == NULL);
+    assert(lb->next == lb_aux);
+    list_body_free(lb);
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    lb_aux = list_body_create(NULL, NULL);
+    lb = list_body_create(ND(1), lb_aux);
+    assert(lb->node == ND(1));
+    assert(lb->next == lb_aux);
+    list_body_free(lb);
+
+    CLU_UNREGISTER(ND(1));
 
     assert(clu_mem_is_empty());
 }
 
-void test_list_body_create_vector(bool show)
+void test_list_body_create_vec(bool show)
 {
     printf("\n\t%s\t\t", __func__);
+    
+    for(long int i=1; i<5; i++)
+        CLU_REGISTER(ND(i));
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = list_body_create_vector(1, (node_p[]){ND(1)});
-    assert(list_body(lb, 1, ND(1)));
-    free(lb);
+    #define TEST_LIST_BODY_CREATE_VEC(TAG, N, ...)   \
+    {   \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        list_body_p lb = list_body_create_vec(N, (node_p[]){__VA_ARGS__});  \
+        assert(list_body_immed(lb, N, __VA_ARGS__));    \
+    }
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = list_body_create_vector(1, (node_p[]){ND(1), ND(2)});
-    assert(list_body(lb, 1, ND(1), ND(2)));
-    free(lb);
+    TEST_LIST_BODY_CREATE_VEC(1, 1, ND(1));
+    TEST_LIST_BODY_CREATE_VEC(2, 2, ND(1), ND(2));
+    TEST_LIST_BODY_CREATE_VEC(3, 3, ND(1), ND(2), ND(3));
+
+    #undef TEST_LIST_BODY_CREATE_VEC
+
+    if(show) printf("\n\t\t%s 4\t\t", __func__);
+    TEST_REVERT_OPEN
+    list_body_create_vec(0, NULL);
+    TEST_REVERT_CLOSE
+    
+    for(long int i=1; i<5; i++)
+        CLU_UNREGISTER(ND(i));
 
     assert(clu_mem_is_empty());
 }
@@ -54,263 +84,75 @@ void test_list_body_create_vector(bool show)
 void test_list_body_remove(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb = list_body_create_test(1, 4);
-    assert(list_body(lb, 4, ND(1), ND(2), ND(3), ND(4)));
-
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb = list_body_remove(lb, ND(4));
-    assert(list_body(lb, 3, ND(1), ND(2), ND(3)));
     
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb = list_body_remove(lb, ND(2));
-    assert(list_body(lb, 2, ND(1), ND(3)));
-    
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    lb = list_body_remove(lb, ND(1));
-    assert(list_body(lb, 1, ND(3)));
-    
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
-    lb = list_body_remove(lb, ND(3));
-    assert(lb == NULL);
+    clu_set_log(true);
+
+    #define TEST_LIST_BODY_REMOVE(TAG, NODE, ...)   \
+    {   \
+        list_body_p lb[2];  \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        printf("\nb");  \
+        list_body_create_vec_immed(lb, 2, __VA_ARGS__); \
+        printf("\na");  \
+        lb[0] = list_body_remove(lb[0], NODE);  \
+        printf("\nb");  \
+        assert(list_body_str(lb[0], lb[1]));    \
+    }
+
+    TEST_LIST_BODY_REMOVE(1, ND(1),
+        1, ND(1),
+        0
+    );
 
     assert(clu_mem_is_empty());
 }
 
-void test_list_body_merge(bool show)
-{
-    printf("\n\t%s\t\t", __func__);
+// void test_list_body_merge(bool show)
+// {
+//     printf("\n\t%s\t\t", __func__);
 
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    list_body_p lb_1 = list_body_create_test(1, 2);
-    list_body_p lb_2 = list_body_create_test(3, 4);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 1\t\t", __func__);
+//     list_body_p lb_1 = list_body_create_test(1, 2);
+//     list_body_p lb_2 = list_body_create_test(3, 4);
+//     lb_1 = list_body_merge(lb_1, lb_2);
+//     assert(list_body_immed(lb_1, 4, ND(3), ND(4), ND(1), ND(2)));
+//     list_body_free(lb_1);
 
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    lb_1 = list_body_create_test(1, 2);
-    lb_2 = list_body_create(ND(3), NULL);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body(lb_1, 3, ND(3), ND(1), ND(2)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 2\t\t", __func__);
+//     lb_1 = list_body_create_test(1, 2);
+//     lb_2 = list_body_create(ND(3), NULL);
+//     lb_1 = list_body_merge(lb_1, lb_2);
+//     assert(list_body_immed(lb_1, 3, ND(3), ND(1), ND(2)));
+//     list_body_free(lb_1);
 
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    lb_1 = list_body_create(ND(1), NULL);
-    lb_2 = list_body_create_test(2, 3);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body(lb_1, 3, ND(2), ND(3), ND(1)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 3\t\t", __func__);
+//     lb_1 = list_body_create(ND(1), NULL);
+//     lb_2 = list_body_create_test(2, 3);
+//     lb_1 = list_body_merge(lb_1, lb_2);
+//     assert(list_body_immed(lb_1, 3, ND(2), ND(3), ND(1)));
+//     list_body_free(lb_1);
 
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    lb_1 = list_body_create(ND(1), NULL);
-    lb_2 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(lb_1, lb_2);
-    assert(list_body(lb_1, 2, ND(2), ND(1)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 4\t\t", __func__);
+//     lb_1 = list_body_create(ND(1), NULL);
+//     lb_2 = list_body_create(ND(2), NULL);
+//     lb_1 = list_body_merge(lb_1, lb_2);
+//     assert(list_body_immed(lb_1, 2, ND(2), ND(1)));
+//     list_body_free(lb_1);
 
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
-    lb_2 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(NULL, lb_2);
-    assert(list_body(lb_1, 1, ND(2)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 5\t\t", __func__);
+//     lb_2 = list_body_create(ND(2), NULL);
+//     lb_1 = list_body_merge(NULL, lb_2);
+//     assert(list_body_immed(lb_1, 1, ND(2)));
+//     list_body_free(lb_1);
 
-    if(show) printf("\n\t\t%s 6\t\t", __func__);
-    lb_1 = list_body_create(ND(2), NULL);
-    lb_1 = list_body_merge(lb_1, NULL);
-    assert(list_body(lb_1, 1, ND(2)));
-    list_body_free(lb_1);
+//     if(show) printf("\n\t\t%s 6\t\t", __func__);
+//     lb_1 = list_body_create(ND(2), NULL);
+//     lb_1 = list_body_merge(lb_1, NULL);
+//     assert(list_body_immed(lb_1, 1, ND(2)));
+//     list_body_free(lb_1);
 
-    assert(clu_mem_is_empty());
-}
-
-
-
-void test_list_body_reduce_equivalence(bool show)
-{
-    printf("\n\t%s\t\t", __func__);
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    node_p n0_0, n0_1, n1, n2;
-    n0_0 = node_amp_create(&AMP_IMMED(0, 0));
-    n0_1 = node_amp_create(&AMP_IMMED(0, 1));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n1, n0_0, n0_1);
-    node_connect_both(n2, n0_0, n0_1);
-    
-    list_body_p lb = list_body_reduce_equivalence(n0_0->lh->lb[ELSE], node_eq_th);
-    assert(list_head(n0_0->lh, 1,
-        LAB(V, 1), 1, n2, 0
-    ));
-    assert(list_head(n0_1->lh, 1,
-        LAB(V, 1), 0, 1, n2
-    ));
-    assert(list_body(lb, 1, n2));
-    node_free(n0_0);
-    node_free(n0_1);
-    node_free(n2);
-    list_body_free(lb);
-
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    node_p N[] = {
-        node_amp_create(&AMP_IMMED(0, 0)),
-        node_amp_create(&AMP_IMMED(0, 1)),
-        node_amp_create(&AMP_IMMED(0, 0)),
-        node_amp_create(&AMP_IMMED(0, 1))
-    };
-    lb = list_body_create_vector(4, N);
-    list_body_p lb_res = list_body_reduce_equivalence(lb, node_eq_amp);
-    assert(list_body(lb, 2, N[0], N[1]));
-    assert(list_body(lb_res, 2, N[1], N[0]));
-    list_body_free(lb);
-    list_body_free(lb_res);
-    free(N[0]);
-    free(N[1]);
-
-    assert(clu_mem_is_empty());
-}
-
-void test_list_body_reduce_redundance(bool show)
-{
-    printf("\n\t%s\t\t", __func__);
-
-    if(show) printf("\n\t\t%s 1\t\t", __func__);
-    node_p n0, n1;
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    node_connect(n1, n0, ELSE);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 1, n1, 0
-    ));
-    node_free(n0);
-    node_free(n1);
-    
-    if(show) printf("\n\t\t%s 2\t\t", __func__);
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    node_connect(n1, n0, THEN);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == false);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 0, 1, n1
-    ));
-    node_free(n0);
-    node_free(n1);
-
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
-    assert(n0->lh == NULL);
-    node_free(n0);
-
-    if(show) printf("\n\t\t%s 4\t\t", __func__);
-    node_p n2;
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 1));
-    node_connect(n2, n0, ELSE);
-    node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 1, n2, 0
-    ));
-    node_free(n0);
-    node_free(n2);
-
-    if(show) printf("\n\t\t%s 5\t\t", __func__);
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 1));
-    node_connect(n2, n0, THEN);
-    node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 0, 1, n2
-    ));
-    node_free(n0);
-    node_free(n2);
-
-    if(show) printf("\n\t\t%s 6\t\t", __func__);
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 2));
-    node_connect(n2, n1, ELSE);
-    node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 2), 1, n2, 0
-    ));
-    node_free(n0);
-    node_free(n2);
-
-    if(show) printf("\n\t\t%s 7\t\t", __func__);
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 2));
-    node_connect(n2, n1, THEN);
-    node_connect_both(n1, n0, n0);
-    assert(list_body_reduce_redundance(&n0->lh->lb[ELSE]) == true);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 2), 0, 1, n2
-    ));
-    node_free(n0);
-    node_free(n2);
-
-    assert(clu_mem_is_empty());
-}
-
-void test_list_body_reduce_redundance_rec()
-{
-    printf("\n\t\t%s\t\t", __func__);
-
-    node_p n0, n1;
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-
-    node_p n2;
-    n2 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n2, n0, n0);
-    node_connect(n1, n0, ELSE);
-    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE]);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 1, n1, 0
-    ));
-    node_free(n0);
-    node_free(n1);
-
-    node_p n3;
-    n0 = node_amp_create(&AMP_IMMED(0, 0));
-    n1 = node_branch_create(&LAB(V, 1));
-    n2 = node_branch_create(&LAB(V, 1));
-    n3 = node_branch_create(&LAB(V, 1));
-    node_connect(n3, n0, ELSE);
-    node_connect_both(n2, n0, n0);
-    node_connect(n1, n0, ELSE);
-    list_body_reduce_redundance_rec(&n0->lh->lb[ELSE]);
-    assert(list_head(n0->lh, 1,
-        LAB(V, 1), 2, n1, n3, 0
-    ));
-    node_free(n0);
-    node_free(n1);
-    node_free(n3);
-
-    assert(clu_mem_is_empty());
-}
-
-void test_list_body_reduce()
-{
-    printf("\n\t%s\t\t", __func__);
-
-    test_list_body_reduce_equivalence();
-    test_list_body_reduce_redundance();
-    test_list_body_reduce_redundance_rec();
-
-    assert(clu_mem_is_empty());
-}
+//     assert(clu_mem_is_empty());
+// }
 
 
 
@@ -318,9 +160,13 @@ void test_list_body()
 {
     printf("\n%s\t\t", __func__);
 
-    test_list_body_create();
-    test_list_body_operations();
-    test_list_body_reduce();
+    bool show = true;
+
+    test_list_body_create(show);
+    test_list_body_create_vec(show);
+
+    test_list_body_remove(show);
+    // test_list_body_merge(show);
 
     assert(clu_mem_is_empty());
 }

@@ -156,6 +156,8 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
     lh = *lh_root;
     if(lh == NULL)
         return NULL;
+        
+    list_body_reduce_path(node_0, lh->lb[ELSE]);
 
     list_body_p lb_aux = list_body_reduce_node(lh->lb[ELSE], node_eq_th,false);
     list_head_p lh_res_el = list_head_create_body(lb_aux, ELSE, NULL);

@@ -90,6 +90,24 @@ bool list_head(list_head_p lh, int tot_h, ...)
     return true;
 }
 
+
+
+list_head_p list_head_invert(list_head_p lh)
+{
+    list_head_p lh_new = NULL;
+
+    while(lh)
+    {
+        list_head_p lh_aux = lh->next;
+
+        lh->next = lh_new;
+        lh_new = lh;
+
+        lh = lh_aux;
+    }
+    return lh_new;
+}
+
 #endif
 
 

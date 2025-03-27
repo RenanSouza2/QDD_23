@@ -67,7 +67,7 @@ node_p node_branch_create(label_t lab)
         }, 
         .branch = {NULL, NULL}
     };
-    return NODE(node);
+    return ND(node);
 }
 
 node_p node_amp_create(amp_t amp)
@@ -87,7 +87,7 @@ node_p node_amp_create(amp_t amp)
         },
         .amp = amp
     };
-    return NODE(na);
+    return ND(na);
 }
 
 void node_free(node_p node)
