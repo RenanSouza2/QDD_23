@@ -62,33 +62,36 @@ void test_list_head_create_body(bool show)
     assert(clu_mem_is_empty());
 }
 
-// void test_list_head_create()
-// {
-//     printf("\n\t%s\t\t", __func__);
+void test_list_head_create(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
 
-//     printf("\n\t\t%s 1\t\t", __func__);
-//     node_p n = node_amp_create(&(amp_t){1, 2});
-//     list_head_p lh = list_head_create(n, LH(2), ELSE);
-//     assert(lh->lab.cl == 0);
-//     assert(lh->lab.lv == 0);
-//     assert(list_body(lh->lb[ELSE], 1, n));
-//     assert(list_body(lh->lb[THEN], 0));
-//     assert(lh->lh == LH(2));
-//     free(lh->lb[ELSE]);
-//     free(lh);
-//     free(n);
+    CLU_REGISTER(LH(2));
 
-//     printf("\n\t\t%s 2\t\t", __func__);
-//     n  = node_branch_create(&LAB(V, 2));
-//     lh = list_head_create(n, NULL, THEN);
-//     assert(list_head(lh, 1,
-//         LAB(V, 2), 0, 1, n
-//     ));
-//     list_head_free(lh);
-//     free(n);
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    node_p node = node_amp_create(AMPI(1, 1));
+    list_head_p lh = list_head_create(node, ELSE, LH(2));
+    assert(label(lh->lab, LAB(0, 0)));
+    assert(list_body_immed(lh->lb[ELSE], 1, node));
+    assert(list_body_immed(lh->lb[THEN], 0));
+    assert(lh->next == LH(2));
+    free(node);
+    free(lh);
 
-//     assert(clu_mem_is_empty());
-// }
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    node = node_branch_create(LAB(V, 2));
+    lh = list_head_create(node, THEN, NULL);
+    assert(label(lh->lab, LAB(V, 2)));
+    assert(list_body_immed(lh->lb[ELSE], 0));
+    assert(list_body_immed(lh->lb[THEN], 1, node));
+    assert(lh->next == NULL);
+    free(node);
+    free(lh);
+
+    CLU_UNREGISTER(LH(2));
+
+    assert(clu_mem_is_empty());
+}
 
 
 
@@ -440,6 +443,7 @@ void test_list_head()
     bool show = true;
 
     test_list_head_create_body(show);
+    test_list_head_create(show);
 
     // test_list_head_insert();
     // test_list_head_remove();
