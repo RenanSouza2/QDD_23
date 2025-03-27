@@ -84,25 +84,60 @@ void test_list_body_create_vec(bool show)
 void test_list_body_remove(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-    
-    clu_set_log(true);
 
-    #define TEST_LIST_BODY_REMOVE(TAG, NODE, ...)   \
-    {   \
-        list_body_p lb[2];  \
+    for(long int i=1; i<4; i++)
+        CLU_REGISTER(ND(i));
+
+    #define TEST_LIST_BODY_REMOVE(TAG, NODE, ...)           \
+    {                                                       \
+        list_body_p lb[2];                                  \
         if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
-        printf("\nb");  \
-        list_body_create_vec_immed(lb, 2, __VA_ARGS__); \
-        printf("\na");  \
-        lb[0] = list_body_remove(lb[0], NODE);  \
-        printf("\nb");  \
-        assert(list_body_str(lb[0], lb[1]));    \
+        list_body_create_vec_immed(lb, 2, __VA_ARGS__);     \
+        lb[0] = list_body_remove(lb[0], NODE);              \
+        assert(list_body_str(lb[0], lb[1]));                \
     }
 
     TEST_LIST_BODY_REMOVE(1, ND(1),
         1, ND(1),
         0
     );
+    TEST_LIST_BODY_REMOVE(2, ND(1),
+        2, ND(1), ND(2),
+        1, ND(2)
+    );
+    TEST_LIST_BODY_REMOVE(3, ND(2),
+        2, ND(1), ND(2),
+        1, ND(1)
+    );
+    TEST_LIST_BODY_REMOVE(4, ND(1),
+        3, ND(1), ND(2), ND(3),
+        2, ND(2), ND(3)
+    );
+    TEST_LIST_BODY_REMOVE(5, ND(2),
+        3, ND(1), ND(2), ND(3),
+        2, ND(1), ND(3)
+    );
+    TEST_LIST_BODY_REMOVE(6, ND(3),
+        3, ND(1), ND(2), ND(3),
+        2, ND(1), ND(2)
+    );
+
+    #undef TEST_LIST_BODY_REMOVE
+
+    if(show) printf("\n\t\t%s 6\t\t", __func__);
+    TEST_REVERT_OPEN
+    list_body_remove(NULL, ND(1));
+    TEST_REVERT_CLOSE
+
+    if(show) printf("\n\t\t%s 7\t\t", __func__);
+    list_body_p lb = list_body_create_immed(1, ND(1));
+    TEST_REVERT_OPEN
+    list_body_remove(lb, NULL);
+    TEST_REVERT_CLOSE
+    list_body_free(lb);
+    
+    for(long int i=1; i<4; i++)
+        CLU_UNREGISTER(ND(i));
 
     assert(clu_mem_is_empty());
 }

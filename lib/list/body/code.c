@@ -28,7 +28,7 @@ list_body_p list_body_create_variadic_n(int n, va_list *args)
 
     list_body_p lb_0, lb;
     lb_0 = lb = list_body_create_variadic_item(args);
-    for(int i=0; i<n; i++)
+    for(int i=1; i<n; i++)
         lb = lb->next = list_body_create_variadic_item(args);
 
     return lb_0;
@@ -78,6 +78,15 @@ void list_body_display(list_body_p lb)
         PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
         label_display(lb->node->lab);
     }
+}
+
+void list_body_display_node(list_body_p lb)
+{
+    CLU_IS_SAFE(lb);
+
+    int i;
+    for(i=0; lb; i++, lb = lb->next)
+        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
 }
 
 void list_body_display_full(list_body_p lb)
@@ -217,6 +226,9 @@ list_body_p list_body_remove(list_body_p lb, node_p node)
 {
     CLU_IS_SAFE(lb);
     CLU_IS_SAFE(node);
+
+    assert(lb);
+    assert(node);
 
     if(lb->node == node)
         return list_body_pop(lb);
