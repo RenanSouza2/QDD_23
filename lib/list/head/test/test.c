@@ -271,7 +271,7 @@ void test_list_head_insert(bool show)
 void test_list_head_remove(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-    
+
     node_p node[] = {
         node_amp_create(AMPI(1, 2)),
         node_amp_create(AMPI(1, 3)),
@@ -347,8 +347,59 @@ void test_list_head_remove(bool show)
         LAB(V, 1), 1, node[2], 0
     );
 
+    #undef TEST_LIST_HEAD_REMOVE
+
     for(int i=0; i<4; i++)
         free(node[i]);
+
+    assert(clu_mem_is_empty());
+}
+
+void test_list_head_merge(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    #define TEST_LIST_HEAD_MERGE(TAG, ...)                  \
+    {                                                       \
+        list_head_p lh[3];                                  \
+        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG); \
+        list_head_create_vec_immed(lh, 3, __VA_ARGS__);     \
+        lh[0] = list_head_merge(lh[0], lh[1]);              \
+        assert(list_head(lh[0], lh[2]));                    \
+    }
+
+    TEST_LIST_HEAD_MERGE(1,
+        0,
+        0,
+        0
+    );
+    TEST_LIST_HEAD_MERGE(2,
+        1,  LAB(V, 1), 1, ND(1), 0,
+        0,
+        1,  LAB(V, 1), 1, ND(1), 0
+    );
+    TEST_LIST_HEAD_MERGE(3,
+        0,
+        1,  LAB(V, 1), 1, ND(1), 0,
+        1,  LAB(V, 1), 1, ND(1), 0
+    );
+    TEST_LIST_HEAD_MERGE(4,
+        1,  LAB(V, 1), 1, ND(1), 0,
+        1,  LAB(V, 1), 0, 1, ND(2),
+        1,  LAB(V, 1), 1, ND(1), 1, ND(2)
+    );
+    TEST_LIST_HEAD_MERGE(5,
+        1,  LAB(V, 1), 1, ND(1), 0,
+        1,  LAB(V, 2), 0, 1, ND(2),
+        2,  LAB(V, 1), 1, ND(1), 0,
+            LAB(V, 2), 0, 1, ND(2)
+    );
+    TEST_LIST_HEAD_MERGE(6,
+        1,  LAB(V, 2), 0, 1, ND(2),
+        1,  LAB(V, 1), 1, ND(1), 0,
+        2,  LAB(V, 1), 1, ND(1), 0,
+            LAB(V, 2), 0, 1, ND(2)
+    );
 
     assert(clu_mem_is_empty());
 }
@@ -370,6 +421,7 @@ void test_list_head()
 
     test_list_head_insert(show);
     test_list_head_remove(show);
+    test_list_head_merge(show);
 
     assert(clu_mem_is_empty());
 }
