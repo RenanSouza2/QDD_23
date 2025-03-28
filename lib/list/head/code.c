@@ -302,14 +302,10 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
             lh->lb[side] = list_body_create(node, lh->lb[side]);
             return lh;
         }
-
-        case 1:
-        {
-            lh->next = list_head_insert(lh->next, node, side);
-            return lh;
-        }
     }
-    assert(false);
+    
+    lh->next = list_head_insert(lh->next, node, side);
+    return lh;
 }
 
 list_head_p list_head_remove(list_head_p lh, node_p node, int side)
