@@ -204,7 +204,8 @@ list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
     assert(lh);
 
     lh->lab = lb->node->lab;
-    lh->lb[side] = lb;
+    lh->lb[ side] = lb;
+    lh->lb[!side] = NULL;
     lh->next = next;
 
     return lh;
