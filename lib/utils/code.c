@@ -5,7 +5,7 @@
 
 #ifdef DEBUG
 
-bool display_handler(char tag[], handler_p h)
+bool handler_display(char tag[], handler_p h)
 {
     PRINT("\nAddress (%s): %p", tag, h);
     return h == NULL;

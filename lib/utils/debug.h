@@ -9,7 +9,7 @@
 
 #include "../macros/struct.h"
 
-bool display_handler(char tag[], handler_p h);
+bool handler_display(char tag[], handler_p h);
 
 bool int_str(int a, int b);
 

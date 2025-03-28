@@ -72,19 +72,29 @@ void list_head_create_vec_immed(list_head_p lh[], int n, ...)
 
 
 
-void list_head_display_item(list_head_p lh)
+void list_head_display(list_head_p lh)
 {
     CLU_HANDLER_IS_SAFE(lh);
 
-    if(display_handler("LIST HEAD", lh))
+    if(lh == NULL)
+    {
+        printf("\nLIST HEAD EMPTY");
         return;
+    }
 
-    PRINT("\nlb[ELSE] : %p", lh->lb[ELSE]);
-    PRINT("\nlb[THEN] : %p", lh->lb[THEN]);
-    PRINT("\nnext     : %p", lh->next);
+    for(; lh; lh = lh->next)
+    {
+        PRINT("\n--------");
+        printf("\nLABEL: ");
+        label_display(lh->lab);
+        printf("\nELSE");
+        list_body_display(lh->lb[ELSE]);
+        printf("\nTHEN");
+        list_body_display(lh->lb[THEN]);
+    }
 }
 
-void list_head_display(list_head_p lh)
+void list_head_display_full(list_head_p lh)
 {
     CLU_HANDLER_IS_SAFE(lh);
 
@@ -136,22 +146,23 @@ bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 
         if(!label(lh_1->lab, lh_2->lab))
         {
-            printf("\n\tLIST HEAD ASSERTION ERROR\t| LABEL MISMATCH");
+            printf("\n\tLIST HEAD ASSERTION ERROR\t| LABEL MISMATCH %d", i);
             return false;
         }
 
         for(int side=0; side<2; side++)
         {
-            if(!list_body(lh_1->lb[side], lh_2->lb[side]))
+            if(!list_body_inner(lh_1->lb[side], lh_2->lb[side]))
             {
                 printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST BODY MISMATCH | %d ", i);
                 label_display(lh_1->lab);
+                printf(" %s", side ? "THEN" : "ELSE");
                 return false;
             }
         }
 
-        lh_1 = list_head_pop(lh_1);
-        lh_2 = list_head_pop(lh_2);
+        lh_1 = lh_1->next;
+        lh_2 = lh_2->next;
     }
 
     if(lh_1)
@@ -173,9 +184,15 @@ bool list_head(list_head_p lh_1, list_head_p lh_2)
 {
     if(!list_head_inner(lh_1, lh_2)) // TODO reevaluate
     {
+        printf("\n\nLIST HEAD 1");
+        list_head_display(lh_1);
+        printf("\n\nLIST HEAD 2");
+        list_head_display(lh_2);
         return false;
     }
 
+    list_head_free(lh_1);
+    list_head_free(lh_2);
     return true;
 }
 
@@ -268,14 +285,17 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
     CLU_HANDLER_IS_SAFE(lh);
     CLU_HANDLER_IS_SAFE(node);
 
+    assert(node);
+
     if(lh == NULL)
         return list_head_create(node, side, NULL);
-
+    
     switch (label_compare(&node->lab, &lh->lab))
     {
         case -1:
         {
-            return list_head_create(node, side, lh);
+            lh = list_head_create(node, side, lh);
+            return lh;
         }
 
         case 0:
@@ -283,20 +303,38 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
             lh->lb[side] = list_body_create(node, lh->lb[side]);
             return lh;
         }
+    }
 
-        case 1:
+    list_head_p lh_0 = lh;
+    for(; lh->next; lh = lh->next)
+    {
+        switch (label_compare(&node->lab, &lh->next->lab))
         {
-            lh->next = list_head_insert(lh->next, node, side);
-            return lh;
+            case -1:
+            {
+                lh->next = list_head_create(node, side, lh->next);
+                return lh_0;
+            }
+
+            case 0:
+            {
+                lh->next->lb[side] = list_body_create(node, lh->next->lb[side]);
+                return lh_0;
+            }
         }
     }
-    assert(false);
+
+    lh->next = list_head_create(node, side, lh->next);
+    return lh_0;
 }
 
 list_head_p list_head_remove(list_head_p lh, node_p node, int side)
 {
     CLU_HANDLER_IS_SAFE(lh);
     CLU_HANDLER_IS_SAFE(node);
+
+    assert(lh);
+    assert(node);
 
     switch(label_compare(&node->lab, &lh->lab))
     {

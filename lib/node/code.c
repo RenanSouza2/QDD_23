@@ -33,7 +33,6 @@ void node_amp_display(node_p node)
     CLU_HANDLER_IS_SAFE(node);
 
     PRINT("\nnode (amp): %p", node);
-    label_display(node->lab);
     PRINT("\namp: ");
     amp_display(AMP(node));
     PRINT("\n");

@@ -25,7 +25,7 @@ void tree_display(node_p node)
 
     list_head_p lh = tree_enlist(node);
     lh = list_head_invert(lh);
-    list_head_display(lh);
+    list_head_display_full(lh);
 }
 
 bool tree_str_rec(node_p node, node_p node_1, node_p node_2)

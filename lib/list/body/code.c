@@ -61,7 +61,7 @@ void list_body_display_item(list_body_p lb)
 {
     CLU_HANDLER_IS_SAFE(lb);
 
-    if(display_handler("LIST BODY", lb)) return;
+    if(handler_display("LIST BODY", lb)) return;
 
     PRINT("\nnode: %p", lb->node);
     PRINT("\nnext: %p", lb->next);
@@ -72,20 +72,23 @@ void list_body_display(list_body_p lb)
 {
     CLU_HANDLER_IS_SAFE(lb);
 
+    if(lb == NULL)
+        printf("\n\tLIST BODY EMPTY");
+
+    for(int i=0; lb; i++, lb = lb->next)
+        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
+}
+
+void list_body_display_short(list_body_p lb)
+{
+    CLU_HANDLER_IS_SAFE(lb);
+
     int i;
     for(i=0; lb; i++, lb = lb->next)
     {
         PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
         label_display(lb->node->lab);
     }
-}
-
-void list_body_display_node(list_body_p lb)
-{
-    CLU_HANDLER_IS_SAFE(lb);
-
-    for(int i=0; lb; i++, lb = lb->next)
-        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
 }
 
 void list_body_display_full(list_body_p lb)
@@ -98,7 +101,7 @@ void list_body_display_full(list_body_p lb)
 
 
 
-bool list_body_str_inner(list_body_p lb_1, list_body_p lb_2)
+bool list_body_inner(list_body_p lb_1, list_body_p lb_2)
 {
     CLU_HANDLER_IS_SAFE(lb_1);
     CLU_HANDLER_IS_SAFE(lb_2);
@@ -119,13 +122,13 @@ bool list_body_str_inner(list_body_p lb_1, list_body_p lb_2)
 
     if(lb_1)
     {
-        PRINT("\n\n\ttLIST BODY ASSERTION ERROR\t| LIST LONGER\t\t");
+        PRINT("\n\n\tLIST BODY ASSERTION ERROR\t| LIST LONGER\t\t");
         return false;
     }
 
     if(lb_2)
     {
-        PRINT("\n\n\ttLIST BODY ASSERTION ERROR\t| LIST SHORTER\t\t");
+        PRINT("\n\n\tLIST BODY ASSERTION ERROR\t| LIST SHORTER\t\t");
         return false;
     }
 
@@ -137,7 +140,7 @@ bool list_body(list_body_p lb_1, list_body_p lb_2)
     CLU_HANDLER_IS_SAFE(lb_1);
     CLU_HANDLER_IS_SAFE(lb_2);
 
-    if(!list_body_str_inner(lb_1, lb_2))
+    if(!list_body_inner(lb_1, lb_2))
     {
         PRINT("\n");
         list_body_display(lb_1);
