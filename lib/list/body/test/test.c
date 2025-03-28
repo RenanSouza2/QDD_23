@@ -15,7 +15,7 @@ void test_list_body_create(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    CLU_REGISTER(ND(1));
+    CLU_HANDLER_REGISTER(ND(1));
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     list_body_p lb = list_body_create(NULL, NULL);
@@ -43,7 +43,7 @@ void test_list_body_create(bool show)
     assert(lb->next == lb_aux);
     list_body_free(lb);
 
-    CLU_UNREGISTER(ND(1));
+    CLU_HANDLER_UNREGISTER(ND(1));
 
     assert(clu_mem_is_empty());
 }
@@ -53,13 +53,13 @@ void test_list_body_create_vec(bool show)
     printf("\n\t%s\t\t", __func__);
 
     for(long int i=1; i<5; i++)
-        CLU_REGISTER(ND(i));
+        CLU_HANDLER_REGISTER(ND(i));
 
-    #define TEST_LIST_BODY_CREATE_VEC(TAG, N, ...)   \
-    {   \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+    #define TEST_LIST_BODY_CREATE_VEC(TAG, N, ...)                          \
+    {                                                                       \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);                  \
         list_body_p lb = list_body_create_vec(N, (node_p[]){__VA_ARGS__});  \
-        assert(list_body_immed(lb, N, __VA_ARGS__));    \
+        assert(list_body_immed(lb, N, __VA_ARGS__));                        \
     }
 
     TEST_LIST_BODY_CREATE_VEC(1, 1, ND(1));
@@ -74,7 +74,7 @@ void test_list_body_create_vec(bool show)
     TEST_REVERT_CLOSE
 
     for(long int i=1; i<5; i++)
-        CLU_UNREGISTER(ND(i));
+        CLU_HANDLER_UNREGISTER(ND(i));
 
     assert(clu_mem_is_empty());
 }
@@ -86,7 +86,7 @@ void test_list_body_remove(bool show)
     printf("\n\t%s\t\t", __func__);
 
     for(long int i=1; i<4; i++)
-        CLU_REGISTER(ND(i));
+        CLU_HANDLER_REGISTER(ND(i));
 
     #define TEST_LIST_BODY_REMOVE(TAG, NODE, ...)           \
     {                                                       \
@@ -137,7 +137,7 @@ void test_list_body_remove(bool show)
     list_body_free(lb);
 
     for(long int i=1; i<4; i++)
-        CLU_UNREGISTER(ND(i));
+        CLU_HANDLER_UNREGISTER(ND(i));
 
     assert(clu_mem_is_empty());
 }

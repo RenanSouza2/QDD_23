@@ -17,7 +17,7 @@ void test_list_head_create_body(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    CLU_REGISTER(LH(2));
+    CLU_HANDLER_REGISTER(LH(2));
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p node = node_amp_create(AMPI(1, 1));
@@ -40,12 +40,12 @@ void test_list_head_create_body(bool show)
     assert(lh->next == NULL);
     free(node);
     free(lh);
-    
+
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     TEST_REVERT_OPEN
     list_head_create_body(NULL, ELSE, NULL);
     TEST_REVERT_CLOSE
-    
+
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     lb = list_body_create(NULL, NULL);
     TEST_REVERT_OPEN
@@ -53,7 +53,7 @@ void test_list_head_create_body(bool show)
     TEST_REVERT_CLOSE
     free(lb);
 
-    CLU_UNREGISTER(LH(2));
+    CLU_HANDLER_UNREGISTER(LH(2));
 
     assert(clu_mem_is_empty());
 }
@@ -62,7 +62,7 @@ void test_list_head_create(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    CLU_REGISTER(LH(2));
+    CLU_HANDLER_REGISTER(LH(2));
 
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p node = node_amp_create(AMPI(1, 1));
@@ -83,13 +83,13 @@ void test_list_head_create(bool show)
     assert(lh->next == NULL);
     free(node);
     free(lh);
-    
+
     if(show) printf("\n\t\t%s 3\t\t", __func__);
     TEST_REVERT_OPEN
     list_head_create(NULL, ELSE, NULL);
     TEST_REVERT_CLOSE
 
-    CLU_UNREGISTER(LH(2));
+    CLU_HANDLER_UNREGISTER(LH(2));
 
     assert(clu_mem_is_empty());
 }
@@ -115,9 +115,110 @@ void test_list_head_pop(bool show)
     assert(label(lh->lab, LAB(V, 2)));
     free(lh);
 
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    TEST_REVERT_OPEN
+    list_head_pop(NULL);
+    TEST_REVERT_CLOSE
+
     assert(clu_mem_is_empty());
 }
 
+
+
+void test_list_head_first(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    #define TEST_LIST_HEAD_FIRST(TAG, RES, ...)                 \
+    {                                                           \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);      \
+        list_head_p lh = list_head_create_immed(__VA_ARGS__);   \
+        node_p node = list_head_first(lh);                      \
+        assert(node == RES);                                    \
+        list_head_free(lh);                                     \
+    }
+
+    TEST_LIST_HEAD_FIRST(1, ND(1), 2,
+        LAB(V, 1), 1, ND(1), 1, ND(2),
+        LAB(V, 2), 1, ND(3), 1, ND(4)
+    );
+    TEST_LIST_HEAD_FIRST(2, ND(2), 2,
+        LAB(V, 1), 0, 1, ND(2),
+        LAB(V, 2), 1, ND(3), 1, ND(4)
+    )
+
+    #undef TEST_LIST_HEAD_FIRST
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    TEST_REVERT_OPEN
+    list_head_first(NULL);
+    TEST_REVERT_CLOSE
+
+    assert(clu_mem_is_empty());
+}
+
+void test_list_head_occupied(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    #define TEST_LIST_HEAD_OCCUPIED(TAG, RES, ...)              \
+    {                                                           \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);      \
+        list_head_p lh = list_head_create_immed(__VA_ARGS__);   \
+        bool node = list_head_occupied(lh);                     \
+        assert(node == RES);                                    \
+        list_head_free(lh);                                     \
+    }
+
+    TEST_LIST_HEAD_OCCUPIED(1, false, 1,
+        LAB(V, 1), 0, 0
+    );
+    TEST_LIST_HEAD_OCCUPIED(2, true, 1,
+        LAB(V, 1), 1, ND(1), 0
+    );
+    TEST_LIST_HEAD_OCCUPIED(3, true, 1,
+        LAB(V, 1), 0, 1, ND(2)
+    );
+    TEST_LIST_HEAD_OCCUPIED(4, true, 1,
+        LAB(V, 1), 1, ND(1), 1, ND(2)
+    );
+
+    #undef TEST_LIST_HEAD_OCCUPIED
+
+    assert(clu_mem_is_empty());
+}
+
+
+
+void test_list_head_insert(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    #define TEST_LIST_HEAD_INSERT(TAG, NODE, SIDE, ...)     \
+    {                                                       \
+        list_head_p lh[2];                                  \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        list_head_create_vec_immed(lh, 2, __VA_ARGS__);     \
+        lh[0] = list_head_insert(lh[0], NODE, SIDE);        \
+        assert(list_head(lh[0], lh[1]));                    \
+    }
+
+
+    node_p node[] = {node_amp_create(AMPI(1, 2))};
+
+    TEST_LIST_HEAD_INSERT(1, node[0], ELSE,
+        0,
+        1,  LAB(0, 0), 1, node[0], 0
+    );
+    TEST_LIST_HEAD_INSERT(2, node[0], THEN,
+        0,
+        1,  LAB(0, 0), 0, 1, node[0]
+    );
+
+    #undef TEST_LIST_HEAD_OCCUPIED
+
+    assert(clu_mem_is_empty());
+}
 
 
 void test_list_head()
@@ -129,6 +230,11 @@ void test_list_head()
     test_list_head_create_body(show);
     test_list_head_create(show);
     test_list_head_pop(show);
+
+    test_list_head_first(show);
+    test_list_head_occupied(show);
+
+    test_list_head_insert(show);
 
     assert(clu_mem_is_empty());
 }

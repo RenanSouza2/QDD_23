@@ -17,8 +17,8 @@
 
 qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
 {
-    CLU_IS_SAFE(node);
-    CLU_IS_SAFE(lb);
+    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(lb);
 
     qdd_p q = malloc(sizeof(qdd_t));
     assert(q);
@@ -67,7 +67,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
 
 void qdd_free(qdd_p q)
 {
-    CLU_IS_SAFE(q);
+    CLU_HANDLER_IS_SAFE(q);
 
     tree_free(q->node);
     list_body_free(q->lb);
@@ -79,8 +79,8 @@ typedef bool (*node_eq_f)(node_p, node_p);
 
 bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
 {
-    CLU_IS_SAFE(lb);
-    CLU_IS_SAFE(node_1);
+    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_IS_SAFE(node_1);
 
     bool insert = false;
     for(; lb->next; )
@@ -105,7 +105,7 @@ bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, boo
 // returns the list of the nodes reduced
 list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn, bool remove)
 {
-    CLU_IS_SAFE(lb);
+    CLU_HANDLER_IS_SAFE(lb);
 
     if(lb == NULL)
         return NULL;
@@ -123,7 +123,7 @@ list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn, bool remove)
 
 void list_body_reduce_path(node_p node_0, list_body_p lb)
 {
-    CLU_IS_SAFE(lb);
+    CLU_HANDLER_IS_SAFE(lb);
 
     if(lb == NULL)
         return;
@@ -170,7 +170,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 
 list_head_p node_reduce(node_p node_0)
 {
-    CLU_IS_SAFE(node_0);
+    CLU_HANDLER_IS_SAFE(node_0);
 
     list_head_p lh_res = list_head_reduce(node_0, &node_0->lh);
     if(node_0->lh == NULL)
@@ -188,7 +188,7 @@ list_head_p node_reduce(node_p node_0)
 
 void qdd_reduce(qdd_p q)
 {
-    CLU_IS_SAFE(q);
+    CLU_HANDLER_IS_SAFE(q);
 
     list_body_p lb = list_body_reduce_node(q->lb, node_eq_amp, true);
     if(lb == NULL)

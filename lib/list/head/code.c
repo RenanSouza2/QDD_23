@@ -24,7 +24,7 @@ list_head_p list_head_create_variadic_item(va_list *args)
     label_t lab = va_arg(*args, label_t);
     list_body_p lb_el = list_body_create_variadic(args);
     list_body_p lb_th = list_body_create_variadic(args);
-    
+
     list_head_p lh = malloc(sizeof(list_head_t));
     assert(lh);
     *lh = (list_head_t)
@@ -49,6 +49,12 @@ list_head_p list_head_create_variadic_n(int n, va_list *args)
     return lh_0;
 }
 
+list_head_p list_head_create_variadic(va_list *args)
+{
+    int n = va_arg(*args, int);
+    return list_head_create_variadic_n(n, args);
+}
+
 list_head_p list_head_create_immed(int n, ...)
 {
     va_list args;
@@ -56,10 +62,20 @@ list_head_p list_head_create_immed(int n, ...)
     return list_head_create_variadic_n(n, &args);
 }
 
+void list_head_create_vec_immed(list_head_p lh[], int n, ...)
+{
+    va_list args;
+    va_start(args, n);
+    for(int i=0; i<n; i++)
+        lh[i] = list_head_create_variadic(&args);
+}
+
 
 
 void list_head_display_item(list_head_p lh)
 {
+    CLU_HANDLER_IS_SAFE(lh);
+
     if(display_handler("LIST HEAD", lh))
         return;
 
@@ -70,6 +86,8 @@ void list_head_display_item(list_head_p lh)
 
 void list_head_display(list_head_p lh)
 {
+    CLU_HANDLER_IS_SAFE(lh);
+
     if(lh == NULL) PRINT("\nnull list");
 
    for(; lh; lh = lh->next)
@@ -109,13 +127,12 @@ list_head_p list_head_invert(list_head_p lh)
 
 bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 {
+    CLU_HANDLER_IS_SAFE(lh_1);
+    CLU_HANDLER_IS_SAFE(lh_2);
+
     for(int i=0; lh_1 && lh_2; i++)
     {
-        if(!clu_handler_is_safe(lh_1))
-        {
-            printf("\n\tLIST HEAD ASSERTION ERROR\t| LH UNSAFE | %d", i);
-            return false;
-        }
+        CLU_HANDLER_IS_SAFE(lh_1);
 
         if(!label(lh_1->lab, lh_2->lab))
         {
@@ -156,7 +173,7 @@ bool list_head(list_head_p lh_1, list_head_p lh_2)
 {
     if(!list_head_inner(lh_1, lh_2)) // TODO reevaluate
     {
-        return false; 
+        return false;
     }
 
     return true;
@@ -176,9 +193,9 @@ bool list_head_immed(list_head_p lh, int n, ...)
 
 list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 {
-    CLU_IS_SAFE(lb);
-    CLU_IS_SAFE(lb->node);
-    CLU_IS_SAFE(next);
+    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_IS_SAFE(lb->node);
+    CLU_HANDLER_IS_SAFE(next);
 
     assert(lb);
     assert(lb->node);
@@ -195,8 +212,8 @@ list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 
 list_head_p list_head_create(node_p node, int side, list_head_p next)
 {
-    CLU_IS_SAFE(node);
-    CLU_IS_SAFE(next);
+    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(next);
 
     list_body_p lb = list_body_create(node, NULL);
     return list_head_create_body(lb, side, next);
@@ -204,7 +221,7 @@ list_head_p list_head_create(node_p node, int side, list_head_p next)
 
 list_head_p list_head_pop(list_head_p lh)
 {
-    CLU_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(lh);
 
     assert(lh);
 
@@ -215,7 +232,7 @@ list_head_p list_head_pop(list_head_p lh)
 
 void list_head_free(list_head_p lh)
 {
-    CLU_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(lh);
 
     for(; lh; lh = list_head_pop(lh))
     for(int side = 0; side < 2; side ++)
@@ -226,10 +243,9 @@ void list_head_free(list_head_p lh)
 
 node_p list_head_first(list_head_p lh)
 {
-    CLU_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(lh);
 
-    if(lh == NULL)
-        return NULL;
+    assert(lh);
 
     if(lh->lb[ELSE])
         return lh->lb[ELSE]->node;
@@ -239,7 +255,7 @@ node_p list_head_first(list_head_p lh)
 
 bool list_head_occupied(list_head_p lh)
 {
-    CLU_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(lh);
 
     return lh->lb[ELSE] || lh->lb[THEN];
 }
@@ -248,8 +264,8 @@ bool list_head_occupied(list_head_p lh)
 
 list_head_p list_head_insert(list_head_p lh, node_p node, int side)
 {
-    CLU_IS_SAFE(lh);
-    CLU_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(node);
 
     if(lh == NULL)
         return list_head_create(node, side, NULL);
@@ -278,8 +294,8 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
 
 list_head_p list_head_remove(list_head_p lh, node_p node, int side)
 {
-    CLU_IS_SAFE(lh);
-    CLU_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_IS_SAFE(node);
 
     switch(label_compare(&node->lab, &lh->lab))
     {

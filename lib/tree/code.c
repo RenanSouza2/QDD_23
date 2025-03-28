@@ -21,7 +21,7 @@
 
 void tree_display(node_p node)
 {
-    CLU_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(node);
 
     list_head_p lh = tree_enlist(node);
     lh = list_head_invert(lh);
@@ -30,9 +30,9 @@ void tree_display(node_p node)
 
 bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
 {
-    CLU_IS_SAFE(node);
-    CLU_IS_SAFE(node_1);
-    CLU_IS_SAFE(node_2);
+    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(node_1);
+    CLU_HANDLER_IS_SAFE(node_2);
 
     if(node_1 == NULL)
     {
@@ -84,7 +84,7 @@ bool tree(node_p n1, node_p n2)
 
 void tree_free(node_p node)
 {
-    CLU_IS_SAFE(node);
+    CLU_HANDLER_IS_SAFE(node);
     assert(node);
 
     if(node->lh)

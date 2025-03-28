@@ -8,6 +8,7 @@
 #define LH(HANDLER) ((list_head_p)(HANDLER))
 
 list_head_p list_head_create_immed(int n, ...);
+void list_head_create_vec_immed(list_head_p lh[], int n, ...);
 
 void list_head_display_item(list_head_p lh);
 void list_head_display(list_head_p lh);
@@ -21,5 +22,7 @@ bool list_head_immed(list_head_p lh, int n, ...);
 
 list_head_p list_head_create(node_p node, int side, list_head_p next);
 list_head_p list_head_pop(list_head_p lh);
+
+bool list_head_occupied(list_head_p lh);
 
 #endif
