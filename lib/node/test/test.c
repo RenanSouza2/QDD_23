@@ -14,7 +14,7 @@ void test_node_create_branch(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    
+
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p node = node_branch_create(LAB(V, 2));
     assert(node->lh == NULL);
