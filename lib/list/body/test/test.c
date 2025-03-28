@@ -213,7 +213,9 @@ void test_list_body()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(5)
     test_list_body();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }
