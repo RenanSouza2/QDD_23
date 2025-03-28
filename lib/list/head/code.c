@@ -294,8 +294,7 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
     {
         case -1:
         {
-            lh = list_head_create(node, side, lh);
-            return lh;
+            return list_head_create(node, side, lh);
         }
 
         case 0:
@@ -303,29 +302,14 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
             lh->lb[side] = list_body_create(node, lh->lb[side]);
             return lh;
         }
-    }
 
-    list_head_p lh_0 = lh;
-    for(; lh->next; lh = lh->next)
-    {
-        switch (label_compare(&node->lab, &lh->next->lab))
+        case 1:
         {
-            case -1:
-            {
-                lh->next = list_head_create(node, side, lh->next);
-                return lh_0;
-            }
-
-            case 0:
-            {
-                lh->next->lb[side] = list_body_create(node, lh->next->lb[side]);
-                return lh_0;
-            }
+            lh->next = list_head_insert(lh->next, node, side);
+            return lh;
         }
     }
-
-    lh->next = list_head_create(node, side, lh->next);
-    return lh_0;
+    assert(false);
 }
 
 list_head_p list_head_remove(list_head_p lh, node_p node, int side)
