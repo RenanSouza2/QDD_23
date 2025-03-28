@@ -315,12 +315,12 @@ void test_node_merge(bool show)
     node_v2 = node_branch_create(LAB(V, 2));
     node_connect_both(node_v2, node_amp_1, node_amp_2);
     node_merge(node_amp_1, node_amp_2);
-    assert(BRANCH(node_amp_2)[ELSE] == node_amp_1);
-    assert(BRANCH(node_amp_2)[THEN] == node_amp_1);
+    assert(BRANCH(node_v2)[ELSE] == node_amp_1);
+    assert(BRANCH(node_v2)[THEN] == node_amp_1);
     assert(list_head_immed(node_amp_1->lh, 1,
-        LAB(V, 3),  1, node_v2, 1, node_v2
+        LAB(V, 2),  1, node_v2, 1, node_v2
     ));
-    free(node_amp);
+    free(node_amp_1);
     free(node_v2);
 
     assert(clu_mem_is_empty());
