@@ -252,6 +252,7 @@ list_body_p list_body_remove(list_body_p lb, node_p node)
             break;
 
     assert(lb->next);
+    assert(lb->next->node == node);
     lb->next = list_body_pop(lb->next);
     return lb_0;
 }

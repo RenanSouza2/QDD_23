@@ -136,6 +136,13 @@ void test_list_body_remove(bool show)
     TEST_REVERT_CLOSE
     list_body_free(lb);
 
+    if(show) printf("\n\t\t%s 8\t\t", __func__);
+    lb = list_body_create_immed(1, ND(1));
+    TEST_REVERT_OPEN
+    list_body_remove(lb, ND(2));
+    TEST_REVERT_CLOSE
+    list_body_free(lb);
+
     for(long int i=1; i<4; i++)
         CLU_HANDLER_UNREGISTER(ND(i));
 

@@ -197,7 +197,7 @@ void test_list_head_insert(bool show)
     #define TEST_LIST_HEAD_INSERT(TAG, NODE, SIDE, ...)     \
     {                                                       \
         list_head_p lh[2];                                  \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG); \
         list_head_create_vec_immed(lh, 2, __VA_ARGS__);     \
         lh[0] = list_head_insert(lh[0], NODE, SIDE);        \
         assert(list_head(lh[0], lh[1]));                    \
@@ -209,6 +209,8 @@ void test_list_head_insert(bool show)
         node_amp_create(AMPI(1, 3)),
 
         node_branch_create(LAB(V, 1)),
+
+        node_branch_create(LAB(V, 2)),
     };
 
     TEST_LIST_HEAD_INSERT(1, node[0], ELSE,
@@ -245,15 +247,22 @@ void test_list_head_insert(bool show)
         2,  LAB(0, 0), 1, node[0], 0,
             LAB(V, 1), 1, node[2], 0
     );
+    TEST_LIST_HEAD_INSERT(9, node[2], ELSE,
+        2,  LAB(0, 0), 1, node[0], 0,
+            LAB(V, 2), 1, node[3], 0,
+        3,  LAB(0, 0), 1, node[0], 0,
+            LAB(V, 1), 1, node[2], 0,
+            LAB(V, 2), 1, node[3], 0
+    );
 
-    #undef TEST_LIST_HEAD_OCCUPIED
+    #undef TEST_LIST_HEAD_INSERT
 
-    if(show) printf("\n\t\t%s 9\t\t", __func__);
+    if(show) printf("\n\t\t%s 10\t\t", __func__);
     TEST_REVERT_OPEN
     list_head_insert(NULL, NULL, ELSE);
     TEST_REVERT_CLOSE
 
-    for(int i=0; i<3; i++)
+    for(int i=0; i<4; i++)
         free(node[i]);
 
     assert(clu_mem_is_empty());
@@ -262,33 +271,83 @@ void test_list_head_insert(bool show)
 void test_list_head_remove(bool show)
 {
     printf("\n\t%s\t\t", __func__);
-
-    #define TEST_LIST_HEAD_REMOVE(TAG, NODE, SIDE, ...)     \
-    {                                                       \
-        list_head_p lh[2];                                  \
-        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
-        list_head_create_vec_immed(lh, 2, __VA_ARGS__);     \
-        lh[0] = list_head_insert(lh[0], NODE, SIDE);        \
-        assert(list_head(lh[0], lh[1]));                    \
-    }
-
-
+    
     node_p node[] = {
         node_amp_create(AMPI(1, 2)),
         node_amp_create(AMPI(1, 3)),
 
         node_branch_create(LAB(V, 1)),
+
+        node_branch_create(LAB(V, 2)),
     };
 
-    TEST_LIST_HEAD_INSERT(1, node[0], ELSE,
-        0,
-        1,  LAB(0, 0), 1, node[0], 0
+    #define TEST_LIST_HEAD_REMOVE(TAG, NODE, SIDE, ...)     \
+    {                                                       \
+        list_head_p lh[2];                                  \
+        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG); \
+        list_head_create_vec_immed(lh, 2, __VA_ARGS__);     \
+        lh[0] = list_head_remove(lh[0], NODE, SIDE);        \
+        assert(list_head(lh[0], lh[1]));                    \
+    }
+
+    TEST_LIST_HEAD_REMOVE(1, node[0], ELSE,
+        1,  LAB(0, 0), 1, node[0], 0,
+        0
+    );
+    TEST_LIST_HEAD_REMOVE(2, node[0], ELSE,
+        1,  LAB(0, 0), 1, node[0], 1, node[1],
+        1,  LAB(0, 0), 0, 1, node[1]
+    );
+    TEST_LIST_HEAD_REMOVE(3, node[0], ELSE,
+        1,  LAB(0, 0), 2, node[0], node[1], 0,
+        1,  LAB(0, 0), 1, node[1], 0
+    );
+    TEST_LIST_HEAD_REMOVE(4, node[0], THEN,
+        2,  LAB(0, 0), 0, 1, node[0],
+            LAB(V, 1), 1, node[2], 0,
+        1,  LAB(V, 1), 1, node[2], 0
+    );
+    TEST_LIST_HEAD_REMOVE(5, node[2], ELSE,
+        2,  LAB(0, 0), 0, 1, node[0],
+            LAB(V, 1), 1, node[2], 0,
+        1,  LAB(0, 0), 0, 1, node[0]
+    );
+    TEST_LIST_HEAD_REMOVE(6, node[2], ELSE,
+        3,  LAB(0, 0), 0, 1, node[0],
+            LAB(V, 1), 1, node[2], 0,
+            LAB(V, 2), 1, node[3], 0,
+        2,  LAB(0, 0), 0, 1, node[0],
+            LAB(V, 2), 1, node[3], 0
     );
 
     #undef TEST_LIST_HEAD_REMOVE
-    
 
-    for(int i=0; i<3; i++)
+    if(show) printf("\n\t\t%s  7\t\t", __func__);
+    TEST_REVERT_OPEN
+    list_head_remove(NULL, node[0], ELSE);
+    TEST_REVERT_CLOSE
+
+    #define TEST_LIST_HEAD_REMOVE(TAG, NODE, SIDE, ...)         \
+    {                                                           \
+        if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG);     \
+        list_head_p lh = list_head_create_immed(__VA_ARGS__);   \
+        TEST_REVERT_OPEN                                        \
+        list_head_remove(lh, NODE, SIDE);                       \
+        TEST_REVERT_CLOSE                                       \
+        list_head_free(lh);                                     \
+    }
+
+    TEST_LIST_HEAD_REMOVE(8, NULL, ELSE, 1,
+        LAB(V, 1), 1, node[2], 0
+    );
+    TEST_LIST_HEAD_REMOVE(9, node[0], ELSE, 1,
+        LAB(V, 1), 1, node[2], 0
+    );
+    TEST_LIST_HEAD_REMOVE(10, node[3], ELSE, 1,
+        LAB(V, 1), 1, node[2], 0
+    );
+
+    for(int i=0; i<4; i++)
         free(node[i]);
 
     assert(clu_mem_is_empty());
