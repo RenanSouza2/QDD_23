@@ -9,6 +9,7 @@
 PLACEHOLDER(list_head);
 
 list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next);
+list_head_p list_head_pop(list_head_p lh);
 void list_head_free(list_head_p lh);
 
 node_p list_head_first(list_head_p lh);

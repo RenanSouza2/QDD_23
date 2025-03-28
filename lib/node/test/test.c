@@ -3,6 +3,7 @@
 #include "../debug.h"
 #include "../../amp/debug.h"
 #include "../../label/debug.h"
+#include "../../macros/test.h"
 #include "../../list/body/debug.h"
 #include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
@@ -117,164 +118,213 @@ void test_node_eq_th(bool show)
 
 
 
-// void test_node_connect_one()
-// {
-//     printf("\n\t\t\t%s\t\t", __func__);
+void test_node_connect(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
 
-//     node_p n = node_branch_create(&LAB(V, 2));
-//     node_p n_el = node_branch_create(&LAB(V, 1));
-//     node_connect(n, n_el, ELSE);
-//     assert(ND_STR(n)->el == n_el);
-//     assert(list_head(n_el->lh, 1,
-//         LAB(V, 2), 1, n, 0
-//     ));
+    #define TEST_NODE_CONNECT(TAG, SIDE, NODE_EL, NODE_TH, ...) \
+    {                                                           \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);      \
+        node_p node_top = node_branch_create(LAB(V, 2));        \
+        node_p node_bot = node_branch_create(LAB(V, 1));        \
+        node_connect(node_top, node_bot, SIDE);                 \
+        assert(BRANCH(node_top)[ELSE] == NODE_EL);              \
+        assert(BRANCH(node_top)[THEN] == NODE_TH);              \
+        assert(list_head_immed(node_bot->lh, __VA_ARGS__));     \
+        free(node_top);                                         \
+        free(node_bot);                                         \
+    }
 
-//     node_p n_th = node_branch_create(&LAB(V, 1));
-//     node_connect(n, n_th, THEN);
-//     assert(ND_STR(n)->th == n_th);
-//     assert(list_head(n_th->lh, 1,
-//         LAB(V, 2), 0, 1, n
-//     ));
+    TEST_NODE_CONNECT(1, ELSE, node_bot, NULL, 1,
+        LAB(V, 2), 1, node_top, 0
+    );
+    TEST_NODE_CONNECT(2, THEN, NULL, node_bot, 1,
+        LAB(V, 2), 0, 1, node_top
+    );
 
-//     free(n_el);
-//     free(n_th);
-//     free(n);
-//     assert(clu_mem_is_empty());
-// }
+    #undef TEST_NODE_CONNECT
 
-// void test_node_connect_both()
-// {
-//     printf("\n\t\t\t%s\t\t", __func__);
+    #define TEST_NODE_CONNECT(TAG, SIDE)                    \
+    {                                                       \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        node_p node_top = node_branch_create(LAB(V, 2));    \
+        node_p node_bot = node_branch_create(LAB(V, 1));    \
+        node_connect(node_top, node_bot, SIDE);             \
+        TEST_REVERT_OPEN                                    \
+        node_connect(node_top, node_bot, SIDE);             \
+        TEST_REVERT_CLOSE                                   \
+        list_head_free(node_bot->lh);                       \
+        free(node_top);                                     \
+        free(node_bot);                                     \
+    }
 
-//     node_p n    = node_branch_create(&LAB(V, 2));
-//     node_p n_el = node_branch_create(&LAB(V, 1));
-//     node_p n_th = node_branch_create(&LAB(V, 1));
+    TEST_NODE_CONNECT(3, ELSE);
+    TEST_NODE_CONNECT(4, THEN);
 
-//     node_connect_both(n, n_el, n_th);
-//     assert(ND_STR(n)->el == n_el);
-//     assert(ND_STR(n)->th == n_th);
-//     assert(list_head(n_el->lh, 1,
-//         LAB(V, 2), 1, n, 0
-//     ));
-//     assert(list_head(n_th->lh, 1,
-//         LAB(V, 2), 0, 1, n
-//     ));
+    #undef TEST_NODE_CONNECT
 
-//     free(n_el);
-//     free(n_th);
-//     free(n);
-//     assert(clu_mem_is_empty());
-// }
+    assert(clu_mem_is_empty());
+}
 
+void test_node_connect_both(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
 
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    node_p node_top = node_branch_create(LAB(V, 2));
+    node_p node_el = node_branch_create(LAB(V, 1));
+    node_p node_th = node_branch_create(LAB(V, 1));
+    node_connect_both(node_top, node_el, node_th);
+    assert(BRANCH(node_top)[ELSE] == node_el);
+    assert(BRANCH(node_top)[THEN] == node_th);
+    assert(list_head_immed(node_el->lh, 1,
+        LAB(V, 2),  1, node_top, 0
+    ));
+    assert(list_head_immed(node_th->lh, 1,
+        LAB(V, 2),  0, 1, node_top
+    ));
+    free(node_top);
+    free(node_el);
+    free(node_th);
 
-// void test_node_disconnect_one()
-// {
-//     printf("\n\t\t\t%s\t\t", __func__);
-
-//     node_p n    = node_branch_create(&LAB(V, 2));
-//     node_p n_el = node_branch_create(&LAB(V, 1));
-//     node_p n_th = node_branch_create(&LAB(V, 1));
-//     node_connect_both(n, n_el, n_th);
-
-//     node_disconnect(n, ELSE);
-//     assert(ND_STR(n)->el == NULL);
-//     assert(n_el->lh == NULL);
-
-//     node_disconnect(n, THEN);
-//     assert(ND_STR(n)->th == NULL);
-//     assert(n_th->lh == NULL);
-
-//     free(n_el);
-//     free(n_th);
-//     free(n);
-//     assert(clu_mem_is_empty());
-// }
-
-// void test_node_disconnect_both()
-// {
-//     printf("\n\t\t\t%s\t\t", __func__);
-
-//     node_p n    = node_branch_create(&LAB(V, 2));
-//     node_p n_el = node_branch_create(&LAB(V, 1));
-//     node_p n_th = node_branch_create(&LAB(V, 1));
-//     node_connect_both(n, n_el, n_th);
-
-//     node_disconnect_both(n);
-//     assert(ND_STR(n)->el == NULL);
-//     assert(ND_STR(n)->th == NULL);
-//     assert(n_el->lh == NULL);
-//     assert(n_th->lh == NULL);
-
-//     free(n_el);
-//     free(n_th);
-//     free(n);
-//     assert(clu_mem_is_empty());
-// }
+    assert(clu_mem_is_empty());
+}
 
 
 
-// void test_node_merge()
-// {
-//     printf("\n\t\t%s\t\t", __func__);
+void test_node_disconnect(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
 
-//     printf("\n\t\t\t%s 1\t\t", __func__);
-//     node_p n1 = node_amp_create(&(amp_t){0, 0});
-//     node_p n2 = node_amp_create(&(amp_t){0, 0});
-//     node_merge(n1, n2);
+    #define TEST_NODE_DISCONNECT(TAG, SIDE)                 \
+    {                                                       \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        node_p node_top = node_branch_create(LAB(V, 2));    \
+        node_p node_bot = node_branch_create(LAB(V, 1));    \
+        node_connect(node_top, node_bot, SIDE);             \
+        node_disconnect(node_top, SIDE);                    \
+        assert(BRANCH(node_top)[ELSE] == NULL);             \
+        assert(BRANCH(node_top)[THEN] == NULL);             \
+        assert(list_head_immed(node_bot->lh, 0));           \
+        free(node_top);                                     \
+        free(node_bot);                                     \
+    }
 
-//     printf("\n\t\t\t%s 2\t\t", __func__);
-//     node_p N1[] = {
-//         node_branch_create(&LAB(V, 1)),
-//         node_branch_create(&LAB(V, 1)),
-//         node_branch_create(&LAB(V, 2)),
-//         node_branch_create(&LAB(V, 2)),
-//     };
-//     n2 = node_amp_create(&(amp_t){0, 0});
-//     node_connect(N1[0], n2, ELSE);
-//     node_connect(N1[0], n2, THEN);
-//     for(int i=1; i<4; i++)
-//         node_connect(N1[i], n2, i&1);
-//     node_merge(n1, n2);
-//     assert(list_head(n1->lh, 2,
-//         LAB(V, 1), 1, N1[0], 2, N1[1], N1[0],
-//         LAB(V, 2), 1, N1[2], 1, N1[3]
-//     ));
-//     for(list_head_p lh = n1->lh; lh; lh = lh->lh)
-//     for(int side=0; side<2; side++)
-//     for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
-//         assert(V_STR(lb->n)[side] == n1);
+    TEST_NODE_DISCONNECT(1, ELSE);
+    TEST_NODE_DISCONNECT(2, THEN);
 
-//     printf("\n\t\t\t%s 3\t\t", __func__);
-//     node_p N2[] = {
-//         node_branch_create(&LAB(V, 1)),
-//         node_branch_create(&LAB(V, 1)),
-//         node_branch_create(&LAB(V, 2)),
-//         node_branch_create(&LAB(V, 2)),
-//     };
-//     n2 = node_amp_create(&(amp_t){0, 0});
-//     for(int i=0; i<4; i++)
-//         node_connect(N2[i], n2, i&1);
-//     node_merge(n1, n2);
-//     assert(list_head(n1->lh, 2,
-//         LAB(V, 1), 2, N2[0], N1[0], 3, N2[1], N1[1], N1[0],
-//         LAB(V, 2), 2, N2[2], N1[2], 2, N2[3], N1[3]
-//     ));
-//     for(list_head_p lh = n1->lh; lh; lh = lh->lh)
-//     for(int side=0; side<2; side++)
-//     for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
-//         assert(V_STR(lb->n)[side] == n1);
+    #undef TEST_NODE_DISCONNECT
 
-//     for(int i=0; i<4; i++)
-//     {
-//         free(N1[i]);
-//         free(N2[i]);
-//     }
-//     free(n1);
+    #define TEST_NODE_DISCONNECT(TAG, SIDE)                 \
+    {                                                       \
+        if(show) printf("\n\t\t%s %d\t\t", __func__, TAG);  \
+        node_p node_top = node_branch_create(LAB(V, 2));    \
+        node_p node_bot = node_branch_create(LAB(V, 1));    \
+        TEST_REVERT_OPEN                                    \
+        node_disconnect(node_top, SIDE);                    \
+        TEST_REVERT_CLOSE                                   \
+        free(node_top);                                     \
+        free(node_bot);                                     \
+    }
 
-//     assert(clu_mem_is_empty());
-// }
+    TEST_NODE_DISCONNECT(3, ELSE);
+    TEST_NODE_DISCONNECT(4, THEN);
 
+    #undef TEST_NODE_DISCONNECT
+
+    assert(clu_mem_is_empty());
+}
+
+void test_node_disconnect_both(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    node_p node_top = node_branch_create(LAB(V, 2));
+    node_p node_el = node_branch_create(LAB(V, 1));
+    node_p node_th = node_branch_create(LAB(V, 1));
+    node_connect_both(node_top, node_el, node_th);
+    node_disconnect_both(node_top);
+    assert(BRANCH(node_top)[ELSE] == NULL);
+    assert(BRANCH(node_top)[THEN] == NULL);
+    assert(list_head_immed(node_el->lh, 0));
+    assert(list_head_immed(node_th->lh, 0));
+    free(node_top);
+    free(node_el);
+    free(node_th);
+
+    assert(clu_mem_is_empty());
+}
+
+
+
+void test_node_merge(bool show)
+{
+    printf("\n\t%s\t\t", __func__);
+
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    node_p node_v1_1 = node_branch_create(LAB(V, 1));
+    node_p node_v1_2 = node_branch_create(LAB(V, 1));
+    node_p node_v2_1 = node_branch_create(LAB(V, 2));
+    node_p node_v2_2 = node_branch_create(LAB(V, 2));
+    node_p node_v3_1 = node_branch_create(LAB(V, 3));
+    node_p node_v3_2 = node_branch_create(LAB(V, 3));
+    node_connect(node_v3_1, node_v2_1, ELSE);
+    node_connect(node_v3_2, node_v2_2, THEN);
+    node_connect_both(node_v2_1, node_v1_1, node_v1_2);
+    node_connect_both(node_v2_2, node_v1_1, node_v1_2);
+    node_merge(node_v2_1, node_v2_2);
+    assert(BRANCH(node_v3_1)[ELSE] == node_v2_1);
+    assert(BRANCH(node_v3_2)[THEN] == node_v2_1);
+    assert(list_head_immed(node_v2_1->lh, 1,
+        LAB(V, 3),  1, node_v3_1, 1, node_v3_2
+    ));
+    assert(list_head_immed(node_v1_1->lh, 1,
+        LAB(V, 2),  1, node_v2_1, 0
+    ));
+    assert(list_head_immed(node_v1_2->lh, 1,
+        LAB(V, 2),  0, 1, node_v2_1
+    ));
+    free(node_v1_1);
+    free(node_v1_2);
+    free(node_v2_1);
+    free(node_v3_1);
+    free(node_v3_2);
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    node_p node_amp = node_amp_create(AMPI(1, 2));
+    node_p node_v2 = node_branch_create(LAB(V, 2));
+    node_v3_1 = node_branch_create(LAB(V, 3));
+    node_v3_2 = node_branch_create(LAB(V, 3));
+    node_connect(node_v3_1, node_v2, ELSE);
+    node_connect(node_v3_2, node_v2, THEN);
+    node_connect_both(node_v2, node_amp, node_amp);
+    node_merge(node_amp, node_v2);
+    assert(BRANCH(node_v3_1)[ELSE] == node_amp);
+    assert(BRANCH(node_v3_2)[THEN] == node_amp);
+    assert(list_head_immed(node_amp->lh, 1,
+        LAB(V, 3),  1, node_v3_1, 1, node_v3_2
+    ));
+    free(node_amp);
+    free(node_v3_1);
+    free(node_v3_2);
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    node_p node_amp_1 = node_amp_create(AMPI(1, 2));
+    node_p node_amp_2 = node_amp_create(AMPI(1, 2));
+    node_v2 = node_branch_create(LAB(V, 2));
+    node_connect_both(node_v2, node_amp_1, node_amp_2);
+    node_merge(node_amp_1, node_amp_2);
+    assert(BRANCH(node_amp_2)[ELSE] == node_amp_1);
+    assert(BRANCH(node_amp_2)[THEN] == node_amp_1);
+    assert(list_head_immed(node_amp_1->lh, 1,
+        LAB(V, 3),  1, node_v2, 1, node_v2
+    ));
+    free(node_amp);
+    free(node_v2);
+
+    assert(clu_mem_is_empty());
+}
 
 
 
@@ -291,13 +341,13 @@ void test_node()
     test_node_eq_el(show);
     test_node_eq_th(show);
 
-    // test_node_connect_one();
-    // test_node_connect_both();
+    test_node_connect(show);
+    test_node_connect_both(show);
 
-    // test_node_disconnect_one();
-    // test_node_disconnect_both();
+    test_node_disconnect(show);
+    test_node_disconnect_both(show);
 
-    // test_node_merge();
+    test_node_merge(show);
 
     assert(clu_mem_is_empty());
 }

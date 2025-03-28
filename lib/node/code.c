@@ -122,6 +122,9 @@ void node_connect(node_p node_top, node_p node_bot, int side)
     CLU_HANDLER_IS_SAFE(node_top);
     CLU_HANDLER_IS_SAFE(node_bot);
 
+    assert(node_top);
+    assert(node_bot);
+
     assert(BRANCH(node_top)[side] == NULL);
     BRANCH(node_top)[side] = node_bot;
     node_bot->lh = list_head_insert(node_bot->lh, node_top, side);
@@ -140,6 +143,8 @@ void node_connect_both(node_p node_top, node_p node_el, node_p node_th)
 void node_disconnect(node_p node, int side)
 {
     CLU_HANDLER_IS_SAFE(node);
+
+    assert(node);
 
     node_p node_bot = BRANCH(node)[side];
     assert(node_bot);
