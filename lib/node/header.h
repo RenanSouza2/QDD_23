@@ -15,7 +15,6 @@ PLACEHOLDER(branch);
 
 node_p node_branch_create(label_t lab);
 node_p node_amp_create(amp_t amp);
-void node_free(node_p n);
 
 bool node_eq_amp(node_p n1, node_p n2);
 bool node_eq_el(node_p n1, node_p n2);

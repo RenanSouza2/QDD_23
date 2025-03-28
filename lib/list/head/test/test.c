@@ -204,7 +204,12 @@ void test_list_head_insert(bool show)
     }
 
 
-    node_p node[] = {node_amp_create(AMPI(1, 2))};
+    node_p node[] = {
+        node_amp_create(AMPI(1, 2)),
+        node_amp_create(AMPI(1, 3)),
+
+        node_branch_create(LAB(V, 1)),
+    };
 
     TEST_LIST_HEAD_INSERT(1, node[0], ELSE,
         0,
@@ -214,8 +219,37 @@ void test_list_head_insert(bool show)
         0,
         1,  LAB(0, 0), 0, 1, node[0]
     );
+    TEST_LIST_HEAD_INSERT(3, node[1], ELSE,
+        1,  LAB(0, 0), 0, 1, node[0],
+        1,  LAB(0, 0), 1, node[1], 1, node[0]
+    );
+    TEST_LIST_HEAD_INSERT(4, node[1], THEN,
+        1,  LAB(0, 0), 0, 1, node[0],
+        1,  LAB(0, 0), 0, 2, node[1], node[0]
+    );
+    TEST_LIST_HEAD_INSERT(5, node[1], THEN,
+        1,  LAB(0, 0), 1, node[0], 0,
+        1,  LAB(0, 0), 1, node[0], 1, node[1]
+    );
+    TEST_LIST_HEAD_INSERT(6, node[1], ELSE,
+        1,  LAB(0, 0), 1, node[0], 0,
+        1,  LAB(0, 0), 2, node[1], node[0], 0
+    );
+    TEST_LIST_HEAD_INSERT(7, node[0], ELSE,
+        1,  LAB(V, 1), 1, node[2], 0,
+        2,  LAB(0, 0), 1, node[0], 0,
+            LAB(V, 1), 1, node[2], 0
+    );
+    TEST_LIST_HEAD_INSERT(8, node[2], ELSE,
+        1,  LAB(0, 0), 1, node[0], 0,
+        2,  LAB(0, 0), 1, node[0], 0,
+            LAB(V, 1), 1, node[2], 0
+    );
 
     #undef TEST_LIST_HEAD_OCCUPIED
+
+    for(int i=0; i<3; i++)
+        free(node[i]);
 
     assert(clu_mem_is_empty());
 }

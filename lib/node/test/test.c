@@ -89,7 +89,7 @@ void test_branch_eq()
         node_connect(n2, n0, side);
         assert(fn[side](n1, n2) == true);
     }
-    node_free(n0);
+    free(n0);
     free(n1);
     free(n2);
 
@@ -127,8 +127,8 @@ void test_node_connect_one()
         LAB(V, 2), 0, 1, n
     ));
 
-    node_free(n_el);
-    node_free(n_th);
+    free(n_el);
+    free(n_th);
     free(n);
     assert(clu_mem_is_empty());
 }
@@ -151,8 +151,8 @@ void test_node_connect_both()
         LAB(V, 2), 0, 1, n
     ));
 
-    node_free(n_el);
-    node_free(n_th);
+    free(n_el);
+    free(n_th);
     free(n);
     assert(clu_mem_is_empty());
 }
@@ -281,7 +281,7 @@ void test_node_merge()
         free(N1[i]);
         free(N2[i]);
     }
-    node_free(n1);
+    free(n1);
 
     assert(clu_mem_is_empty());
 }

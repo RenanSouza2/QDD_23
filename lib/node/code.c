@@ -90,14 +90,6 @@ node_p node_amp_create(amp_t amp)
     return ND(na);
 }
 
-void node_free(node_p node)
-{
-    CLU_HANDLER_IS_SAFE(node);
-
-    list_head_free(node->lh);
-    free(node);
-}
-
 
 
 bool node_eq_amp(node_p node_1, node_p node_2)
