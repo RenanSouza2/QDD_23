@@ -410,7 +410,7 @@ void test_list_head()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_list_head_create_body(show);
     test_list_head_create(show);
