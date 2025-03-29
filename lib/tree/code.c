@@ -1,17 +1,19 @@
 #include <stdlib.h>
 
 #include "debug.h"
+#include "../../mods/clu/header.h"
+
+#include "../label/header.h"
 #include "../node/struct.h"
+#include "../macros/assert.h"
 #include "../list/body/struct.h"
 #include "../list/head/struct.h"
-
-#include "../../mods/clu/header.h"
-#include "../macros/assert.h"
 
 
 
 #ifdef DEBUG
 
+#include "../amp/header.h"
 #include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
@@ -107,7 +109,7 @@ void tree_free(node_p node)
 
 list_head_p tree_enlist_rec(list_head_p lh, node_p node_0, node_p node)
 {
-    if(node_0 && (list_head_first(node->lh) != node_0))
+    if(list_head_first(node->lh) != node_0)
         return lh;
 
     lh = list_head_insert(lh, node, ELSE);

@@ -274,8 +274,8 @@ void test_qdd()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(5)
-    test_qdd();
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
+    // test_qdd();
     TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;

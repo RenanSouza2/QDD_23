@@ -1,10 +1,13 @@
 #include <stdlib.h>
 
 #include "debug.h"
+#include "../../mods/clu/header.h"
+
+#include "../amp/header.h"
+#include "../label/header.h"
+#include "../macros/assert.h"
 #include "../list/head/struct.h"
 #include "../list/body/struct.h"
-#include "../macros/assert.h"
-#include "../../mods/clu/header.h"
 
 
 

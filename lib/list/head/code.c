@@ -2,12 +2,13 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-#include "../../macros/assert.h"
+#include "debug.h"
 #include "../../../mods/clu/header.h"
 
-#include "debug.h"
 #include "../body/struct.h"
 #include "../../node/struct.h"
+#include "../../label/header.h"
+#include "../../macros/assert.h"
 
 
 

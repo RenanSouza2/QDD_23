@@ -1,4 +1,4 @@
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdbool.h>
 
 #include "../debug.h"
@@ -39,7 +39,7 @@ void test_amp()
 int main()
 {
     setbuf(stdout, NULL);
-    TEST_TIMEOUT_OPEN(5)
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_amp();
     TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");

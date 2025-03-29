@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 #include "../debug.h"
-#include "../../label/struct.h"
 #include "../../amp/struct.h"
+#include "../../label/debug.h"
 #include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
 
@@ -92,6 +92,7 @@ void test_tree()
 
     assert(clu_mem_is_empty());
 }
+
 
 
 int main()
