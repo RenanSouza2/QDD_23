@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdarg.h>
-
 #include "../debug.h"
-#include "../../head/debug.h"
-#include "../../../amp/debug.h"
 #include "../../../node/debug.h"
 #include "../../../macros/test.h"
 #include "../../../../mods/clu/header.h"

@@ -1,6 +1,4 @@
 #include <stdlib.h>
-#include <stdbool.h>
-#include <stdarg.h>
 
 #include "debug.h"
 #include "../../../mods/clu/header.h"
@@ -15,8 +13,8 @@
 #ifdef DEBUG
 
 #include "../body/debug.h"
-#include "../../utils/debug.h"
 #include "../../label/debug.h"
+#include "../../utils/debug.h"
 
 
 

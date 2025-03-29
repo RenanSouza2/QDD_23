@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
 #include "../debug.h"
 #include "../../body/debug.h"
 #include "../../../amp/debug.h"

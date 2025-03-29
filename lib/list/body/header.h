@@ -1,9 +1,6 @@
 #ifndef __LIST_BODY_H__
 #define __LIST_BODY_H__
 
-#include <stdbool.h>
-
-#include "../../macros/struct.h"
 #include "../../node/header.h"
 
 PLACEHOLDER(list_body);

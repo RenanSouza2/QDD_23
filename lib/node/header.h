@@ -3,9 +3,9 @@
 
 #include <stdbool.h>
 
-#include "../macros/struct.h"
-#include "../label/struct.h"
 #include "../amp/struct.h"
+#include "../label/struct.h"
+#include "../macros/struct.h"
 
 PLACEHOLDER(node);
 PLACEHOLDER(branch);

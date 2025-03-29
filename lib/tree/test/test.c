@@ -1,7 +1,4 @@
-#include <stdio.h>
-
 #include "../debug.h"
-#include "../../amp/struct.h"
 #include "../../label/debug.h"
 #include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"

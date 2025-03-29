@@ -13,9 +13,9 @@
 
 #ifdef DEBUG
 
-#include "../utils/debug.h"
-#include "../label/debug.h"
 #include "../amp/debug.h"
+#include "../label/debug.h"
+#include "../utils/debug.h"
 
 
 

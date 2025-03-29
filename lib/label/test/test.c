@@ -1,6 +1,4 @@
 #include "../debug.h"
-#include "../../utils/header.h"
-#include "../../macros/assert.h"
 #include "../../macros/test.h"
 #include "../../../mods/clu/header.h"
 
@@ -8,7 +6,7 @@
 
 void test_label_compare(bool show)
 {
-    printf("\n\ttest label compare\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     #define TEST_LABEL_COMPARE(TAG, CL1, LV1, EXPR, CL2, LV2)   \
     {                                                           \
@@ -38,7 +36,7 @@ void test_label_compare(bool show)
 
 void test_label_is_amp(bool show)
 {
-    printf("\n\ttest label compare\t\t");
+    printf("\n\t%s\t\t", __func__);
 
     #define TEST_LABEL_IS_AMP(TAG, CL, LV, RES)             \
     {                                                       \

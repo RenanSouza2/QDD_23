@@ -2,14 +2,8 @@
 
 #ifdef DEBUG
 
-#include <stdbool.h>
-
 #include "../utils/header.h"
 #include "../macros/assert.h"
-
-#define R 2
-#define V 1
-#define C 0
 
 
 

@@ -4,8 +4,6 @@
 #include "header.h"
 #include "struct.h"
 
-#include <stdbool.h>
-
 #ifdef DEBUG
 
 #define LAB(CL, LV) (label_t){CL, LV}

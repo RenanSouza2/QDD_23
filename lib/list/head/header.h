@@ -1,10 +1,7 @@
 #ifndef __LIST_HEAD_H__
 #define __LIST_HEAD_H__
 
-#include "../../macros/struct.h"
-
 #include "../body/header.h"
-#include "../../node/header.h"
 
 PLACEHOLDER(list_head);
 

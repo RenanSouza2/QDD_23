@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "debug.h"
-#include "../../node/struct.h"
 #include "../../macros/assert.h"
 #include "../../../mods/clu/header.h"
 
