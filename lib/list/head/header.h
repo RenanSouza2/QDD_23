@@ -1,6 +1,8 @@
 #ifndef __LIST_HEAD_H__
 #define __LIST_HEAD_H__
 
+#include "struct.h"
+
 #include "../body/header.h"
 
 PLACEHOLDER(list_head);

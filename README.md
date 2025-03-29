@@ -23,8 +23,8 @@ The lib folder has a makefile that compiles every folder inside it and links it,
 
 Inside each lib there are some files:
 
-- header.h: export functions with opaque types
-- struct.h: where structs for this lib should be defined and also functions that don't treat these structs as opaque
+- header.h: export functions
+- struct.h: where structs for this lib should be defined
 - debug.h: export internal functions and also functions that only exist in debug mode
 - code.c: where code exists
 - test/test.c where tests are implemented for this lib

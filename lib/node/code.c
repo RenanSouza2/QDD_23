@@ -6,7 +6,7 @@
 #include "../amp/header.h"
 #include "../label/header.h"
 #include "../macros/assert.h"
-#include "../list/head/struct.h"
+#include "../list/head/header.h"
 #include "../list/body/struct.h"
 
 

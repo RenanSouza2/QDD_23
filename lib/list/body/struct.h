@@ -1,7 +1,7 @@
 #ifndef __LIST_BODY_STRUCT_H__
 #define __LIST_BODY_STRUCT_H__
 
-#include "../../node/header.h"
+PLACEHOLDER(node);
 
 STRUCT(list_body)
 {

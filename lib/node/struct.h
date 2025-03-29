@@ -1,7 +1,10 @@
 #ifndef __ND_STRUCT_H__
 #define __ND_STRUCT_H__
 
-#include "../list/head/header.h"
+#include "../amp/struct.h"
+#include "../label/struct.h"
+
+PLACEHOLDER(list_head);
 
 STRUCT(node)
 {

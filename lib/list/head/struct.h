@@ -1,7 +1,9 @@
 #ifndef __LIST_HEAD_STRUCT_H__
 #define __LIST_HEAD_STRUCT_H__
 
-#include "../body/header.h"
+#include "../../label/struct.h"
+
+PLACEHOLDER(list_body);
 
 STRUCT(list_head)
 {
