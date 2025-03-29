@@ -1,91 +1,62 @@
 #include "../debug.h"
+#include "../../amp/debug.h"
 #include "../../label/debug.h"
 #include "../../list/head/debug.h"
 #include "../../../mods/clu/header.h"
 
 
 
-void test_tree_enlist()
+void test_tree_enlist(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-    node_p n  = node_branch_create(&LAB(V, 1));
-    node_p n1 = node_amp_create(&(amp_t){0, 0});
-    node_p n2 = node_amp_create(&(amp_t){0, 1});
-    node_connect_both(n, n1, n2);
-
-    list_head_p lh = tree_enlist(n);
-    assert(list_head(lh, 2,
-        LAB(0, 0), 2, n2, n1, 0,
-        LAB(V, 1), 1, n, 0
+    if(show) printf("\n\t\t%s 1\t\t", __func__);
+    node_p node_amp = node_amp_create(AMPI(1, 2));
+    list_head_p lh = tree_enlist(node_amp);
+    assert(list_head_immed(lh, 1,
+        LAB(0, 0), 1, node_amp, 0
     ));
-    tree_free(n);
-    list_head_free(lh);
+    tree_free(node_amp);
+
+    if(show) printf("\n\t\t%s 2\t\t", __func__);
+    node_p node_amp_1 = node_amp_create(AMPI(1, 2));
+    node_p node_amp_2 = node_amp_create(AMPI(1, 3));
+    node_p node_v1 = node_branch_create(LAB(V, 1));
+    node_connect_both(node_v1, node_amp_1, node_amp_2);
+    lh = tree_enlist(node_v1);
+    assert(list_head_immed(lh, 2,
+        LAB(0, 0), 2, node_amp_2, node_amp_1, 0,
+        LAB(V, 1), 1, node_v1, 0
+    ));
+    tree_free(node_v1);
+
+    if(show) printf("\n\t\t%s 3\t\t", __func__);
+    node_amp_1 = node_amp_create(AMPI(1, 2));
+    node_amp_2 = node_amp_create(AMPI(1, 3));
+    node_v1 = node_branch_create(LAB(V, 1));
+    node_p node_v2 = node_branch_create(LAB(V, 2));
+    node_connect_both(node_v2, node_amp_1, node_v1);
+    node_connect_both(node_v1, node_amp_1, node_amp_2);
+    lh = tree_enlist(node_v1);
+    assert(list_head_immed(lh, 3,
+        LAB(0, 0), 2, node_amp_2, node_amp_1, 0,
+        LAB(V, 1), 1, node_v1, 0,
+        LAB(V, 2), 1, node_v2, 0
+    ));
+    tree_free(node_v1);
 
     assert(clu_mem_is_empty());
 }
 
-void test_tree_assert()
-{
-    printf("\n\t%s\t\t", __func__);
 
-    printf("\n\t\t%s 1\t\t", __func__);
-    node_p na, n1, n2;
-    n1 = node_amp_create(&AMP_IMMED(0, 0));
-    n2 = node_amp_create(&AMP_IMMED(0, 1));
-    na = node_branch_create(&LAB(V, 1));
-    node_connect_both(na, n1, n2);
-
-    node_p nb;
-    n1 = node_amp_create(&AMP_IMMED(0, 0));
-    n2 = node_amp_create(&AMP_IMMED(0, 1));
-    nb = node_branch_create(&LAB(V, 1));
-    node_connect_both(nb, n1, n2);
-
-    assert(tree(na, nb));
-    tree_free(na);
-    tree_free(nb);
-
-    printf("\n\t\t%s 2\t\t", __func__);
-    node_p n3;
-    n1 = node_amp_create(&AMP_IMMED(0, 0));
-    n2 = node_amp_create(&AMP_IMMED(0, 1));
-    n3 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n3, n1, n2);
-
-    node_p n4;
-    n2 = node_amp_create(&AMP_IMMED(0, 2));
-    n4 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n4, n1, n2);
-
-    na = node_branch_create(&LAB(V, 2));
-    node_connect_both(na, n3, n4);
-
-    n1 = node_amp_create(&AMP_IMMED(0, 0));
-    n2 = node_amp_create(&AMP_IMMED(0, 2));
-    n4 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n4, n1, n2);
-
-    n2 = node_amp_create(&AMP_IMMED(0, 1));
-    n3 = node_branch_create(&LAB(V, 1));
-    node_connect_both(n3, n1, n2);
-
-    nb = node_branch_create(&LAB(V, 2));
-    node_connect_both(nb, n3, n4);
-
-    assert(tree(na, nb));
-    tree_free(na);
-    tree_free(nb);
-
-    assert(clu_mem_is_empty());
-}
 
 void test_tree()
 {
     printf("\n%s\t\t", __func__);
 
-    test_tree_enlist();
-    test_tree_assert();
+    bool show = true;
+
+    test_tree_enlist(show);
 
     assert(clu_mem_is_empty());
 }

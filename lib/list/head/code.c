@@ -166,13 +166,13 @@ bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 
     if(lh_1)
     {
-        printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST LONGER");
+        printf("\n\n\tLIST HEAD ASSERTION ERROR\t| LIST LONGER");
         return false;
     }
 
     if(lh_2)
     {
-        printf("\n\tLIST HEAD ASSERTION ERROR\t| LIST shorter");
+        printf("\n\n\tLIST HEAD ASSERTION ERROR\t| LIST SHORTER");
         return false;
     }
 
@@ -262,7 +262,8 @@ node_p list_head_first(list_head_p lh)
 {
     CLU_HANDLER_IS_SAFE(lh);
 
-    assert(lh);
+    if(lh == NULL)
+        return NULL;
 
     if(lh->lb[ELSE])
         return lh->lb[ELSE]->node;

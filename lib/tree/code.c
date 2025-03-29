@@ -13,12 +13,80 @@
 
 #ifdef DEBUG
 
+#include <stdarg.h>
+#include <memory.h>
+
 #include "../amp/header.h"
 #include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
 #include "../list/head/debug.h"
 
+#define IDX(LABEL) LABEL.lv][LABEL.cl
+
+node_p tree_create_variadic_amp(node_p *node[][3], va_list *args)
+{
+    int n = va_arg(*args, int);
+    assert(n);
+
+    label_t lab = va_arg(*args, label_t);
+    node_p *node_lab = node[lab.cl][lab.lv] = malloc(n * sizeof(node_p));
+    assert(node);
+
+    for(int i=0; i<n; i++)
+    {
+        amp_t amp = va_arg(*args, amp_t);
+        node_lab[i] = node_amp_create(amp);
+    }
+    return node_lab[0];
+}
+
+node_p tree_create_variadic_branch(node_p *node[][3], va_list *args)
+{
+    int n = va_arg(*args, int);
+    assert(n);
+
+    label_t lab = va_arg(*args, label_t);
+    node_p *node_lab = node[lab.cl][lab.lv] = malloc(n * sizeof(node_p));
+    assert(node);
+
+    for(int i=0; i<n; i++)
+    {
+        node_p node_top = node_lab[i] = node_branch_create(lab);
+        label_t lab_el = va_arg(*args, label_t);
+        int id_el = va_arg(*args, int);
+        label_t lab_th = va_arg(*args, label_t);
+        int id_th = va_arg(*args, int);
+        node_connect_both(
+            node_top,
+            node[IDX(lab_el)][id_el],
+            node[IDX(lab_th)][id_th]
+        );
+    }
+    return node_lab[0];
+}
+
+node_p tree_create_immed(int max, ...)
+{
+    va_list args;
+    va_start(args, max);
+
+    max++;
+    node_p *node[max][3];
+    memset(node, 0, sizeof(node));
+    node_p node_0 = tree_create_variadic_amp(node, &args);
+
+    int n = va_arg(args, int);
+    for(int i=0; i<n; i++)
+        node_0 = tree_create_variadic_branch(node, &args);
+
+    for(int i=0; i<max; i++)
+    for(int j=0; j<3; j++)
+        if(node[i][j])
+            free(node[i][j]);
+
+    return node_0;
+}
 
 
 void tree_display(node_p node)

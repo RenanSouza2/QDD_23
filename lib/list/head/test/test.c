@@ -134,21 +134,17 @@ void test_list_head_first(bool show)
         list_head_free(lh);                                     \
     }
 
-    TEST_LIST_HEAD_FIRST(1, ND(1), 2,
+    TEST_LIST_HEAD_FIRST(1, NULL, 0);
+    TEST_LIST_HEAD_FIRST(2, ND(1), 2,
         LAB(V, 1), 1, ND(1), 1, ND(2),
         LAB(V, 2), 1, ND(3), 1, ND(4)
     );
-    TEST_LIST_HEAD_FIRST(2, ND(2), 2,
+    TEST_LIST_HEAD_FIRST(3, ND(2), 2,
         LAB(V, 1), 0, 1, ND(2),
         LAB(V, 2), 1, ND(3), 1, ND(4)
     )
 
     #undef TEST_LIST_HEAD_FIRST
-
-    if(show) printf("\n\t\t%s 3\t\t", __func__);
-    TEST_REVERT_OPEN
-    list_head_first(NULL);
-    TEST_REVERT_CLOSE
 
     assert(clu_mem_is_empty());
 }
