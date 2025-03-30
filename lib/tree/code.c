@@ -196,11 +196,13 @@ void list_body_reduce_useless(node_p node_0, list_body_p lb)
     if(lb == NULL)
         return;
 
-    for(; lb->next; lb = list_body_pop(lb))
+    for(; lb->next; )
     {
         node_p node = lb->next->node;
         if(BRANCH(node)[ELSE] == BRANCH(node)[THEN])
             node_merge(node_0, node);
+        else
+            lb = lb->next;
     }
 }
 
@@ -216,19 +218,20 @@ bool list_head_reduce_useless(node_p node_0, list_head_p *lh_root)
     list_body_p lb;
     while(
         (lh = *lh_root) &&
-        (lb = lh->lb[ELSE]) &&
-        (
-            BRANCH(lb->node)[ELSE] ==
-            BRANCH(lb->node)[THEN]
-        )
+        (lb = lh->lb[ELSE])
     )
-        node_merge(node_0, lb->node);
+    {
+        node_p node = lb->node;
+        if(BRANCH(node)[ELSE] != BRANCH(node)[THEN])
+            break;
 
-    lh = *lh_root;
+        node_merge(node_0, node);
+    }
+
     if(lh == NULL)
         return false;
 
-    list_body_reduce_useless(node_0, lh->lb[ELSE]);
+    list_body_reduce_useless(node_0, lb);
     return true;
 }
 
