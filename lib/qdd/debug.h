@@ -5,6 +5,13 @@
 #include "../amp/struct.h"
 
 #ifdef DEBUG
+
+#include <stdbool.h>
+
+qdd_p qdd_create_immed(int qbits, ...);
+
+bool qdd(qdd_p q_1, qdd_p q_2);
+
 #endif
 
 qdd_p qdd_create(node_p n, list_body_p lb, int qbits);

@@ -261,20 +261,38 @@ list_head_p node_reduce(node_p node_0)
     return lh_res;
 }
 
+node_p list_head_pop_node(list_head_p *lh_root)
+{
+    CLU_HANDLER_VALIDATE(*lh_root);
+
+    list_head_p lh = *lh_root;
+    if(lh_root == NULL)
+        return NULL;
+
+    list_body_p lb = lh->lb[ELSE];
+    node_p node = lb->node;
+
+    lh->lb[ELSE] = lb = list_body_pop(lb);
+    if(lb == NULL)
+        *lh_root = list_head_pop(lh);
+
+    return node;
+}
+
 node_p tree_reduce(list_body_p lb)
 {
     lb = list_body_reduce_repeated(lb, node_eq_amp, true);
+    list_head_p lh = list_head_create_body(lb, ELSE, NULL);
     for(
-        list_head_p lh = list_head_create_body(lb, ELSE, NULL);
-        lh;
-        lh = list_head_remove(lh, lh->lb[ELSE]->node, ELSE)
+        node_p node = list_head_pop_node(&lh);
+        node;
+        list_head_pop_node(&lh)
     ) {
-        node_p node = lh->lb[ELSE]->node;
         list_head_p lh_aux = node_reduce(node);
         if(node->lh == NULL)
             return node;
 
-        lh = list_head_merge(lh,lh_aux);
+        lh = list_head_merge(lh, lh_aux);
     }
 
     return NULL;
