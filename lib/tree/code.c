@@ -261,8 +261,6 @@ list_head_p node_reduce(node_p node_0)
     return lh_res;
 }
 
-
-
 node_p tree_reduce(list_body_p lb)
 {
     lb = list_body_reduce_repeated(lb, node_eq_amp, true);

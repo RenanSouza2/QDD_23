@@ -376,6 +376,30 @@ void test_list_head_reduce_useless(bool show)
     }
     TEST_CASE_CLOSE
 
+    TEST_CASE_OPEN(8);
+    {
+        node_p node_amp[2] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1[2] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1))
+        };
+        node_connect_both(node_v1[1], node_amp[0], node_amp[1]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[1]);
+        bool res = list_head_reduce_useless(node_amp[0], &node_amp[0]->lh);
+        assert(res == true);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 2, node_v1[0], node_v1[1], 0
+        ));
+        free(node_amp[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1[0]);
+        node_test_free(node_v1[1]);
+    }
+    TEST_CASE_CLOSE
+
     assert(clu_mem_is_empty());
 }
 
