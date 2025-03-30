@@ -7,8 +7,10 @@
 #include <signal.h>
 
 #include "./assert.h"
+#include "../../mods/clu/header.h"
 
 #define TEST_FN printf("\n\t%s\t\t", __func__)
+
 #define TEST_CASE_OPEN(TAG)                                             \
     if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG);                 \
     {                                                                   \
@@ -26,11 +28,15 @@
         }                                                               \
         else                                                            \
         {
-        
-#define TEST_CASE_CLOSE         \
+
+#define TEST_DEFAULT_CLOSE      \
             exit(EXIT_SUCCESS); \
         }                       \
-    }    
+    }
+    
+#define TEST_CASE_CLOSE             \
+        assert(clu_mem_is_empty()); \
+    TEST_DEFAULT_CLOSE
 
 #define TEST_REVERT_OPEN                                        \
     {                                                           \
@@ -52,10 +58,7 @@
                 exit(EXIT_SUCCESS);                             \
             }
 
-#define TEST_REVERT_CLOSE       \
-            exit(EXIT_SUCCESS); \
-        }                       \
-    }
+#define TEST_REVERT_CLOSE TEST_DEFAULT_CLOSE
 
 #define TEST_TIMEOUT_DEFAULT 5
 
@@ -92,9 +95,6 @@
         {
 
 
-#define TEST_TIMEOUT_CLOSE                          \
-            exit(EXIT_SUCCESS);                     \
-        }                                           \
-    }
+#define TEST_TIMEOUT_CLOSE TEST_DEFAULT_CLOSE
 
 #endif
