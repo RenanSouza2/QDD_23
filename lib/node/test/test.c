@@ -328,7 +328,7 @@ void test_node()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_node_create_branch(show);
     test_node_create_amp(show);

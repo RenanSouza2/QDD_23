@@ -33,7 +33,7 @@
             exit(EXIT_SUCCESS); \
         }                       \
     }
-    
+
 #define TEST_CASE_CLOSE             \
         assert(clu_mem_is_empty()); \
     TEST_DEFAULT_CLOSE

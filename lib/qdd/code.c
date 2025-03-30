@@ -81,5 +81,5 @@ void qdd_reduce(qdd_p q)
     CLU_HANDLER_VALIDATE(q);
 
     node_p node = tree_reduce(q->lb);
-    q->node = node ? node : q->node; 
+    q->node = node ? node : q->node;
 }

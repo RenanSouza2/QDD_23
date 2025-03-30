@@ -13,11 +13,10 @@
 
 #ifdef DEBUG
 
-#include "../amp/header.h"
-#include "../utils/header.h"
-#include "../node/debug.h"
+#include "../amp/debug.h"
 #include "../label/debug.h"
 #include "../list/head/debug.h"
+#include "../utils/debug.h"
 
 
 
@@ -26,11 +25,12 @@ void tree_display(node_p node)
     CLU_HANDLER_VALIDATE(node);
 
     list_head_p lh = tree_enlist(node);
-    lh = list_head_invert(lh);
     list_head_display_full(lh);
 }
 
-bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
+
+
+bool tree_rec(node_p node, node_p node_1, node_p node_2)
 {
     CLU_HANDLER_VALIDATE(node);
     CLU_HANDLER_VALIDATE(node_1);
@@ -38,37 +38,38 @@ bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
 
     if(node_1 == NULL)
     {
-        printf("\n\n\tTREE ASSERTION ERRO\t| NODE 1 IS NULL");
+        printf("\n\n\tTREE ASSERT ERRO\t| NODE 1 IS NULL");
         return false;
     }
 
     assert(node_2);
 
-    if(node && (list_head_first(node_1->lh) != node))
-        return true;
-
-    if(!label(node_1->lab, node_2->lab))
+    if(list_head_first(node_1->lh) != node)
     {
-        PRINT("\n\tTREE ASSERTION ERROR\t| LABEL MISMATCH ");
-        return false;
-    }
-
-    if(label_is_amp(&node_2->lab))
-    {
-        if(!amp_eq(AMP(node_1), AMP(node_2)))
+        if(!label(node_1->lab, node_2->lab))
         {
-            PRINT("\n\tERROR TREE ASSSERT 2 | AMP MISMATCH");
+            PRINT("\n\tTREE ASSERT ERROR\t| LABEL MISMATCH ");
             return false;
         }
-        return true;
-    }
 
-    for(int side=0; side<2; side++)
-    {
-        if(!tree_str_rec(node_1, BRANCH(node_1)[side], BRANCH(node_2)[side]))
+        if(label_is_amp(&node_1->lab))
         {
-            PRINT("\n\tERROR TREE ASSSERT 3 | %s MISMATCH", side ? "THEN" : "ELSE");
-            return false;
+            if(!amplitude(AMP(node_1), AMP(node_2)))
+            {
+                PRINT("\n\tTREE ASSERT ERROR\t| AMP MISMATCH");
+                return false;
+            }
+
+            return true;
+        }
+
+        for(int side=0; side<2; side++)
+        {
+            if(!tree_rec(node_1, BRANCH(node_1)[side], BRANCH(node_2)[side]))
+            {
+                PRINT("\n\tTREE ASSERT ERROR\t| %s MISMATCH", side ? "THEN" : "ELSE");
+                return false;
+            }
         }
     }
 
@@ -77,7 +78,7 @@ bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
 
 bool tree(node_p n1, node_p n2)
 {
-    return tree_str_rec(NULL, n1, n2);
+    return tree_rec(NULL, n1, n2);
 }
 
 #endif
@@ -127,7 +128,6 @@ list_head_p tree_enlist(node_p n)
 
 
 
-
 bool list_body_reduce_repeated_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
 {
     CLU_HANDLER_VALIDATE(lb);
@@ -172,8 +172,25 @@ list_body_p list_body_reduce_repeated(list_body_p lb, node_eq_f fn, bool remove)
     return lb_res;
 }
 
+list_head_p list_head_reduce_repeated(list_head_p lh)
+{
+    CLU_HANDLER_VALIDATE(lh);
+
+    list_body_p lb;
+    lb = list_body_reduce_repeated(lh->lb[ELSE], node_eq_th, false);
+    list_head_p lh_res_el = list_head_create_body(lb, ELSE, NULL);
+
+    lb = list_body_reduce_repeated(lh->lb[THEN], node_eq_el, false);
+    list_head_p lh_res_th = list_head_create_body(lb, ELSE, NULL);
+
+    return list_head_merge(lh_res_el, lh_res_th);
+}
+
+
+
 void list_body_reduce_useless(node_p node_0, list_body_p lb)
 {
+    CLU_HANDLER_VALIDATE(node_0);
     CLU_HANDLER_VALIDATE(lb);
 
     if(lb == NULL)
@@ -187,8 +204,11 @@ void list_body_reduce_useless(node_p node_0, list_body_p lb)
     }
 }
 
-list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
+bool list_head_reduce_useless(node_p node_0, list_head_p *lh_root)
 {
+    CLU_HANDLER_VALIDATE(node_0);
+    CLU_HANDLER_VALIDATE(*lh_root);
+
     if(*lh_root == NULL)
         return NULL;
 
@@ -206,34 +226,39 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 
     lh = *lh_root;
     if(lh == NULL)
-        return NULL;
+        return false;
 
     list_body_reduce_useless(node_0, lh->lb[ELSE]);
+    return true;
+}
 
-    list_body_p lb_aux = list_body_reduce_repeated(lh->lb[ELSE], node_eq_th, false);
-    list_head_p lh_res_el = list_head_create_body(lb_aux, ELSE, NULL);
 
-    lb_aux = list_body_reduce_repeated(lh->lb[THEN], node_eq_el, false);
-    list_head_p lh_res_th = list_head_create_body(lb_aux, ELSE, NULL);
 
-    return list_head_merge(lh_res_el, lh_res_th);
+list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
+{
+    CLU_HANDLER_VALIDATE(node_0);
+    CLU_HANDLER_VALIDATE(*lh_root);
+
+    if(list_head_reduce_useless(node_0, lh_root))
+        return NULL;
+
+    return list_head_reduce_repeated(*lh_root);
 }
 
 list_head_p node_reduce(node_p node_0)
 {
     CLU_HANDLER_VALIDATE(node_0);
 
-    list_head_p lh_res = list_head_reduce(node_0, &node_0->lh);
-    if(node_0->lh == NULL)
-        return lh_res;
-
-    for(list_head_p lh = node_0->lh; lh->next; lh = lh->next)
+    list_head_p lh_res = NULL;
+    for(list_head_p *lh_root = &node_0->lh; *lh_root; lh_root = &(*lh_root)->next)
     {
-        list_head_p lh_aux = list_head_reduce(node_0, &lh->next);
-        lh_res = list_head_merge(lh_res, lh_aux);
+        list_head_p lh = list_head_reduce(node_0, lh_root);
+        lh_res = list_head_merge(lh_res, lh);
     }
     return lh_res;
 }
+
+
 
 node_p tree_reduce(list_body_p lb)
 {

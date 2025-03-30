@@ -14,8 +14,6 @@ void list_head_create_vec_immed(list_head_p lh[], int n, ...);
 void list_head_display(list_head_p lh);
 void list_head_display_full(list_head_p lh);
 
-list_head_p list_head_invert(list_head_p lh);
-
 bool list_head(list_head_p lh_1, list_head_p lh_2);
 bool list_head_immed(list_head_p lh, int n, ...);
 

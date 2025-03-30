@@ -51,6 +51,18 @@ void node_display(node_p node)
         node_branch_display(node);
 }
 
+
+
+void node_test_free(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    if(node->lh)
+        list_head_free(node->lh);
+
+    free(node);
+}
+
 #endif
 
 

@@ -126,33 +126,12 @@ void test_list_body_reduce_repeated(bool show)
         ));
         assert(list_body_immed(lb_res, 0));
         free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        free(node_v1);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1);
     }
     TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(6);
-    {
-        node_p node_amp[] = {
-            node_amp_create(AMPI(1, 2)),
-            node_amp_create(AMPI(1, 3)),
-        };
-        node_p node_v1 = node_branch_create(LAB(V, 1));
-        node_connect_both(node_v1, node_amp[0], node_amp[1]);
-        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[THEN], node_eq_el, false);
-        assert(list_head_immed(node_amp[0]->lh, 1,
-            LAB(V, 1), 1, node_v1, 0
-        ));
-        assert(list_body_immed(lb_res, 0));
-        free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        free(node_v1);
-    }
-    TEST_CASE_CLOSE
-
-    TEST_CASE_OPEN(7);
     {
         node_p node_amp[] = {
             node_amp_create(AMPI(1, 2)),
@@ -170,13 +149,12 @@ void test_list_body_reduce_repeated(bool show)
         ));
         assert(list_body_immed(lb_res, 1, node_v1[0]));
         free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        free(node_v1[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1[0]);
     }
     TEST_CASE_CLOSE
 
-    TEST_CASE_OPEN(8);
+    TEST_CASE_OPEN(7);
     {
         node_p node_amp[] = {
             node_amp_create(AMPI(1, 2)),
@@ -195,15 +173,31 @@ void test_list_body_reduce_repeated(bool show)
         ));
         assert(list_body_immed(lb_res, 0));
         free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        list_head_free(node_amp[2]->lh);
-        free(node_amp[2]);
-        free(node_v1[0]);
-        free(node_v1[1]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_amp[2]);
+        node_test_free(node_v1[0]);
+        node_test_free(node_v1[1]);
     }
     TEST_CASE_CLOSE
-    
+
+    TEST_CASE_OPEN(8);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1 = node_branch_create(LAB(V, 1));
+        node_connect_both(node_v1, node_amp[0], node_amp[1]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[THEN], node_eq_el, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 1, node_v1, 0
+        ));
+        assert(list_body_immed(lb_res, 0));
+        free(node_amp[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1);
+    }
+    TEST_CASE_CLOSE
 
     TEST_CASE_OPEN(9);
     {
@@ -223,9 +217,8 @@ void test_list_body_reduce_repeated(bool show)
         ));
         assert(list_body_immed(lb_res, 1, node_v1[0]));
         free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        free(node_v1[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1[0]);
     }
     TEST_CASE_CLOSE
 
@@ -248,12 +241,138 @@ void test_list_body_reduce_repeated(bool show)
         ));
         assert(list_body_immed(lb_res, 0));
         free(node_amp[0]);
-        list_head_free(node_amp[1]->lh);
-        free(node_amp[1]);
-        list_head_free(node_amp[2]->lh);
-        free(node_amp[2]);
-        free(node_v1[0]);
-        free(node_v1[1]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_amp[2]);
+        node_test_free(node_v1[0]);
+        node_test_free(node_v1[1]);
+    }
+    TEST_CASE_CLOSE
+
+    assert(clu_mem_is_empty());
+}
+
+void test_list_head_reduce_useless(bool show)
+{
+    TEST_FN;
+
+    TEST_CASE_OPEN(1);
+    {
+        node_p node_amp = node_amp_create(AMPI(1, 2));
+        bool res = list_head_reduce_useless(node_amp, &node_amp->lh);
+        assert(res == false);
+        assert(list_head_immed(node_amp->lh, 0));
+        free(node_amp);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(2);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3))
+        };
+        node_p node_v1 = node_branch_create(LAB(V, 1));
+        node_connect_both(node_v1, node_amp[0], node_amp[1]);
+        bool res = list_head_reduce_useless(node_amp[0], &node_amp[0]->lh);
+        assert(res == true);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 1, node_v1, 0
+        ));
+        free(node_amp[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(3);
+    {
+        node_p node_amp = node_amp_create(AMPI(1, 2));
+        node_p node_v1 = node_branch_create(LAB(V, 1));
+        node_connect_both(node_v1, node_amp, node_amp);
+        bool res = list_head_reduce_useless(node_amp, &node_amp->lh);
+        assert(res == false);
+        assert(list_head_immed(node_amp->lh, 0));
+        free(node_amp);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(4);
+    {
+        node_p node_amp = node_amp_create(AMPI(1, 2));
+        node_p node_v1[2] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1))
+        };
+        node_connect_both(node_v1[1], node_amp, node_amp);
+        node_connect_both(node_v1[0], node_amp, node_amp);
+        bool res = list_head_reduce_useless(node_amp, &node_amp->lh);
+        assert(res == false);
+        assert(list_head_immed(node_amp->lh, 0));
+        free(node_amp);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(5);
+    {
+        node_p node_amp = node_amp_create(AMPI(1, 2));
+        node_p node_v1[2] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1))
+        };
+        node_p node_v2 = node_branch_create(LAB(V, 2));
+        node_connect_both(node_v1[1], node_amp, node_amp);
+        node_connect_both(node_v1[0], node_amp, node_amp);
+        node_connect_both(node_v2, node_v1[0], node_v1[1]);
+        bool res = list_head_reduce_useless(node_amp, &node_amp->lh);
+        assert(res == false);
+        assert(list_head_immed(node_amp->lh, 0));
+        free(node_amp);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(6);
+    {
+        node_p node_amp[2] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1[2] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1))
+        };
+        node_connect_both(node_v1[1], node_amp[1], node_amp[0]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[0]);
+        bool res = list_head_reduce_useless(node_amp[0], &node_amp[0]->lh);
+        assert(res == true);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 0, 1, node_v1[1]
+        ));
+        free(node_amp[0]);
+        node_test_free(node_amp[1]);
+        node_test_free(node_v1[1]);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(8);
+    {
+        node_p node_amp[2] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1[2] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1))
+        };
+        node_p node_v2 = node_branch_create(LAB(V, 2));
+        node_connect_both(node_v1[1], node_amp[0], node_amp[0]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[1]);
+        node_connect_both(node_v2, node_v1[0], node_v1[1]);
+        bool res = list_head_reduce_useless(node_amp[0], &node_amp[0]->lh);
+        assert(res == true);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 1, node_v1[0], 0
+        ));
+        free(node_amp);
     }
     TEST_CASE_CLOSE
 
@@ -271,6 +390,7 @@ void test_tree()
     test_tree_enlist(show);
 
     test_list_body_reduce_repeated(show);
+    test_list_head_reduce_useless(show);
 
     assert(clu_mem_is_empty());
 }

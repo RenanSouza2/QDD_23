@@ -116,24 +116,6 @@ void list_head_display_full(list_head_p lh)
 
 
 
-list_head_p list_head_invert(list_head_p lh)
-{
-    list_head_p lh_new = NULL;
-
-    while(lh)
-    {
-        list_head_p lh_aux = lh->next;
-
-        lh->next = lh_new;
-        lh_new = lh;
-
-        lh = lh_aux;
-    }
-    return lh_new;
-}
-
-
-
 bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 {
     CLU_HANDLER_VALIDATE(lh_1);
