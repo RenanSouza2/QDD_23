@@ -54,7 +54,7 @@ void test_tree_enlist(bool show)
 
 void test_list_body_reduce_repeated(bool show)
 {
-    TEST_FN;
+    TEST_FN
 
     TEST_CASE_OPEN(1);
     {
@@ -253,7 +253,7 @@ void test_list_body_reduce_repeated(bool show)
 
 void test_list_head_reduce_useless(bool show)
 {
-    TEST_FN;
+    TEST_FN
 
     TEST_CASE_OPEN(1);
     {

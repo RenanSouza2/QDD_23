@@ -86,10 +86,15 @@ void list_head_display(list_head_p lh)
         PRINT("\n--------");
         printf("\nLABEL: ");
         label_display(lh->lab);
-        printf("\nELSE");
-        list_body_display(lh->lb[ELSE]);
-        printf("\nTHEN");
-        list_body_display(lh->lb[THEN]);
+        for(int side=0; side<2; side++)
+        {
+            list_body_p lb = lh->lb[side];
+            if(lb == NULL)
+                continue;
+
+            printf("\n%s", side ? "THEN" : "ELSE");
+            list_body_display_short(lh->lb[side]);
+        }
     }
 }
 

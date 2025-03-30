@@ -13,6 +13,7 @@ list_body_p list_body_create_immed(int n, ...);
 void list_body_create_vec_immed(list_body_p lb[], int n, ...);
 
 void list_body_display(list_body_p lb);
+void list_body_display_short(list_body_p lb);
 void list_body_display_full(list_body_p lb);
 
 bool list_body_inner(list_body_p lb_1, list_body_p lb_2);

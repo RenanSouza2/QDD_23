@@ -12,7 +12,7 @@
 
 void test_qdd_create(bool show)
 {
-    TEST_FN;
+    TEST_FN
 
     TEST_CASE_OPEN(1)
     {
@@ -20,7 +20,7 @@ void test_qdd_create(bool show)
         CLU_HANDLER_REGISTER(LB(2));
 
         qdd_p q = qdd_create(ND(1), LB(2), 3);
-        assert(q->node  == ND(1));
+        assert(q->node == ND(1));
         assert(q->lb == LB(2));
         assert(q->qbits == 3);
         free(q);
@@ -35,7 +35,7 @@ void test_qdd_create(bool show)
 
 void test_qdd_create_immed(bool show)
 {
-    TEST_FN;
+    TEST_FN
 
     label_t amp, V1, V2;
     amp = LAB(0, 0);
@@ -159,24 +159,37 @@ void test_qdd_create_immed(bool show)
     assert(clu_mem_is_empty());
 }
 
-void test_qdd_vector()
+void test_qdd_arr(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
-    label_t amp, V1;
-    amp = LAB(0, 0);
-    V1 = LAB(V, 1);
+    label_t amp = LAB(0, 0);
+    label_t v1 = LAB(V, 1);
+    label_t v2 = LAB(V, 2);
 
-    qdd_p q0 = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
-    qdd_p q1 = qdd_create_immed(1,
-        2, AMPI(0, 0), AMPI(0, 1),
-        1,
-        V1, 1, amp, 0, amp, 1
+    #define TEST_QDD_ARR(TAG, QBITS, ARR, ...)          \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, ARR);       \
+            assert(qdd_immed(q, QBITS, __VA_ARGS__));   \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
+    }
+
+    TEST_QDD_ARR(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)}),
+        2,  AMPI(0, 0), AMPI(0, 1),
+        1,  v1, 1, amp, 0, amp, 1
     );
-    assert(tree(q0->node, q1->node));
+    TEST_QDD_ARR(2, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3)}),
+        4,  AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3),
+        2,  v1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
+            v2, 1, v1, 0, v1, 1
+    );
 
-    qdd_free(q0);
-    qdd_free(q1);
+    #undef TEST_QDD_ARR
 
     assert(clu_mem_is_empty());
 }
@@ -188,7 +201,7 @@ void test_qdd_reduce()
     printf("\n\t%s\t\t", __func__);
 
     printf("\n\t\t%s 1\t\t", __func__);
-    qdd_p q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
+    qdd_p q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
     qdd_reduce(q);
 
     label_t amp, V1, V2;
@@ -207,7 +220,7 @@ void test_qdd_reduce()
     qdd_free(q_exp);
 
     printf("\n\t\t%s 2\t\t", __func__);
-    q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
+    q = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 0}});
     qdd_reduce(q);
 
     q_exp = qdd_create_immed(1,
@@ -219,10 +232,10 @@ void test_qdd_reduce()
     qdd_free(q_exp);
 
     printf("\n\t\t%s 3\t\t", __func__);
-    q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
+    q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
     qdd_reduce(q);
 
-    q_exp = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
+    q_exp = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 1}});
     assert(tree(q->node, q_exp->node));
     qdd_free(q);
     qdd_free(q_exp);
@@ -238,7 +251,7 @@ void test_qdd()
 
     test_qdd_create(show);
     test_qdd_create_immed(show);
-    test_qdd_vector();
+    test_qdd_arr(show);
     test_qdd_reduce();
 
     assert(clu_mem_is_empty());

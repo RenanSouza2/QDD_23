@@ -15,43 +15,48 @@
 #include <memory.h>
 
 #include "../amp/debug.h"
+#include "../label/debug.h"
+#include "../list/body/debug.h"
+#include "../list/head/debug.h"
 #include "../node/debug.h"
 #include "../tree/debug.h"
 #include "../utils/debug.h"
 
 
 
-#define IDX(L) L.cl][L.lv
+#define IDX(L) L.lv][L.cl
 
-qdd_p qdd_create_immed(int qbits, ...)
+qdd_p qdd_create_variadic_qbits(int qbits, va_list args)
 {
-    node_p *N[3][qbits];
+    int max = qbits + 1;
+    node_p *N[max][3];
     memset(N, 0, sizeof(N));
 
-    va_list args;
-    va_start(args, qbits);
-
-    node_p n = NULL;
     int size = va_arg(args, int);
+    node_p *N_lab = N[0][0] = malloc(size * sizeof(node_p));
+    assert(N_lab);
 
-    N[0][0] = malloc(size * sizeof(node_p));
+    node_p node = NULL;
     for(int i=0; i<size; i++)
     {
         amp_t amp = va_arg(args, amp_t);
-        N[0][0][i] = n = node_amp_create(amp);
+        N_lab[i] = node = node_amp_create(amp);
     }
-    list_body_p lb = list_body_create_vec(size, N[0][0]);
+    list_body_p lb = list_body_create_vec(size, N_lab);
 
-    int max = va_arg(args, int);
-    for(int i=0; i<max; i++)
+    int n = va_arg(args, int);
+    for(int i=0; i<n; i++)
     {
         label_t lab = va_arg(args, label_t);
         int size = va_arg(args, int);
+        assert(size);
 
-        N[IDX(lab)] = malloc(size * sizeof(node_p));
+        N_lab = N[IDX(lab)] = malloc(size * sizeof(node_p));
+        assert(N_lab);
+
         for(int j=0; j<size; j++)
         {
-            N[IDX(lab)][j] = n = node_branch_create(lab);
+            N_lab[j] = node = node_branch_create(lab);
 
             for(int side=0; side<2; side++)
             {
@@ -59,18 +64,51 @@ qdd_p qdd_create_immed(int qbits, ...)
                 assert(N[IDX(lab_0)]);
 
                 int index = va_arg(args, int);
-                node_connect(n, N[IDX(lab_0)][index], side);
+                node_connect(node, N[IDX(lab_0)][index], side);
             }
         }
     }
 
-    for(int i=0; i<qbits; i++)
+    for(int i=0; i<max; i++)
     for(int j=0; j<3; j++)
-    if(N[j][i]) free(N[j][i]);
+    {
+        N_lab = N[i][j];
+        if(N_lab)
+            free(N_lab);
+    }
 
-    return qdd_create(n, lb, qbits);
+    return qdd_create(node, lb, qbits);
 }
-    
+
+qdd_p qdd_create_variadic(va_list args)
+{
+    int qbits = va_arg(args, int);
+    return qdd_create_variadic_qbits(qbits, args);
+}
+
+qdd_p qdd_create_immed(int qbits, ...)
+{
+    va_list args;
+    va_start(args, qbits);
+    return qdd_create_variadic_qbits(qbits, args);
+}
+
+
+void qdd_display(qdd_p q)
+{
+    CLU_HANDLER_VALIDATE(q);
+
+    printf("\nQDD: %p", q);
+    printf("\nqbits: %d", q->qbits);
+
+    printf("\namplitudes:");
+    list_body_display_short(q->lb);
+
+    list_head_p lh = tree_enlist(q->node);
+    list_head_display(lh->next);
+    list_head_free(lh);
+}
+
 
 
 bool qdd_inner(qdd_p q_1, qdd_p q_2)
@@ -89,6 +127,12 @@ bool qdd_inner(qdd_p q_1, qdd_p q_2)
     {
         CLU_HANDLER_VALIDATE(lb_1);
 
+        if(!label_is_amp(&lb_1->node->lab))
+        {
+            printf("\n\n\tQDD ASSERT ERROR\t| NODE IM AMPLITUDE LIST IS NOT AMP | %d", i);
+            return false;
+        }
+
         if(!amplitude(AMP(lb_1->node), AMP(lb_2->node)))
         {
             printf("\n\tQDD ASSERT ERROR\t| AMPLITUDE MISMATCH | %d", i);
@@ -101,13 +145,13 @@ bool qdd_inner(qdd_p q_1, qdd_p q_2)
 
     if(lb_1)
     {
-        printf("\n\tQDD ASSERT ERROR\t| LB AMPLITUDE LONGER");
+        printf("\n\n\tQDD ASSERT ERROR\t| LB AMPLITUDE LONGER");
         return false;
     }
 
     if(lb_2)
     {
-        printf("\n\tQDD ASSERT ERROR\t| LB AMPLITUDE SHORTER");
+        printf("\n\n\tQDD ASSERT ERROR\t| LB AMPLITUDE SHORTER");
         return false;
     }
 
@@ -124,14 +168,30 @@ bool qdd(qdd_p q_1, qdd_p q_2)
 {
     if(!qdd_inner(q_1, q_2))
     {
-        // qdd_display(q_1);
-        // qdd_display(q_2);
+        printf("\n");
+        printf("\n-----------------------------------------------");
+        printf("\nQDD 1");
+        qdd_display(q_1);
+        printf("\n-----------------------------------------------");
+        printf("\n");
+        printf("\n-----------------------------------------------");
+        printf("\nQDD 2");
+        qdd_display(q_2);
+        printf("\n-----------------------------------------------");
         return false;
     }
 
     qdd_free(q_1);
     qdd_free(q_2);
     return true;
+}
+
+bool qdd_immed(qdd_p q, ...)
+{
+    va_list args;
+    va_start(args, q);
+    qdd_p q2 = qdd_create_variadic(args);
+    return qdd(q, q2);
 }
 
 #endif
@@ -155,12 +215,12 @@ qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
     return q;
 }
 
-qdd_p qdd_create_vector(int qbits, amp_t amp[])
+qdd_p qdd_create_arr(int qbits, amp_t node_amp[])
 {
     int Q = 1 << qbits;
     node_p N[Q];
     for(int i=0; i<Q; i++)
-        N[i] = node_amp_create(amp[i]);
+        N[i] = node_amp_create(node_amp[i]);
     list_body_p lb = list_body_create_vec(Q, N);
 
     for(int i=1; i<=qbits; i++)

@@ -41,6 +41,20 @@ void node_amp_display(node_p node)
     PRINT("\n");
 }
 
+void node_display_short(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    printf("%p\t", node);
+    label_t lab = node->lab;
+    label_display(lab);
+    printf("\t");
+    if(label_is_amp(&lab))
+        amp_display(AMP(node));
+    else
+        printf("%p %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
+}
+
 void node_display(node_p node)
 {
     CLU_HANDLER_VALIDATE(node);

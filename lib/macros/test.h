@@ -9,7 +9,7 @@
 #include "./assert.h"
 #include "../../mods/clu/header.h"
 
-#define TEST_FN printf("\n\t%s\t\t", __func__)
+#define TEST_FN printf("\n\t%s\t\t", __func__);
 
 #define TEST_CASE_OPEN(TAG)                                             \
     if(show) printf("\n\t\t%s %2d\t\t", __func__, TAG);                 \

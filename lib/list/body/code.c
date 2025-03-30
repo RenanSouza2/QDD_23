@@ -82,11 +82,12 @@ void list_body_display_short(list_body_p lb)
 {
     CLU_HANDLER_VALIDATE(lb);
 
-    int i;
-    for(i=0; lb; i++, lb = lb->next)
+    for(int i=0; lb; i++)
     {
-        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
-        label_display(lb->node->lab);
+        PRINT("\n\tnode %3d: ", i);
+        node_display_short(lb->node);
+
+        lb = lb->next;
     }
 }
 

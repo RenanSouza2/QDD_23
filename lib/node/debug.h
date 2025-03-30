@@ -6,8 +6,7 @@
 
 #ifdef DEBUG
 
-void node_branch_display(node_p node);
-void node_amp_display(node_p node);
+void node_display_short(node_p node);
 void node_display(node_p n);
 
 void node_test_free(node_p node);
