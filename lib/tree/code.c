@@ -210,7 +210,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 
     list_body_reduce_useless(node_0, lh->lb[ELSE]);
 
-    list_body_p lb_aux = list_body_reduce_repeated(lh->lb[ELSE], node_eq_th,false);
+    list_body_p lb_aux = list_body_reduce_repeated(lh->lb[ELSE], node_eq_th, false);
     list_head_p lh_res_el = list_head_create_body(lb_aux, ELSE, NULL);
 
     lb_aux = list_body_reduce_repeated(lh->lb[THEN], node_eq_el, false);

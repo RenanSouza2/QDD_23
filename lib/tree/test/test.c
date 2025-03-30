@@ -120,7 +120,7 @@ void test_list_body_reduce_repeated(bool show)
         };
         node_p node_v1 = node_branch_create(LAB(V, 1));
         node_connect_both(node_v1, node_amp[0], node_amp[1]);
-        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[ELSE], node_eq_th, true);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[ELSE], node_eq_th, false);
         assert(list_head_immed(node_amp[0]->lh, 1,
             LAB(V, 1), 1, node_v1, 0
         ));
@@ -129,6 +129,131 @@ void test_list_body_reduce_repeated(bool show)
         list_head_free(node_amp[1]->lh);
         free(node_amp[1]);
         free(node_v1);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(6);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1 = node_branch_create(LAB(V, 1));
+        node_connect_both(node_v1, node_amp[0], node_amp[1]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[THEN], node_eq_el, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 1, node_v1, 0
+        ));
+        assert(list_body_immed(lb_res, 0));
+        free(node_amp[0]);
+        list_head_free(node_amp[1]->lh);
+        free(node_amp[1]);
+        free(node_v1);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(7);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1[] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1)),
+        };
+        node_connect_both(node_v1[1], node_amp[0], node_amp[1]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[1]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[ELSE], node_eq_th, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 1, node_v1[0], 0
+        ));
+        assert(list_body_immed(lb_res, 1, node_v1[0]));
+        free(node_amp[0]);
+        list_head_free(node_amp[1]->lh);
+        free(node_amp[1]);
+        free(node_v1[0]);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(8);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+            node_amp_create(AMPI(1, 4)),
+        };
+        node_p node_v1[] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1)),
+        };
+        node_connect_both(node_v1[1], node_amp[0], node_amp[1]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[2]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[ELSE], node_eq_th, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 2, node_v1[0], node_v1[1], 0
+        ));
+        assert(list_body_immed(lb_res, 0));
+        free(node_amp[0]);
+        list_head_free(node_amp[1]->lh);
+        free(node_amp[1]);
+        list_head_free(node_amp[2]->lh);
+        free(node_amp[2]);
+        free(node_v1[0]);
+        free(node_v1[1]);
+    }
+    TEST_CASE_CLOSE
+    
+
+    TEST_CASE_OPEN(9);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+        };
+        node_p node_v1[] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1)),
+        };
+        node_connect_both(node_v1[1], node_amp[1], node_amp[0]);
+        node_connect_both(node_v1[0], node_amp[1], node_amp[0]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[THEN], node_eq_el, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 0, 1, node_v1[0], 0
+        ));
+        assert(list_body_immed(lb_res, 1, node_v1[0]));
+        free(node_amp[0]);
+        list_head_free(node_amp[1]->lh);
+        free(node_amp[1]);
+        free(node_v1[0]);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(10);
+    {
+        node_p node_amp[] = {
+            node_amp_create(AMPI(1, 2)),
+            node_amp_create(AMPI(1, 3)),
+            node_amp_create(AMPI(1, 4)),
+        };
+        node_p node_v1[] = {
+            node_branch_create(LAB(V, 1)),
+            node_branch_create(LAB(V, 1)),
+        };
+        node_connect_both(node_v1[1], node_amp[1], node_amp[0]);
+        node_connect_both(node_v1[0], node_amp[2], node_amp[0]);
+        list_body_p lb_res = list_body_reduce_repeated(node_amp[0]->lh->lb[THEN], node_eq_el, false);
+        assert(list_head_immed(node_amp[0]->lh, 1,
+            LAB(V, 1), 0, 2, node_v1[0], node_v1[1]
+        ));
+        assert(list_body_immed(lb_res, 0));
+        free(node_amp[0]);
+        list_head_free(node_amp[1]->lh);
+        free(node_amp[1]);
+        list_head_free(node_amp[2]->lh);
+        free(node_amp[2]);
+        free(node_v1[0]);
+        free(node_v1[1]);
     }
     TEST_CASE_CLOSE
 
