@@ -17,8 +17,8 @@
 
 qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
 {
-    CLU_HANDLER_IS_SAFE(node);
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(node);
+    CLU_HANDLER_VALIDATE(lb);
 
     qdd_p q = malloc(sizeof(qdd_t));
     assert(q);
@@ -67,7 +67,7 @@ qdd_p qdd_create_vector(int qbits, amp_t amp[])
 
 void qdd_free(qdd_p q)
 {
-    CLU_HANDLER_IS_SAFE(q);
+    CLU_HANDLER_VALIDATE(q);
 
     tree_free(q->node);
     list_body_free(q->lb);
@@ -78,7 +78,7 @@ void qdd_free(qdd_p q)
 
 void qdd_reduce(qdd_p q)
 {
-    CLU_HANDLER_IS_SAFE(q);
+    CLU_HANDLER_VALIDATE(q);
 
     node_p node = tree_reduce(q->lb);
     q->node = node ? node : q->node; 

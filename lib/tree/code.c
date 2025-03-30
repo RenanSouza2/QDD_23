@@ -13,85 +13,17 @@
 
 #ifdef DEBUG
 
-#include <stdarg.h>
-#include <memory.h>
-
 #include "../amp/header.h"
 #include "../utils/header.h"
 #include "../node/debug.h"
 #include "../label/debug.h"
 #include "../list/head/debug.h"
 
-#define IDX(LABEL) LABEL.lv][LABEL.cl
-
-node_p tree_create_variadic_amp(node_p *node[][3], va_list *args)
-{
-    int n = va_arg(*args, int);
-    assert(n);
-
-    label_t lab = va_arg(*args, label_t);
-    node_p *node_lab = node[lab.cl][lab.lv] = malloc(n * sizeof(node_p));
-    assert(node);
-
-    for(int i=0; i<n; i++)
-    {
-        amp_t amp = va_arg(*args, amp_t);
-        node_lab[i] = node_amp_create(amp);
-    }
-    return node_lab[0];
-}
-
-node_p tree_create_variadic_branch(node_p *node[][3], va_list *args)
-{
-    int n = va_arg(*args, int);
-    assert(n);
-
-    label_t lab = va_arg(*args, label_t);
-    node_p *node_lab = node[lab.cl][lab.lv] = malloc(n * sizeof(node_p));
-    assert(node);
-
-    for(int i=0; i<n; i++)
-    {
-        node_p node_top = node_lab[i] = node_branch_create(lab);
-        label_t lab_el = va_arg(*args, label_t);
-        int id_el = va_arg(*args, int);
-        label_t lab_th = va_arg(*args, label_t);
-        int id_th = va_arg(*args, int);
-        node_connect_both(
-            node_top,
-            node[IDX(lab_el)][id_el],
-            node[IDX(lab_th)][id_th]
-        );
-    }
-    return node_lab[0];
-}
-
-node_p tree_create_immed(int max, ...)
-{
-    va_list args;
-    va_start(args, max);
-
-    max++;
-    node_p *node[max][3];
-    memset(node, 0, sizeof(node));
-    node_p node_0 = tree_create_variadic_amp(node, &args);
-
-    int n = va_arg(args, int);
-    for(int i=0; i<n; i++)
-        node_0 = tree_create_variadic_branch(node, &args);
-
-    for(int i=0; i<max; i++)
-    for(int j=0; j<3; j++)
-        if(node[i][j])
-            free(node[i][j]);
-
-    return node_0;
-}
 
 
 void tree_display(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     list_head_p lh = tree_enlist(node);
     lh = list_head_invert(lh);
@@ -100,9 +32,9 @@ void tree_display(node_p node)
 
 bool tree_str_rec(node_p node, node_p node_1, node_p node_2)
 {
-    CLU_HANDLER_IS_SAFE(node);
-    CLU_HANDLER_IS_SAFE(node_1);
-    CLU_HANDLER_IS_SAFE(node_2);
+    CLU_HANDLER_VALIDATE(node);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
     if(node_1 == NULL)
     {
@@ -154,7 +86,7 @@ bool tree(node_p n1, node_p n2)
 
 void tree_free(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
     assert(node);
 
     if(node->lh)
@@ -196,15 +128,13 @@ list_head_p tree_enlist(node_p n)
 
 
 
-typedef bool (*node_eq_f)(node_p, node_p);
-
-bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
+bool list_body_reduce_repeated_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
 {
-    CLU_HANDLER_IS_SAFE(lb);
-    CLU_HANDLER_IS_SAFE(node_1);
+    CLU_HANDLER_VALIDATE(lb);
+    CLU_HANDLER_VALIDATE(node_1);
 
     bool insert = false;
-    for(; lb->next; )
+    while(lb->next)
     {
         node_p node_2 = lb->next->node;
         if(!fn(node_1, node_2))
@@ -224,27 +154,27 @@ bool list_body_reduce_node_item(list_body_p lb, node_eq_f fn, node_p node_1, boo
 }
 
 // returns the list of the nodes reduced
-list_body_p list_body_reduce_node(list_body_p lb, node_eq_f fn, bool remove)
+list_body_p list_body_reduce_repeated(list_body_p lb, node_eq_f fn, bool remove)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     if(lb == NULL)
         return NULL;
 
     list_body_p lb_res = NULL;
-    for(; lb && lb->next; lb = lb->next)
+    for(; lb; lb = lb->next)
     {
         node_p node_1 = lb->node;
-        if(list_body_reduce_node_item(lb, fn, node_1, remove))
+        if(list_body_reduce_repeated_item(lb, fn, node_1, remove))
             lb_res = list_body_create(node_1, lb_res);
     }
 
     return lb_res;
 }
 
-void list_body_reduce_path(node_p node_0, list_body_p lb)
+void list_body_reduce_useless(node_p node_0, list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     if(lb == NULL)
         return;
@@ -278,12 +208,12 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
     if(lh == NULL)
         return NULL;
 
-    list_body_reduce_path(node_0, lh->lb[ELSE]);
+    list_body_reduce_useless(node_0, lh->lb[ELSE]);
 
-    list_body_p lb_aux = list_body_reduce_node(lh->lb[ELSE], node_eq_th,false);
+    list_body_p lb_aux = list_body_reduce_repeated(lh->lb[ELSE], node_eq_th,false);
     list_head_p lh_res_el = list_head_create_body(lb_aux, ELSE, NULL);
 
-    lb_aux = list_body_reduce_node(lh->lb[THEN], node_eq_el, false);
+    lb_aux = list_body_reduce_repeated(lh->lb[THEN], node_eq_el, false);
     list_head_p lh_res_th = list_head_create_body(lb_aux, ELSE, NULL);
 
     return list_head_merge(lh_res_el, lh_res_th);
@@ -291,7 +221,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
 
 list_head_p node_reduce(node_p node_0)
 {
-    CLU_HANDLER_IS_SAFE(node_0);
+    CLU_HANDLER_VALIDATE(node_0);
 
     list_head_p lh_res = list_head_reduce(node_0, &node_0->lh);
     if(node_0->lh == NULL)
@@ -307,7 +237,7 @@ list_head_p node_reduce(node_p node_0)
 
 node_p tree_reduce(list_body_p lb)
 {
-    lb = list_body_reduce_node(lb, node_eq_amp, true);
+    lb = list_body_reduce_repeated(lb, node_eq_amp, true);
     for(
         list_head_p lh = list_head_create_body(lb, ELSE, NULL);
         lh;

@@ -73,7 +73,7 @@ void list_head_create_vec_immed(list_head_p lh[], int n, ...)
 
 void list_head_display(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     if(lh == NULL)
     {
@@ -95,7 +95,7 @@ void list_head_display(list_head_p lh)
 
 void list_head_display_full(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     if(lh == NULL) PRINT("\nnull list");
 
@@ -136,12 +136,12 @@ list_head_p list_head_invert(list_head_p lh)
 
 bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 {
-    CLU_HANDLER_IS_SAFE(lh_1);
-    CLU_HANDLER_IS_SAFE(lh_2);
+    CLU_HANDLER_VALIDATE(lh_1);
+    CLU_HANDLER_VALIDATE(lh_2);
 
     for(int i=0; lh_1 && lh_2; i++)
     {
-        CLU_HANDLER_IS_SAFE(lh_1);
+        CLU_HANDLER_VALIDATE(lh_1);
 
         if(!label(lh_1->lab, lh_2->lab))
         {
@@ -209,9 +209,9 @@ bool list_head_immed(list_head_p lh, int n, ...)
 
 list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 {
-    CLU_HANDLER_IS_SAFE(lb);
-    CLU_HANDLER_IS_SAFE(lb->node);
-    CLU_HANDLER_IS_SAFE(next);
+    CLU_HANDLER_VALIDATE(lb);
+    CLU_HANDLER_VALIDATE(lb->node);
+    CLU_HANDLER_VALIDATE(next);
 
     assert(lb);
     assert(lb->node);
@@ -229,8 +229,8 @@ list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 
 list_head_p list_head_create(node_p node, int side, list_head_p next)
 {
-    CLU_HANDLER_IS_SAFE(node);
-    CLU_HANDLER_IS_SAFE(next);
+    CLU_HANDLER_VALIDATE(node);
+    CLU_HANDLER_VALIDATE(next);
 
     list_body_p lb = list_body_create(node, NULL);
     return list_head_create_body(lb, side, next);
@@ -238,7 +238,7 @@ list_head_p list_head_create(node_p node, int side, list_head_p next)
 
 list_head_p list_head_pop(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     assert(lh);
 
@@ -249,7 +249,7 @@ list_head_p list_head_pop(list_head_p lh)
 
 void list_head_free(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     for(; lh; lh = list_head_pop(lh))
     for(int side = 0; side < 2; side ++)
@@ -260,7 +260,7 @@ void list_head_free(list_head_p lh)
 
 node_p list_head_first(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     if(lh == NULL)
         return NULL;
@@ -273,7 +273,7 @@ node_p list_head_first(list_head_p lh)
 
 bool list_head_occupied(list_head_p lh)
 {
-    CLU_HANDLER_IS_SAFE(lh);
+    CLU_HANDLER_VALIDATE(lh);
 
     return lh->lb[ELSE] || lh->lb[THEN];
 }
@@ -282,8 +282,8 @@ bool list_head_occupied(list_head_p lh)
 
 list_head_p list_head_insert(list_head_p lh, node_p node, int side)
 {
-    CLU_HANDLER_IS_SAFE(lh);
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(lh);
+    CLU_HANDLER_VALIDATE(node);
 
     assert(node);
 
@@ -310,8 +310,8 @@ list_head_p list_head_insert(list_head_p lh, node_p node, int side)
 
 list_head_p list_head_remove(list_head_p lh, node_p node, int side)
 {
-    CLU_HANDLER_IS_SAFE(lh);
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(lh);
+    CLU_HANDLER_VALIDATE(node);
 
     assert(lh);
     assert(node);

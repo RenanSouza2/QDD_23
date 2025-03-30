@@ -11,7 +11,6 @@ void test_node_create_branch(bool show)
 {
     printf("\n\t%s\t\t", __func__);
 
-
     if(show) printf("\n\t\t%s 1\t\t", __func__);
     node_p node = node_branch_create(LAB(V, 2));
     assert(node->lh == NULL);
@@ -329,7 +328,7 @@ void test_node()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_node_create_branch(show);
     test_node_create_amp(show);
@@ -354,7 +353,9 @@ void test_node()
 int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_node();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

@@ -58,7 +58,7 @@ void list_body_create_vec_immed(list_body_p lb[], int n, ...)
 
 void list_body_display_item(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     if(handler_display("LIST BODY", lb)) return;
 
@@ -69,7 +69,7 @@ void list_body_display_item(list_body_p lb)
 
 void list_body_display(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     if(lb == NULL)
         printf("\n\tLIST BODY EMPTY");
@@ -80,7 +80,7 @@ void list_body_display(list_body_p lb)
 
 void list_body_display_short(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     int i;
     for(i=0; lb; i++, lb = lb->next)
@@ -92,7 +92,7 @@ void list_body_display_short(list_body_p lb)
 
 void list_body_display_full(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     for(; lb; lb = lb->next)
         node_display(lb->node);
@@ -102,12 +102,12 @@ void list_body_display_full(list_body_p lb)
 
 bool list_body_inner(list_body_p lb_1, list_body_p lb_2)
 {
-    CLU_HANDLER_IS_SAFE(lb_1);
-    CLU_HANDLER_IS_SAFE(lb_2);
+    CLU_HANDLER_VALIDATE(lb_1);
+    CLU_HANDLER_VALIDATE(lb_2);
 
     for(int i=0; lb_1 && lb_2; i++)
     {
-        CLU_HANDLER_IS_SAFE(lb_1);
+        CLU_HANDLER_VALIDATE(lb_1);
 
         if(lb_1->node != lb_2->node)
         {
@@ -136,8 +136,8 @@ bool list_body_inner(list_body_p lb_1, list_body_p lb_2)
 
 bool list_body(list_body_p lb_1, list_body_p lb_2)
 {
-    CLU_HANDLER_IS_SAFE(lb_1);
-    CLU_HANDLER_IS_SAFE(lb_2);
+    CLU_HANDLER_VALIDATE(lb_1);
+    CLU_HANDLER_VALIDATE(lb_2);
 
     if(!list_body_inner(lb_1, lb_2))
     {
@@ -160,7 +160,7 @@ bool list_body_variadic(list_body_p lb, int n, va_list *args)
 
 bool list_body_immed(list_body_p lb, int n, ...)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     va_list args;
     va_start(args, n);
@@ -173,7 +173,7 @@ bool list_body_immed(list_body_p lb, int n, ...)
 
 list_body_p list_body_create(node_p node, list_body_p next)
 {
-    CLU_HANDLER_IS_SAFE(next);
+    CLU_HANDLER_VALIDATE(next);
 
     list_body_p lb = malloc(sizeof(list_body_t));
     assert(lb);
@@ -201,7 +201,7 @@ list_body_p list_body_create_vec(int size, node_p node[])
 
 list_body_p list_body_copy(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     if(lb == NULL)
         return NULL;
@@ -216,7 +216,7 @@ list_body_p list_body_copy(list_body_p lb)
 
 list_body_p list_body_pop(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     assert(lb);
     list_body_p lb_aux = lb->next;
@@ -226,7 +226,7 @@ list_body_p list_body_pop(list_body_p lb)
 
 void list_body_free(list_body_p lb)
 {
-    CLU_HANDLER_IS_SAFE(lb);
+    CLU_HANDLER_VALIDATE(lb);
 
     while(lb)
         lb = list_body_pop(lb);
@@ -236,8 +236,8 @@ void list_body_free(list_body_p lb)
 
 list_body_p list_body_remove(list_body_p lb, node_p node)
 {
-    CLU_HANDLER_IS_SAFE(lb);
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(lb);
+    CLU_HANDLER_VALIDATE(node);
 
     assert(lb);
     assert(node);
@@ -258,8 +258,8 @@ list_body_p list_body_remove(list_body_p lb, node_p node)
 
 list_body_p list_body_merge(list_body_p lb_1, list_body_p lb_2)
 {
-    CLU_HANDLER_IS_SAFE(lb_1);
-    CLU_HANDLER_IS_SAFE(lb_2);
+    CLU_HANDLER_VALIDATE(lb_1);
+    CLU_HANDLER_VALIDATE(lb_2);
 
     if(lb_1 == NULL) return lb_2;
     if(lb_2 == NULL) return lb_1;

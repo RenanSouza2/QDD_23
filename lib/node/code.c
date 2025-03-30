@@ -21,7 +21,7 @@
 
 void node_branch_display(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     PRINT("\nnode (branch): %p", node);
     PRINT("\nlabel: ");
@@ -33,7 +33,7 @@ void node_branch_display(node_p node)
 
 void node_amp_display(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     PRINT("\nnode (amp): %p", node);
     PRINT("\namp: ");
@@ -43,7 +43,7 @@ void node_amp_display(node_p node)
 
 void node_display(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     if(label_is_amp(&node->lab))
         node_amp_display(node);
@@ -96,24 +96,24 @@ node_p node_amp_create(amp_t amp)
 
 bool node_eq_amp(node_p node_1, node_p node_2)
 {
-    CLU_HANDLER_IS_SAFE(node_1);
-    CLU_HANDLER_IS_SAFE(node_2);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
     return amp_eq(AMP(node_1), AMP(node_2));
 }
 
 bool node_eq_el(node_p node_1, node_p node_2)
 {
-    CLU_HANDLER_IS_SAFE(node_1);
-    CLU_HANDLER_IS_SAFE(node_2);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
     return BRANCH(node_1)[ELSE] == BRANCH(node_2)[ELSE];
 }
 
 bool node_eq_th(node_p node_1, node_p node_2)
 {
-    CLU_HANDLER_IS_SAFE(node_1);
-    CLU_HANDLER_IS_SAFE(node_2);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
     return BRANCH(node_1)[THEN] == BRANCH(node_2)[THEN];
 }
@@ -122,8 +122,8 @@ bool node_eq_th(node_p node_1, node_p node_2)
 
 void node_connect(node_p node_top, node_p node_bot, int side)
 {
-    CLU_HANDLER_IS_SAFE(node_top);
-    CLU_HANDLER_IS_SAFE(node_bot);
+    CLU_HANDLER_VALIDATE(node_top);
+    CLU_HANDLER_VALIDATE(node_bot);
 
     assert(node_top);
     assert(node_bot);
@@ -135,9 +135,9 @@ void node_connect(node_p node_top, node_p node_bot, int side)
 
 void node_connect_both(node_p node_top, node_p node_el, node_p node_th)
 {
-    CLU_HANDLER_IS_SAFE(node_top);
-    CLU_HANDLER_IS_SAFE(node_el);
-    CLU_HANDLER_IS_SAFE(node_th);
+    CLU_HANDLER_VALIDATE(node_top);
+    CLU_HANDLER_VALIDATE(node_el);
+    CLU_HANDLER_VALIDATE(node_th);
 
     node_connect(node_top, node_el, ELSE);
     node_connect(node_top, node_th, THEN);
@@ -145,7 +145,7 @@ void node_connect_both(node_p node_top, node_p node_el, node_p node_th)
 
 void node_disconnect(node_p node, int side)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     assert(node);
 
@@ -158,7 +158,7 @@ void node_disconnect(node_p node, int side)
 
 void node_disconnect_both(node_p node)
 {
-    CLU_HANDLER_IS_SAFE(node);
+    CLU_HANDLER_VALIDATE(node);
 
     node_disconnect(node, ELSE);
     node_disconnect(node, THEN);
@@ -168,8 +168,8 @@ void node_disconnect_both(node_p node)
 
 void node_merge(node_p node_1, node_p node_2)
 {
-    CLU_HANDLER_IS_SAFE(node_1);
-    CLU_HANDLER_IS_SAFE(node_2);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
     assert(node_1);
     assert(node_2);
