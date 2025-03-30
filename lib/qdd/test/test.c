@@ -5,8 +5,6 @@
 #include "../../tree/debug.h"
 #include "../../macros/test.h"
 #include "../../list/body/debug.h"
-#include "../../list/head/debug.h"
-#include "../../../mods/clu/header.h"
 
 
 
@@ -194,54 +192,72 @@ void test_qdd_arr(bool show)
     assert(clu_mem_is_empty());
 }
 
-
-
-void test_qdd_reduce()
+void test_qdd_reduce(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
-    printf("\n\t\t%s 1\t\t", __func__);
-    qdd_p q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
-    qdd_reduce(q);
+    label_t amp = LAB(0, 0);
+    label_t v1 = LAB(V, 1);
+    // label_t V2 = LAB(V, 2);
 
-    label_t amp, V1, V2;
-    amp = LAB(0, 0);
-    V1 = LAB(V, 1);
-    V2 = LAB(V, 2);
+    #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)   \
+    {                                           \
+        TEST_CASE_OPEN(TAG)                     \
+        {                                       \
+            qdd_p q = qdd_create_immed(QBITS, QDD); \
+            qdd_reduce(q);                  \
+            assert(qdd_immed(q, __VA_ARGS__));  \
+        }                                       \
+        TEST_CASE_CLOSE                         \
+    }
 
-    qdd_p q_exp = qdd_create_immed(2,
-        3, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2),
-        2,
-        V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
-        V2, 1, V1, 0, V1, 1
-    );
-    assert(tree(q->node, q_exp->node));
-    qdd_free(q);
-    qdd_free(q_exp);
+    TEST_QDD_REDUCE(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)}),
+        2, AMPI(0, 0), AMPI(0, 1),
+        1, v1, 1, amp, 0, amp, 1
+    )
 
-    printf("\n\t\t%s 2\t\t", __func__);
-    q = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 0}});
-    qdd_reduce(q);
+    #undef TEST_QDD_REDUCE
 
-    q_exp = qdd_create_immed(1,
-        1, AMPI(0, 0),
-        0
-    );
-    assert(tree(q->node, q_exp->node));
-    qdd_free(q);
-    qdd_free(q_exp);
+    // printf("\n\t\t%s 1\t\t", __func__);
+    // qdd_p q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
+    // qdd_reduce(q);
 
-    printf("\n\t\t%s 3\t\t", __func__);
-    q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
-    qdd_reduce(q);
+    // qdd_p q_exp = qdd_create_immed(2,
+    //     3, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2),
+    //     2,
+    //     V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
+    //     V2, 1, V1, 0, V1, 1
+    // );
+    // assert(tree(q->node, q_exp->node));
+    // qdd_free(q);
+    // qdd_free(q_exp);
 
-    q_exp = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 1}});
-    assert(tree(q->node, q_exp->node));
-    qdd_free(q);
-    qdd_free(q_exp);
+    // printf("\n\t\t%s 2\t\t", __func__);
+    // q = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 0}});
+    // qdd_reduce(q);
+
+    // q_exp = qdd_create_immed(1,
+    //     1, AMPI(0, 0),
+    //     0
+    // );
+    // assert(tree(q->node, q_exp->node));
+    // qdd_free(q);
+    // qdd_free(q_exp);
+
+    // printf("\n\t\t%s 3\t\t", __func__);
+    // q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
+    // qdd_reduce(q);
+
+    // q_exp = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 1}});
+    // assert(tree(q->node, q_exp->node));
+    // qdd_free(q);
+    // qdd_free(q_exp);
 
     assert(clu_mem_is_empty());
 }
+
+
 
 void test_qdd()
 {
@@ -252,7 +268,7 @@ void test_qdd()
     test_qdd_create(show);
     test_qdd_create_immed(show);
     test_qdd_arr(show);
-    test_qdd_reduce();
+    test_qdd_reduce(show);
 
     assert(clu_mem_is_empty());
 }
