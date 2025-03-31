@@ -87,6 +87,24 @@ bool tree(node_p n1, node_p n2)
 
 
 
+node_p tree_create_fn(int qbits, int index, amp_index_f fn)
+{
+    if(qbits == 0)
+    {
+        amp_t amp = fn(index);
+        return node_amp_create(amp);
+    }
+
+    node_p n1, n0_el, n0_th;
+    n1 = node_branch_create((label_t){V, qbits});
+    n0_el = tree_create_fn(qbits-1, index, fn);
+    n0_th = tree_create_fn(qbits-1, 1 << (qbits-1), fn);
+    node_connect_both(n1, n0_el, n0_th);
+    return n1;
+}
+
+
+
 void tree_free(node_p node)
 {
     CLU_HANDLER_VALIDATE(node);

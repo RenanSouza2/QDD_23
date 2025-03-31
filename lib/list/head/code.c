@@ -7,6 +7,7 @@
 #include "../../node/struct.h"
 #include "../../label/header.h"
 #include "../../macros/assert.h"
+#include "../../utils/header.h"
 
 
 
@@ -14,7 +15,6 @@
 
 #include "../body/debug.h"
 #include "../../label/debug.h"
-#include "../../utils/debug.h"
 
 
 
@@ -67,56 +67,6 @@ void list_head_create_vec_immed(list_head_p lh[], int n, ...)
     va_start(args, n);
     for(int i=0; i<n; i++)
         lh[i] = list_head_create_variadic(&args);
-}
-
-
-
-void list_head_display(list_head_p lh)
-{
-    CLU_HANDLER_VALIDATE(lh);
-
-    if(lh == NULL)
-    {
-        printf("\nLIST HEAD EMPTY");
-        return;
-    }
-
-    for(; lh; lh = lh->next)
-    {
-        PRINT("\n--------");
-        printf("\nLABEL: ");
-        label_display(lh->lab);
-        for(int side=0; side<2; side++)
-        {
-            list_body_p lb = lh->lb[side];
-            if(lb == NULL)
-                continue;
-
-            printf("\n%s", side ? "THEN" : "ELSE");
-            list_body_display_short(lh->lb[side]);
-        }
-    }
-}
-
-void list_head_display_full(list_head_p lh)
-{
-    CLU_HANDLER_VALIDATE(lh);
-
-    if(lh == NULL) PRINT("\nnull list");
-
-   for(; lh; lh = lh->next)
-    {
-        PRINT("\n--------");
-        for(int side=0; side<2; side++)
-        if(lh->lb[side])
-        {
-            PRINT("\n");
-            label_display(lh->lab);
-            PRINT(" %s", side ? "THEN" : "ELSE");
-            list_body_display_full(lh->lb[side]);
-        }
-    }
-    printf("\t\t");
 }
 
 
@@ -242,6 +192,56 @@ void list_head_free(list_head_p lh)
     for(; lh; lh = list_head_pop(lh))
     for(int side = 0; side < 2; side ++)
         list_body_free(lh->lb[side]);
+}
+
+
+
+void list_head_display(list_head_p lh)
+{
+    CLU_HANDLER_VALIDATE(lh);
+
+    if(lh == NULL)
+    {
+        printf("\nLIST HEAD EMPTY");
+        return;
+    }
+
+    for(; lh; lh = lh->next)
+    {
+        PRINT("\n--------");
+        printf("\nLABEL: ");
+        label_display(lh->lab);
+        for(int side=0; side<2; side++)
+        {
+            list_body_p lb = lh->lb[side];
+            if(lb == NULL)
+                continue;
+
+            printf("\n%s", side ? "THEN" : "ELSE");
+            list_body_display_short(lh->lb[side]);
+        }
+    }
+}
+
+void list_head_display_full(list_head_p lh)
+{
+    CLU_HANDLER_VALIDATE(lh);
+
+    if(lh == NULL) PRINT("\nnull list");
+
+   for(; lh; lh = lh->next)
+    {
+        PRINT("\n--------");
+        for(int side=0; side<2; side++)
+        if(lh->lb[side])
+        {
+            PRINT("\n");
+            label_display(lh->lab);
+            PRINT(" %s", side ? "THEN" : "ELSE");
+            list_body_display_full(lh->lb[side]);
+        }
+    }
+    printf("\t\t");
 }
 
 

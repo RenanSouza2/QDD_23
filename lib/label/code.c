@@ -1,11 +1,10 @@
 #include "debug.h"
-
-#ifdef DEBUG
-
 #include "../utils/header.h"
 #include "../macros/assert.h"
 
 
+
+#ifdef DEBUG
 
 bool label(label_t lab_1, label_t lab_2)
 {

@@ -95,22 +95,6 @@ qdd_p qdd_create_immed(int qbits, ...)
 }
 
 
-void qdd_display(qdd_p q)
-{
-    CLU_HANDLER_VALIDATE(q);
-
-    printf("\nQDD: %p", q);
-    printf("\nqbits: %d", q->qbits);
-
-    printf("\namplitudes:");
-    list_body_display_short(q->lb);
-
-    list_head_p lh = tree_enlist(q->node);
-    list_head_display(lh->next);
-    list_head_free(lh);
-}
-
-
 
 bool qdd_inner(qdd_p q_1, qdd_p q_2)
 {
@@ -254,6 +238,12 @@ qdd_p qdd_create_arr(int qbits, amp_t node_amp[])
     return qdd_create(node, lb, qbits);
 }
 
+qdd_p qdd_create_fn(int qbits, int index, amp_index_f fn) // TODO test
+{
+    node_p n = tree_create_fn(qbits, index, fn);
+    return qdd_encapsulate_tree(qbits, n);
+}
+
 void qdd_free(qdd_p q)
 {
     CLU_HANDLER_VALIDATE(q);
@@ -261,6 +251,23 @@ void qdd_free(qdd_p q)
     tree_free(q->node);
     list_body_free(q->lb);
     free(q);
+}
+
+
+
+void qdd_display(qdd_p q)
+{
+    CLU_HANDLER_VALIDATE(q);
+
+    printf("\nQDD: %p", q);
+    printf("\nqbits: %d", q->qbits);
+
+    printf("\namplitudes:");
+    list_body_display_short(q->lb);
+
+    list_head_p lh = tree_enlist(q->node);
+    list_head_display(lh->next);
+    list_head_free(lh);
 }
 
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "debug.h"
+#include "../../utils/header.h"
 #include "../../macros/assert.h"
 #include "../../../mods/clu/header.h"
 
@@ -8,7 +9,6 @@
 
 #ifdef DEBUG
 
-#include "../../utils/debug.h"
 #include "../../label/debug.h"
 #include "../../node/debug.h"
 
@@ -52,51 +52,6 @@ void list_body_create_vec_immed(list_body_p lb[], int n, ...)
     va_start(args, n);
     for(int i=0; i<n; i++)
         lb[i] = list_body_create_variadic(&args);
-}
-
-
-
-void list_body_display_item(list_body_p lb)
-{
-    CLU_HANDLER_VALIDATE(lb);
-
-    if(handler_display("LIST BODY", lb)) return;
-
-    PRINT("\nnode: %p", lb->node);
-    PRINT("\nnext: %p", lb->next);
-    PRINT("\n");
-}
-
-void list_body_display(list_body_p lb)
-{
-    CLU_HANDLER_VALIDATE(lb);
-
-    if(lb == NULL)
-        printf("\n\tLIST BODY EMPTY");
-
-    for(int i=0; lb; i++, lb = lb->next)
-        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
-}
-
-void list_body_display_short(list_body_p lb)
-{
-    CLU_HANDLER_VALIDATE(lb);
-
-    for(int i=0; lb; i++)
-    {
-        PRINT("\n\tnode %3d: ", i);
-        node_display_short(lb->node);
-
-        lb = lb->next;
-    }
-}
-
-void list_body_display_full(list_body_p lb)
-{
-    CLU_HANDLER_VALIDATE(lb);
-
-    for(; lb; lb = lb->next)
-        node_display(lb->node);
 }
 
 
@@ -232,6 +187,52 @@ void list_body_free(list_body_p lb)
     while(lb)
         lb = list_body_pop(lb);
 }
+
+
+
+void list_body_display_item(list_body_p lb)
+{
+    CLU_HANDLER_VALIDATE(lb);
+
+    if(handler_display("LIST BODY", lb)) return;
+
+    PRINT("\nnode: %p", lb->node);
+    PRINT("\nnext: %p", lb->next);
+    PRINT("\n");
+}
+
+void list_body_display(list_body_p lb)
+{
+    CLU_HANDLER_VALIDATE(lb);
+
+    if(lb == NULL)
+        printf("\n\tLIST BODY EMPTY");
+
+    for(int i=0; lb; i++, lb = lb->next)
+        PRINT("\n\tnode %3d: %p\t\t", i, lb->node);
+}
+
+void list_body_display_short(list_body_p lb)
+{
+    CLU_HANDLER_VALIDATE(lb);
+
+    for(int i=0; lb; i++)
+    {
+        PRINT("\n\tnode %3d: ", i);
+        node_display_short(lb->node);
+
+        lb = lb->next;
+    }
+}
+
+void list_body_display_full(list_body_p lb)
+{
+    CLU_HANDLER_VALIDATE(lb);
+
+    for(; lb; lb = lb->next)
+        node_display(lb->node);
+}
+
 
 
 

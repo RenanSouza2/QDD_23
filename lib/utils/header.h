@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include "../macros/struct.h"
+
 #define DEFAULT "\033[0m"
 #define RED     "\033[0;31m"
 #define GREEN   "\033[0;32m"
@@ -20,5 +22,7 @@
     }
 #define PRINT(...) fprintf(stdout, __VA_ARGS__)
 #define CPRINT(CODE, ...) FCPRINT(stdout,CODE, __VA_ARGS__)
+
+bool handler_display(char tag[], handler_p h);
 
 #endif

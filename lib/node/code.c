@@ -8,6 +8,7 @@
 #include "../macros/assert.h"
 #include "../list/head/header.h"
 #include "../list/body/struct.h"
+#include "../utils/header.h"
 
 
 
@@ -15,55 +16,6 @@
 
 #include "../amp/debug.h"
 #include "../label/debug.h"
-#include "../utils/debug.h"
-
-
-
-void node_branch_display(node_p node)
-{
-    CLU_HANDLER_VALIDATE(node);
-
-    PRINT("\nnode (branch): %p", node);
-    PRINT("\nlabel: ");
-    label_display(node->lab);
-
-    PRINT("\nel: %p\tth: %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
-    PRINT("\n");
-}
-
-void node_amp_display(node_p node)
-{
-    CLU_HANDLER_VALIDATE(node);
-
-    PRINT("\nnode (amp): %p", node);
-    PRINT("\namp: ");
-    amp_display(AMP(node));
-    PRINT("\n");
-}
-
-void node_display_short(node_p node)
-{
-    CLU_HANDLER_VALIDATE(node);
-
-    printf("%p\t", node);
-    label_t lab = node->lab;
-    label_display(lab);
-    printf("\t");
-    if(label_is_amp(&lab))
-        amp_display(AMP(node));
-    else
-        printf("%p %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
-}
-
-void node_display(node_p node)
-{
-    CLU_HANDLER_VALIDATE(node);
-
-    if(label_is_amp(&node->lab))
-        node_amp_display(node);
-    else
-        node_branch_display(node);
-}
 
 
 
@@ -124,6 +76,54 @@ node_p node_copy(node_p n)
         return node_amp_create(AMP(n));
 
     return node_branch_create(n->lab);
+}
+
+
+
+void node_branch_display(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    PRINT("\nnode (branch): %p", node);
+    PRINT("\nlabel: ");
+    label_display(node->lab);
+
+    PRINT("\nel: %p\tth: %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
+    PRINT("\n");
+}
+
+void node_amp_display(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    PRINT("\nnode (amp): %p", node);
+    PRINT("\namp: ");
+    amp_display(AMP(node));
+    PRINT("\n");
+}
+
+void node_display_short(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    printf("%p\t", node);
+    label_t lab = node->lab;
+    label_display(lab);
+    printf("\t");
+    if(label_is_amp(&lab))
+        amp_display(AMP(node));
+    else
+        printf("%p %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
+}
+
+void node_display(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    if(label_is_amp(&node->lab))
+        node_amp_display(node);
+    else
+        node_branch_display(node);
 }
 
 

@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "../lib/qdd/header.h"
+#include "../lib/amp/header.h"
+
+amp_t amp_fn(int)
+{
+    return (amp_t){0, 0};
+}
+
 int main()
 {
     setbuf(stdout, NULL);

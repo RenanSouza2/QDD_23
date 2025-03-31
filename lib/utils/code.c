@@ -5,13 +5,6 @@
 
 #ifdef DEBUG
 
-bool handler_display(char tag[], handler_p h)
-{
-    PRINT("\nAddress (%s): %p", tag, h);
-    return h == NULL;
-}
-
-
 bool int_str(int a, int b)
 {
     if(a != b)
@@ -24,3 +17,11 @@ bool int_str(int a, int b)
 }
 
 #endif
+
+
+
+bool handler_display(char tag[], handler_p h)
+{
+    PRINT("\nAddress (%s): %p", tag, h);
+    return h == NULL;
+}

@@ -11,6 +11,8 @@ list_body_p list_body_create_vec(int max, node_p N[]);
 list_body_p list_body_pop(list_body_p lb);
 void list_body_free(list_body_p lb);
 
+void list_body_display(list_body_p lb);
+void list_body_display_short(list_body_p lb);
 void list_body_display_full(list_body_p lb);
 
 list_body_p list_body_remove(list_body_p lb, node_p n);

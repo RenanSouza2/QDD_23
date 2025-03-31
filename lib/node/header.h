@@ -15,6 +15,9 @@ node_p node_branch_create(label_t lab);
 node_p node_amp_create(amp_t amp);
 node_p node_copy(node_p n);
 
+void node_display_short(node_p node);
+void node_display(node_p n);
+
 bool node_eq_amp(node_p n1, node_p n2);
 bool node_eq_el(node_p n1, node_p n2);
 bool node_eq_th(node_p n1, node_p n2);
