@@ -2,14 +2,15 @@
 #include <assert.h>
 
 #include "debug.h"
+#include "../../mods/clu/header.h"
+
 #include "../node/header.h"
 #include "../label/header.h"
 #include "../qdd/struct.h"
 
+
+
 #ifdef DEBUG
-
-#include "../../static_utils/mem_report/bin/header.h"
-
 #endif
 
 

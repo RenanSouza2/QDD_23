@@ -265,13 +265,6 @@ void qdd_free(qdd_p q)
 
 
 
-void qdd_display(qdd_p q)
-{
-    tree_display(q->n);
-}
-
-
-
 void qdd_reduce(qdd_p q)
 {
     CLU_HANDLER_VALIDATE(q);
@@ -282,6 +275,6 @@ void qdd_reduce(qdd_p q)
 
 qdd_p qdd_copy(qdd_p q)
 {
-    node_p n = tree_copy(q->n);
+    node_p n = tree_copy(q->node);
     return qdd_encapsulate_tree(q->qbits, n);
 }

@@ -3,7 +3,7 @@
 
 #include "../debug.h"
 #include "../../node/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
+#include "../../../mods/clu/header.h"
 
 void test_apply_create()
 {
@@ -19,7 +19,7 @@ void test_apply_create()
     assert(a->a2 == NULL);
     free(a);
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 void test_apply()
@@ -28,7 +28,7 @@ void test_apply()
 
     test_apply_create();
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
 

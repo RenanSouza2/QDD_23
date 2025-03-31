@@ -120,11 +120,10 @@ node_p node_amp_create(amp_t amp)
 
 node_p node_copy(node_p n)
 {
-    label_p lab = node_label(n);
-    if(label_is_amp(lab))
+    if(label_is_amp(&n->lab))
         return node_amp_create(AMP(n));
 
-    return node_str_create(lab);
+    return node_branch_create(n->lab);
 }
 
 

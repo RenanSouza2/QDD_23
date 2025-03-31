@@ -1,14 +1,7 @@
 #ifndef __TREE_H__
 #define __TREE_H__
 
-<<<<<<< HEAD
-#include "../../static_utils/struct.h"
-#include "../list/list_head/header.h"
-#include "../node/header.h"
-#include "../amp/struct.h"
-=======
 #include "../list/head/header.h"
->>>>>>> main
 
 typedef amp_t (*amp_index_f)(int index);
 
@@ -19,6 +12,7 @@ void tree_free(node_p n);
 void tree_display(node_p n);
 
 list_head_p tree_enlist(node_p n);
+list_body_p tree_enlist_amplitude(node_p n);
 node_p tree_copy(node_p n);
 list_body_p tree_enlist_amplitude(node_p n);
 

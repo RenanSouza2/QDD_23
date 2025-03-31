@@ -2,21 +2,9 @@
 #include <assert.h>
 
 #include "debug.h"
-<<<<<<< HEAD
-#include "../apply/header.h"
-#include "../node/struct.h"
-#include "../list/list_body/struct.h"
-#include "../list/list_head/struct.h"
-#include "../utils/header.h"
-
-#ifdef DEBUG
-
-#include <string.h>
-
-#include "../node/debug.h"
-=======
 #include "../../mods/clu/header.h"
 
+#include "../apply/header.h"
 #include "../label/header.h"
 #include "../node/struct.h"
 #include "../macros/assert.h"
@@ -28,14 +16,10 @@
 #ifdef DEBUG
 
 #include "../amp/debug.h"
->>>>>>> main
 #include "../label/debug.h"
 #include "../list/head/debug.h"
 #include "../utils/debug.h"
 
-<<<<<<< HEAD
-bool tree_rec(node_p n, node_p n1, node_p n2)
-=======
 
 
 void tree_display(node_p node)
@@ -49,7 +33,6 @@ void tree_display(node_p node)
 
 
 bool tree_rec(node_p node, node_p node_1, node_p node_2)
->>>>>>> main
 {
     CLU_HANDLER_VALIDATE(node);
     CLU_HANDLER_VALIDATE(node_1);
@@ -57,15 +40,7 @@ bool tree_rec(node_p node, node_p node_1, node_p node_2)
 
     if(node_1 == NULL)
     {
-<<<<<<< HEAD
-        PRINT("\nERROR TREE ASSSERT 1 | LABEL MISMATCH | ");
-        label_display(node_label(n1));
-        PRINT(" ");
-        label_display(node_label(n2));
-        PRINT("\t\t");
-=======
         printf("\n\n\tTREE ASSERT ERRO\t| NODE 1 IS NULL");
->>>>>>> main
         return false;
     }
 
@@ -108,97 +83,8 @@ bool tree(node_p n1, node_p n2)
     return tree_rec(NULL, n1, n2);
 }
 
-node_p tree_create_variadic(int qbits, va_list args)
-{
-    node_p *N[qbits+1][3];
-    memset(N, 0, sizeof(N));
-
-    int size = va_arg(args, int);
-    N[0][0] = malloc(size * sizeof(node_p));
-    node_p n;
-    for(int i=0; i<size; i++)
-    {
-        amp_t amp = va_arg(args, amp_t);
-        N[0][0][i] = n = node_amp_create(&amp);
-    }
-
-    int max = va_arg(args, int);
-    for(int i=0; i<max; i++)
-    {
-        label_t lab = va_arg(args, label_t);
-        int size = va_arg(args, int);
-
-        node_p *N_1 = N[IDX(lab)] = malloc(size * sizeof(node_p));
-        for(int j=0; j<size; j++)
-        {
-            N_1[j] = n = node_str_create(&lab);
-            for(int side=0; side<2; side++)
-            {
-                label_t lab_0 = va_arg(args, label_t);
-                node_p *N_0 = N[IDX(lab_0)];
-                assert(N_0);
-
-                int index = va_arg(args, int);
-                node_connect(n, N_0[index], side);
-            }
-        }
-    }
-
-    for(int i=0; i<=qbits; i++)
-    for(int j=0; j<3; j++)
-    if(N[i][j]) free(N[i][j]);
-
-    return n;
-}
-
-node_p tree_create(int qbits, ...)
-{
-    va_list args;
-    va_start(args, qbits);
-    return tree_create_variadic(qbits, args);
-}
-
 #endif
 
-<<<<<<< HEAD
-node_p tree_create_vector(int qbits, amp_p amp)
-{
-    if(qbits == 0)
-        return node_amp_create(amp);
-
-    node_p n1, n0_el, n0_th;
-    n1 = node_str_create(&LAB(V, qbits));
-    n0_el = tree_create_vector(qbits-1,  amp);
-    n0_th = tree_create_vector(qbits-1, &amp[1 << (qbits-1)]);
-    node_connect_both(n1, n0_el, n0_th);
-    return n1;
-}
-
-node_p tree_create_fn(int qbits, int index, amp_index_f fn)
-{
-    if(qbits==20)
-        PRINT("\n%d", index);
-    if(qbits == 0)
-    {
-        amp_t amp = fn(index);
-        return node_amp_create(&amp);
-    }
-
-    node_p n1, n0_el, n0_th;
-    n1 = node_str_create(&LAB(V, qbits));
-    n0_el = tree_create_fn(qbits-1, index, fn);
-    n0_th = tree_create_fn(qbits-1, 1 << (qbits-1), fn);
-    node_connect_both(n1, n0_el, n0_th);
-    return n1;
-}
-
-void tree_free(node_p n)
-{
-    assert(n);
-
-    if(n->lh) return;
-=======
->>>>>>> main
 
 
 void tree_free(node_p node)
@@ -224,22 +110,7 @@ void tree_free(node_p node)
     tree_free(node_2);
 }
 
-<<<<<<< HEAD
-
-
-void tree_display(node_p n)
-{
-    list_head_p lh = tree_enlist(n);
-    lh = list_head_invert(lh);
-    list_head_display(lh);
-}
-
-
-
-list_head_p tree_enlist_rec(list_head_p lh, node_p n0, node_p n)
-=======
 list_head_p tree_enlist_rec(list_head_p lh, node_p node_0, node_p node)
->>>>>>> main
 {
     if(list_head_first(node->lh) != node_0)
         return lh;
@@ -259,24 +130,24 @@ list_head_p tree_enlist(node_p n)
     return tree_enlist_rec(NULL, NULL, n);
 }
 
-<<<<<<< HEAD
-list_body_p tree_enlist_amplitude(node_p n)
+list_body_p tree_enlist_amplitude(node_p n) // TODO test
 {
     list_head_p lh = tree_enlist(n);
     list_body_p lb = lh->lb[ELSE];
-    list_head_free(lh->lh);
+    list_head_free(lh->next);
     free(lh);
     return lb;
 }
 
-node_p tree_copy(node_p n)
+node_p tree_copy(node_p n) // TODO test
 {
     apply_p a = apply_tree_fit(n);
     apply_copy(a);
     n = apply_tree_build(a);
     apply_free(a);
     return n;
-=======
+}
+
 
 
 bool list_body_reduce_repeated_item(list_body_p lb, node_eq_f fn, node_p node_1, bool remove)
@@ -451,5 +322,4 @@ node_p tree_reduce(list_body_p lb)
     }
 
     return NULL;
->>>>>>> main
 }
