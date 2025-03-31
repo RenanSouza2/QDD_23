@@ -243,7 +243,7 @@ list_head_p list_head_reduce(node_p node_0, list_head_p *lh_root)
     CLU_HANDLER_VALIDATE(node_0);
     CLU_HANDLER_VALIDATE(*lh_root);
 
-    if(list_head_reduce_useless(node_0, lh_root))
+    if(!list_head_reduce_useless(node_0, lh_root))
         return NULL;
 
     return list_head_reduce_repeated(*lh_root);
@@ -257,6 +257,8 @@ list_head_p node_reduce(node_p node_0)
     for(list_head_p *lh_root = &node_0->lh; *lh_root; lh_root = &(*lh_root)->next)
     {
         list_head_p lh = list_head_reduce(node_0, lh_root);
+        if(*lh_root == NULL)
+            return NULL;
         lh_res = list_head_merge(lh_res, lh);
     }
     return lh_res;

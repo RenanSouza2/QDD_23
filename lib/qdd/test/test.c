@@ -217,6 +217,12 @@ void test_qdd_reduce(bool show)
         1, v1, 1, amp, 0, amp, 1
     );
 
+    TEST_QDD_REDUCE(2, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 0)}),
+        1, AMPI(0, 0),
+        0
+    );
+
     #undef TEST_QDD_REDUCE
 
     // printf("\n\t\t%s 1\t\t", __func__);
