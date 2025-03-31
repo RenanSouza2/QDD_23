@@ -1,187 +1,215 @@
 #include <stdlib.h>
-#include <assert.h>
 
 #include "debug.h"
-#include "../list/list_head/struct.h"
-#include "../list/list_body/struct.h"
+#include "../../mods/clu/header.h"
+
+#include "../amp/header.h"
+#include "../label/header.h"
+#include "../macros/assert.h"
+#include "../list/head/header.h"
+#include "../list/body/struct.h"
+
+
 
 #ifdef DEBUG
 
-#include "../../static_utils/mem_report/bin/header.h"
-
-#include "../utils/debug.h"
-#include "../label/debug.h"
 #include "../amp/debug.h"
+#include "../label/debug.h"
+#include "../utils/debug.h"
 
-void node_str_display(node_p ns)
+
+
+void node_branch_display(node_p node)
 {
-    PRINT("\nnode (str) display: %p", ns);
+    CLU_HANDLER_VALIDATE(node);
+
+    PRINT("\nnode (branch): %p", node);
     PRINT("\nlabel: ");
-    label_display(node_label(ns));
-    
-    str_p str = node_str(ns);
-    PRINT("\nel: %p\tth: %p", str->el, str->th);
+    label_display(node->lab);
+
+    PRINT("\nel: %p\tth: %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
     PRINT("\n");
 }
 
-void node_amp_display(node_p na)
+void node_amp_display(node_p node)
 {
-    PRINT("\nnode (amp) display: %p", na);
-    PRINT("\nlabel: %d %d", na->lab.cl, na->lab.lv);
+    CLU_HANDLER_VALIDATE(node);
+
+    PRINT("\nnode (amp): %p", node);
     PRINT("\namp: ");
-    amp_display(node_amp(na));
+    amp_display(AMP(node));
     PRINT("\n");
 }
 
-void node_display(node_p n)
+void node_display_short(node_p node)
 {
-    if(node_is_amp(n)) node_amp_display(n);
-    else               node_str_display(n);
+    CLU_HANDLER_VALIDATE(node);
+
+    printf("%p\t", node);
+    label_t lab = node->lab;
+    label_display(lab);
+    printf("\t");
+    if(label_is_amp(&lab))
+        amp_display(AMP(node));
+    else
+        printf("%p %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
 }
 
-void str_display(str_p str)
+void node_display(node_p node)
 {
-    PRINT("%p\t\t%p", str->el, str->th);
+    CLU_HANDLER_VALIDATE(node);
+
+    if(label_is_amp(&node->lab))
+        node_amp_display(node);
+    else
+        node_branch_display(node);
+}
+
+
+
+void node_test_free(node_p node)
+{
+    CLU_HANDLER_VALIDATE(node);
+
+    if(node->lh)
+        list_head_free(node->lh);
+
+    free(node);
 }
 
 #endif
 
 
 
-node_p node_str_create(label_p lab)
+node_p node_branch_create(label_t lab)
 {
-    node_str_p ns = malloc(sizeof(node_str_t));
-    assert(ns);
+    node_branch_p node = malloc(sizeof(node_branch_t));
+    assert(node);
 
-    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
-    return ND(ns);
+    *node = (node_branch_t)
+    {
+        .s =
+        {
+            .lh = NULL,
+            .lab = lab
+        },
+        .branch = {NULL, NULL}
+    };
+    return ND(node);
 }
 
-node_p node_amp_create(amp_p amp)
+node_p node_amp_create(amp_t amp)
 {
     node_amp_p na = malloc(sizeof(node_amp_t));
     assert(na);
 
-    *na = (node_amp_t){{NULL, {0, 0}}, *amp};
+    *na = (node_amp_t){
+        .s =
+        {
+            .lh = NULL,
+            .lab =
+            {
+                .cl = 0,
+                .lv = 0
+            }
+        },
+        .amp = amp
+    };
     return ND(na);
 }
 
-void node_free(node_p n)
+
+
+bool node_eq_amp(node_p node_1, node_p node_2)
 {
-    list_head_free(n->lh);
-    free(n);
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
+
+    return amp_eq(AMP(node_1), AMP(node_2));
+}
+
+bool node_eq_el(node_p node_1, node_p node_2)
+{
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
+
+    return BRANCH(node_1)[ELSE] == BRANCH(node_2)[ELSE];
+}
+
+bool node_eq_th(node_p node_1, node_p node_2)
+{
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
+
+    return BRANCH(node_1)[THEN] == BRANCH(node_2)[THEN];
 }
 
 
 
-label_p node_label(node_p n)
+void node_connect(node_p node_top, node_p node_bot, int side)
 {
-    return &n->lab;
+    CLU_HANDLER_VALIDATE(node_top);
+    CLU_HANDLER_VALIDATE(node_bot);
+
+    assert(node_top);
+    assert(node_bot);
+
+    assert(BRANCH(node_top)[side] == NULL);
+    BRANCH(node_top)[side] = node_bot;
+    node_bot->lh = list_head_insert(node_bot->lh, node_top, side);
 }
 
-bool node_is_amp(node_p n)
+void node_connect_both(node_p node_top, node_p node_el, node_p node_th)
 {
-    label_p lab = node_label(n);
-    return label_is_amp(lab);
+    CLU_HANDLER_VALIDATE(node_top);
+    CLU_HANDLER_VALIDATE(node_el);
+    CLU_HANDLER_VALIDATE(node_th);
+
+    node_connect(node_top, node_el, ELSE);
+    node_connect(node_top, node_th, THEN);
 }
 
-str_p node_str(node_p n)
+void node_disconnect(node_p node, int side)
 {
-    assert(!node_is_amp(n));
-    return ND_STR(n);
+    CLU_HANDLER_VALIDATE(node);
+
+    assert(node);
+
+    node_p node_bot = BRANCH(node)[side];
+    assert(node_bot);
+
+    BRANCH(node)[side] = NULL;
+    node_bot->lh = list_head_remove(node_bot->lh, node, side);
 }
 
-amp_p node_amp(node_p n)
+void node_disconnect_both(node_p node)
 {
-    assert(node_is_amp(n));
-    return ND_AMP(n);
-}
+    CLU_HANDLER_VALIDATE(node);
 
-node_p node_first(node_p n)
-{
-    return list_head_first(n->lh);
-}
-
-bool node_amp_eq(node_p n1, node_p n2)
-{
-    return amp_eq(node_amp(n1), node_amp(n2));
-}
-
-bool node_el_eq(node_p n1, node_p n2)
-{
-    str_p str_1 = node_str(n1);
-    str_p str_2 = node_str(n2);
-    return str_1->el == str_2->el;
-}
-
-bool node_th_eq(node_p n1, node_p n2)
-{
-    str_p str_1 = node_str(n1);
-    str_p str_2 = node_str(n2);
-    return str_1->th == str_2->th;
+    node_disconnect(node, ELSE);
+    node_disconnect(node, THEN);
 }
 
 
 
-void node_connect(node_p n1, node_p n0, int side)
+void node_merge(node_p node_1, node_p node_2)
 {
-    assert(V_STR(n1)[side] == NULL);
-    V_STR(n1)[side] = n0;
-    n0->lh = list_head_insert(n0->lh, n1, side);
-}
+    CLU_HANDLER_VALIDATE(node_1);
+    CLU_HANDLER_VALIDATE(node_2);
 
-void node_connect_both(node_p n, node_p n_el, node_p n_th)
-{
-    str_p str = node_str(n);
-    assert(str->el == NULL);
-    assert(str->th == NULL);
-    *str = (str_t){n_el, n_th};
-    n_el->lh = list_head_insert(n_el->lh, n, ELSE);
-    n_th->lh = list_head_insert(n_th->lh, n, THEN);
-}
+    assert(node_1);
+    assert(node_2);
 
-void node_disconnect(node_p n, int side)
-{
-    node_p n0 = V_STR(n)[side];
-    assert(n0);
-
-    V_STR(n)[side] = NULL;
-    n0->lh = list_head_remove(n0->lh, n, side);
-}
-
-void node_disconnect_both(node_p n)
-{
-    str_p str = node_str(n);
-    node_p n_el = str->el;
-    node_p n_th = str->th;
-    assert(n_el);
-    assert(n_th);
-    *str = (str_t){NULL, NULL};
-    
-    n_el->lh = list_head_remove(n_el->lh, n, ELSE);
-    n_th->lh = list_head_remove(n_th->lh, n, THEN);
-}
-
-
-
-bool node_merge(node_p n1, node_p n2)
-{
-    assert(n1);
-    assert(n2);
-
-    for(list_head_p lh = n2->lh; lh; lh = lh->lh)
-    for(int side = 0; side < 2; side++)
-    for(list_body_p lb = lh->lb[side]; lb; lb = lb->lb)
+    for(list_head_p lh = node_2->lh; lh; lh = lh->next)
     {
-        str_p str = node_str(lb->n);
-        if(str->el == n2) str->el = n1;
-        if(str->th == n2) str->th = n1;
+        for(int side = 0; side < 2; side ++)
+        for(list_body_p lb = lh->lb[side]; lb; lb = lb->next)
+            BRANCH(lb->node)[side] = node_1;
     }
 
-    n1->lh = list_head_merge(n1->lh, n2->lh);
-    bool res = !node_is_amp(n2);
-    if(res) node_disconnect_both(n2);
+    node_1->lh = list_head_merge(node_1->lh, node_2->lh);
+    if(!label_is_amp(&node_2->lab))
+        node_disconnect_both(node_2);
 
-    free(n2);
-    return res;
+    free(node_2);
 }

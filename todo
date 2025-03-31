@@ -1,0 +1,6 @@
+use uint64
+rename n to node
+rename lb to next
+rename lh to next
+improve test tooling
+experiment with union in node struct

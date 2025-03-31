@@ -1,6 +1,6 @@
 #ifndef __EXAMPLE_STRUCT_H__
 #define __EXAMPLE_STRUCT_H__
 
-#include "header.h"
+#include "../macros/struct.h"
 
 #endif

@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <assert.h>
 
 #include "../debug.h"
 
@@ -9,7 +8,7 @@ void test_utils()
 }
 
 
-int main() 
+int main()
 {
     return 0;
 

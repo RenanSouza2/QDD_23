@@ -1,11 +1,15 @@
 #ifndef __AMP_DEBUG_H__
 #define __AMP_DEBUG_H__
 
-#include "struct.h"
+#include "header.h"
 
 #ifdef DEBUG
 
-void amp_display(amp_p amp);
+#define AMPI(RE, IM) ((amp_t){RE, IM})
+
+void amp_display(amp_t amp);
+
+bool amplitude(amp_t amp_1, amp_t amp_2);
 
 #endif
 
