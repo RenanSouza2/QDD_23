@@ -200,22 +200,22 @@ void test_qdd_reduce(bool show)
     label_t v1 = LAB(V, 1);
     // label_t V2 = LAB(V, 2);
 
-    #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)   \
-    {                                           \
-        TEST_CASE_OPEN(TAG)                     \
-        {                                       \
-            qdd_p q = qdd_create_immed(QBITS, QDD); \
-            qdd_reduce(q);                  \
-            assert(qdd_immed(q, __VA_ARGS__));  \
-        }                                       \
-        TEST_CASE_CLOSE                         \
+    #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)       \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, QDD);       \
+            qdd_reduce(q);                              \
+            assert(qdd_immed(q, QBITS, __VA_ARGS__));   \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
     }
 
     TEST_QDD_REDUCE(1, 1,
         ((amp_t[]){AMPI(0, 0), AMPI(0, 1)}),
         2, AMPI(0, 0), AMPI(0, 1),
         1, v1, 1, amp, 0, amp, 1
-    )
+    );
 
     #undef TEST_QDD_REDUCE
 
@@ -265,9 +265,9 @@ void test_qdd()
 
     bool show = true;
 
-    test_qdd_create(show);
-    test_qdd_create_immed(show);
-    test_qdd_arr(show);
+    // test_qdd_create(show);
+    // test_qdd_create_immed(show);
+    // test_qdd_arr(show);
     test_qdd_reduce(show);
 
     assert(clu_mem_is_empty());

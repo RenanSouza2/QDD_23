@@ -17,6 +17,7 @@
 #include "../label/debug.h"
 #include "../list/head/debug.h"
 #include "../utils/debug.h"
+#include "../list/body/debug.h" // TODO remove
 
 
 
@@ -282,6 +283,9 @@ node_p list_head_pop_node(list_head_p *lh_root)
 node_p tree_reduce(list_body_p lb)
 {
     lb = list_body_reduce_repeated(lb, node_eq_amp, true);
+    if(lb == NULL)
+        return NULL;
+
     list_head_p lh = list_head_create_body(lb, ELSE, NULL);
     for(
         node_p node = list_head_pop_node(&lh);
