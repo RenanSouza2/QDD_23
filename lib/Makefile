@@ -2,45 +2,69 @@ DIRS := $(wildcard */.)
 
 LIB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))lib.o)
 DGB_FILES = $(foreach DIR,$(DIRS),$(dir $(DIR))debug.o)
+CLU_FILE = ../mods/clu/bin/bin.o
 
+<<<<<<< HEAD
 DGB_MEM = ../static_utils/mem_report/bin/bin.o
+=======
+DIR = lib$(word 2,$(subst lib, ,$(CURDIR)))
+>>>>>>> main
 
 build: lib.o
 
 
 
 lib.o: $(LIB_FILES)
+	echo " linking object $(DIR)"
 	ld -r -o $@ $^
+<<<<<<< HEAD
 	
 debug.o: $(DGB_FILES) $(DGB_MEM)
+=======
+
+debug.o: $(DGB_FILES) $(CLU_FILE)
+	echo " linking debug $(DIR)"
+>>>>>>> main
 	ld -r -o $@ $^
 
 
 
-.PHONY: $(LIB_FILES)
-$(LIB_FILES):
+.PHONY: $(LIB_FILES) $(CLU_FILE)
+$(LIB_FILES) $(CLU_FILE):
 	$(MAKE) --directory=$(dir $@)
 
 .PHONY: $(DGB_FILES)
 $(DGB_FILES):
 	$(MAKE) debug.o --directory=$(dir $@)
 
+<<<<<<< HEAD
 .PHONY: $(DGB_MEM)
 $(DGB_MEM):
 	echo "Fetching mem_report"
 	$(MAKE) --directory=$(dir $@)
+=======
+>>>>>>> main
 
 
+clean c:
+	$(MAKE) _clean -s
 
-.PHONY: clean
-clean:
+_clean:
+	echo "cleaning $(DIR)"
 	rm -rf *.o
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) clean --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _clean --directory=$$DIR ) || exit $$? ; \
 	done
+	$(MAKE) clean --directory=$(dir $(CLU_FILE))
+
+
 
 .PHONY: test
-test:
+test t:
+	$(MAKE) debug.o
+	$(MAKE) _test -s
+
+_test:
 	for DIR in $(DIRS) ; do \
-		( $(MAKE) test --directory=$$DIR ) || exit $$? ; \
+		( $(MAKE) _test --directory=$$DIR ) || exit $$? ; \
 	done

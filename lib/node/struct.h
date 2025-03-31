@@ -1,15 +1,10 @@
 #ifndef __ND_STRUCT_H__
 #define __ND_STRUCT_H__
 
-#include "header.h"
-#include "../list/list_head/header.h"
-#include "../label/struct.h"
 #include "../amp/struct.h"
+#include "../label/struct.h"
 
-STRUCT(str)
-{
-    node_p el, th;
-};
+PLACEHOLDER(list_head);
 
 STRUCT(node)
 {
@@ -17,16 +12,21 @@ STRUCT(node)
     label_t lab;
 };
 
-STRUCT(node_str)
+STRUCT(node_branch)
 {
-    node_t n;
-    str_t s;
+    node_t s;
+    node_p branch[2];
 };
 
 STRUCT(node_amp)
 {
-    node_t n;
-    amp_t a;
+    node_t s;
+    amp_t amp;
 };
+
+#define ND(NODE) ((node_p)(NODE))
+#define AMP(NODE) (*(amp_p)(ND(NODE)+1))
+#define BRANCH(NODE) ((node_p*)(ND(NODE)+1))
+#define SIDE(NODE_TOP, NODE_BOT) (BRANCH(NODE_TOP)[0] != NODE_BOT)
 
 #endif

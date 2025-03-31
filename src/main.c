@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+<<<<<<< HEAD
 #include "../static_utils/struct.h"
 #include "../lib/qdd/header.h"
 #include "../lib/amp/struct.h"
@@ -12,6 +13,8 @@ amp_t amp_fn(int index)
 }
 
 
+=======
+>>>>>>> main
 int main()
 {
     setbuf(stdout, NULL);

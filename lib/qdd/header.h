@@ -1,6 +1,7 @@
 #ifndef __QDD_H__
 #define __QDD_H__
 
+<<<<<<< HEAD
 #include "../../static_utils/struct.h"
 #include "../tree/header.h"
 
@@ -13,5 +14,8 @@ void qdd_display(qdd_p q);
 
 void qdd_reduce(qdd_p q);
 void qdd_free(qdd_p q);
+=======
+#include "../macros/struct.h"
+>>>>>>> main
 
 #endif
