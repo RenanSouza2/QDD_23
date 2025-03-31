@@ -293,7 +293,7 @@ node_p tree_reduce(list_body_p lb)
     for(
         node_p node = list_head_pop_node(&lh);
         node;
-        list_head_pop_node(&lh)
+        node = list_head_pop_node(&lh)
     ) {
         list_head_p lh_aux = node_reduce(node);
         if(node->lh == NULL)
