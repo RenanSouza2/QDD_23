@@ -1,9 +1,9 @@
 #ifndef __APPLY_STRUCT_H__
 #define __APPLY_STRUCT_H__
 
-#include "header.h"
+#include "../macros/struct.h"
 
-#include "../node/header.h"
+PLACEHOLDER(node);
 
 STRUCT(apply)
 {
