@@ -32,17 +32,18 @@ qdd_p qdd_create_variadic_qbits(int qbits, va_list args)
     node_p *N[max][3];
     memset(N, 0, sizeof(N));
 
-    int size = va_arg(args, int);
-    node_p *N_lab = N[0][0] = malloc(size * sizeof(node_p));
+    int size_amp = va_arg(args, int);
+    assert(size_amp);
+    node_p *N_lab = N[0][0] = malloc(size_amp * sizeof(node_p));
     assert(N_lab);
 
     node_p node = NULL;
-    for(int i=0; i<size; i++)
+    for(int i=0; i<size_amp; i++)
     {
         amp_t amp = va_arg(args, amp_t);
         N_lab[i] = node = node_amp_create(amp);
     }
-    list_body_p lb = list_body_create_vec(size, N_lab);
+    list_body_p lb = list_body_create_vec(size_amp, N_lab);
 
     int n = va_arg(args, int);
     for(int i=0; i<n; i++)

@@ -17,7 +17,10 @@
 #include "../label/debug.h"
 #include "../list/head/debug.h"
 #include "../utils/debug.h"
+
 #include "../list/body/debug.h" // TODO remove
+#include "../node/debug.h" // TODO remove
+#include <unistd.h>
 
 
 
@@ -270,7 +273,7 @@ node_p list_head_pop_node(list_head_p *lh_root)
     CLU_HANDLER_VALIDATE(*lh_root);
 
     list_head_p lh = *lh_root;
-    if(lh_root == NULL)
+    if(lh == NULL)
         return NULL;
 
     list_body_p lb = lh->lb[ELSE];
@@ -286,8 +289,6 @@ node_p list_head_pop_node(list_head_p *lh_root)
 node_p tree_reduce(list_body_p lb)
 {
     lb = list_body_reduce_repeated(lb, node_eq_amp, true);
-    if(lb == NULL)
-        return NULL;
 
     list_head_p lh = list_head_create_body(lb, ELSE, NULL);
     for(

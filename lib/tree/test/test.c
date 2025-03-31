@@ -409,7 +409,7 @@ void test_tree()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = true;
+    bool show = false;
 
     test_tree_enlist(show);
 

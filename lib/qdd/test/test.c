@@ -200,6 +200,8 @@ void test_qdd_reduce(bool show)
     label_t v1 = LAB(V, 1);
     // label_t V2 = LAB(V, 2);
 
+    if(show) printf("\no caceta");
+
     #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)       \
     {                                                   \
         TEST_CASE_OPEN(TAG)                             \
@@ -216,49 +218,18 @@ void test_qdd_reduce(bool show)
         2, AMPI(0, 0), AMPI(0, 1),
         1, v1, 1, amp, 0, amp, 1
     );
-
     TEST_QDD_REDUCE(2, 1,
         ((amp_t[]){AMPI(0, 0), AMPI(0, 0)}),
         1, AMPI(0, 0),
         0
     );
+    TEST_QDD_REDUCE(3, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 1)}),
+        2, AMPI(0, 0), AMPI(0, 1),
+        1,  v1, 1, amp, 0, amp, 1
+    );
 
     #undef TEST_QDD_REDUCE
-
-    // printf("\n\t\t%s 1\t\t", __func__);
-    // qdd_p q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
-    // qdd_reduce(q);
-
-    // qdd_p q_exp = qdd_create_immed(2,
-    //     3, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2),
-    //     2,
-    //     V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
-    //     V2, 1, V1, 0, V1, 1
-    // );
-    // assert(tree(q->node, q_exp->node));
-    // qdd_free(q);
-    // qdd_free(q_exp);
-
-    // printf("\n\t\t%s 2\t\t", __func__);
-    // q = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 0}});
-    // qdd_reduce(q);
-
-    // q_exp = qdd_create_immed(1,
-    //     1, AMPI(0, 0),
-    //     0
-    // );
-    // assert(tree(q->node, q_exp->node));
-    // qdd_free(q);
-    // qdd_free(q_exp);
-
-    // printf("\n\t\t%s 3\t\t", __func__);
-    // q = qdd_create_arr(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
-    // qdd_reduce(q);
-
-    // q_exp = qdd_create_arr(1, (amp_t[]){{0, 0}, {0, 1}});
-    // assert(tree(q->node, q_exp->node));
-    // qdd_free(q);
-    // qdd_free(q_exp);
 
     assert(clu_mem_is_empty());
 }
@@ -269,11 +240,11 @@ void test_qdd()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = true;
+    bool show = false;
 
-    // test_qdd_create(show);
-    // test_qdd_create_immed(show);
-    // test_qdd_arr(show);
+    test_qdd_create(show);
+    test_qdd_create_immed(show);
+    test_qdd_arr(show);
     test_qdd_reduce(show);
 
     assert(clu_mem_is_empty());
