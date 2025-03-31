@@ -12,11 +12,4 @@ STRUCT(label)
     int cl, lv;
 };
 
-<<<<<<< HEAD
-#define LAB(CL, LV) (label_t){CL, LV}
-#define IDX(L) (L).lv][(L).cl
-
 #endif
-=======
-#endif
->>>>>>> main

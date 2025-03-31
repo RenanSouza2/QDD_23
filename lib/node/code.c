@@ -1,17 +1,6 @@
 #include <stdlib.h>
 
 #include "debug.h"
-<<<<<<< HEAD
-#include "../list/list_head/struct.h"
-#include "../list/list_body/struct.h"
-#include "../utils/header.h"
-
-#ifdef DEBUG
-
-#include "../../static_utils/mem_report/bin/header.h"
-
-#include "../label/debug.h"
-=======
 #include "../../mods/clu/header.h"
 
 #include "../amp/header.h"
@@ -24,68 +13,13 @@
 
 #ifdef DEBUG
 
->>>>>>> main
 #include "../amp/debug.h"
 #include "../label/debug.h"
 #include "../utils/debug.h"
 
-<<<<<<< HEAD
-void str_display(str_p str)
-{
-    PRINT("%p\t\t%p", str->el, str->th);
-}
-
-void node_vector_free(int len, node_p N[])
-{
-    for(int i=0; i<len; i++)
-        free(N[i]);
-}
-
-#endif
-
-
-
-node_p node_str_create(label_p lab)
-{
-    node_str_p ns = malloc(sizeof(node_str_t));
-    assert(ns);
-
-    *ns = (node_str_t){{NULL, *lab}, {NULL, NULL}};
-    return ND(ns);
-}
-
-node_p node_amp_create(amp_p amp)
-{
-    node_amp_p na = malloc(sizeof(node_amp_t));
-    assert(na);
-
-    *na = (node_amp_t){{NULL, {0, 0}}, *amp};
-    return ND(na);
-}
-
-node_p node_copy(node_p n)
-{
-    label_p lab = node_label(n);
-    if(label_is_amp(lab))
-        return node_amp_create(node_amp(n));
-
-    return node_str_create(lab);
-}
-
-void node_free(node_p n)
-{
-    list_head_free(n->lh);
-    free(n);
-}
-
-
-
-void node_str_display(node_p ns)
-=======
 
 
 void node_branch_display(node_p node)
->>>>>>> main
 {
     CLU_HANDLER_VALIDATE(node);
 
@@ -121,8 +55,6 @@ void node_display_short(node_p node)
         printf("%p %p", BRANCH(node)[ELSE], BRANCH(node)[THEN]);
 }
 
-<<<<<<< HEAD
-=======
 void node_display(node_p node)
 {
     CLU_HANDLER_VALIDATE(node);
@@ -186,6 +118,15 @@ node_p node_amp_create(amp_t amp)
     return ND(na);
 }
 
+node_p node_copy(node_p n)
+{
+    label_p lab = node_label(n);
+    if(label_is_amp(lab))
+        return node_amp_create(AMP(n));
+
+    return node_str_create(lab);
+}
+
 
 
 bool node_eq_amp(node_p node_1, node_p node_2)
@@ -212,7 +153,6 @@ bool node_eq_th(node_p node_1, node_p node_2)
     return BRANCH(node_1)[THEN] == BRANCH(node_2)[THEN];
 }
 
->>>>>>> main
 
 
 void node_connect(node_p node_top, node_p node_bot, int side)

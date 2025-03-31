@@ -58,11 +58,7 @@ void test_label_is_amp(bool show)
 
 void test_label()
 {
-<<<<<<< HEAD
     printf("\n%s\t\t", __func__);
-=======
-    printf("\n%s", __func__);
->>>>>>> main
 
     bool show = false;
 

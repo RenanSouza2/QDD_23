@@ -3,11 +3,8 @@
 
 #include "../../label/struct.h"
 
-<<<<<<< HEAD:lib/list/list_head/struct.h
-=======
 PLACEHOLDER(list_body);
 
->>>>>>> main:lib/list/head/struct.h
 STRUCT(list_head)
 {
     label_t lab;

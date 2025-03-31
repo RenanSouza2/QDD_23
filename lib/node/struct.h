@@ -24,6 +24,9 @@ STRUCT(node_amp)
     amp_t amp;
 };
 
+#define ELSE 0
+#define THEN 1
+
 #define ND(NODE) ((node_p)(NODE))
 #define AMP(NODE) (*(amp_p)(ND(NODE)+1))
 #define BRANCH(NODE) ((node_p*)(ND(NODE)+1))

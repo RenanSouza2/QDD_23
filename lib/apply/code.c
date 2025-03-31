@@ -2,8 +2,8 @@
 #include <assert.h>
 
 #include "debug.h"
-#include "../node/struct.h"
-#include "../label/struct.h"
+#include "../node/header.h"
+#include "../label/header.h"
 #include "../qdd/struct.h"
 
 #ifdef DEBUG
@@ -60,13 +60,12 @@ apply_p apply_insert(apply_p *a_root, node_p n1, node_p n2)
 
 apply_p apply_tree_fit_rec(apply_p *a_root, node_p n)
 {
-    label_t lab = *node_label(n);
+    label_t lab = n->lab;
     apply_p a = apply_insert(a_root, n, NULL);
     if(label_is_amp(&lab) || a->el) return a;
 
-    str_p str = node_str(n);
-    a->el = apply_tree_fit_rec(a_root, str->el);
-    a->th = apply_tree_fit_rec(a_root, str->th);
+    a->el = apply_tree_fit_rec(a_root, BRANCH(n)[ELSE]);
+    a->th = apply_tree_fit_rec(a_root, BRANCH(n)[THEN]);
     return a;
 }
 
@@ -88,13 +87,14 @@ void apply_copy(apply_p a)
 apply_p apply_qdd_fit(qdd_p q)
 {
     apply_p a = NULL;
-    return apply_tree_fit_rec(&a, q->n);
+    return apply_tree_fit_rec(&a, q->node);
 }
 
 node_p apply_tree_build(apply_p a)
 {
     node_p n = a->n;
-    if(node_is_amp(n) || node_str(n)->el) return n;
+    if(label_is_amp(&n->lab) || BRANCH(n)[ELSE])
+        return n;
 
     node_p n_el, n_th;
     n_el = apply_tree_build(a->el);

@@ -18,10 +18,5 @@ void list_head_display(list_head_p lh);
 list_head_p list_head_insert(list_head_p lh, node_p n, int side);
 list_head_p list_head_remove(list_head_p lh, node_p n, int side);
 list_head_p list_head_merge(list_head_p lh_1, list_head_p lh_2);
-<<<<<<< HEAD:lib/list/list_head/header.h
-void list_head_reduce_1(list_head_p *lh_p);
-list_head_p list_head_reduce_2(list_head_p lh);
-=======
->>>>>>> main:lib/list/head/header.h
 
 #endif
