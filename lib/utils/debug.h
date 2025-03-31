@@ -5,9 +5,9 @@
 
 #ifdef DEBUG
 
-#include "../../static_utils/struct.h"
+#include <stdbool.h>
 
-int display_header(char s[], handler_p p);
+bool int_str(int a, int b);
 
 #endif
 

@@ -1,15 +1,15 @@
 #ifndef __LABEL_STRUCT_H__
 #define __LABEL_STRUCT_H__
 
-#include "header.h"
+#include "../macros/struct.h"
+
+#define R 2
+#define V 1
+#define C 0
 
 STRUCT(label)
 {
     int cl, lv;
 };
-
-#define LAB(CL, LV) (label_t){CL, LV}
-#define IDX(L) L.lv][L.cl
-
 
 #endif

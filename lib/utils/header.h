@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <assert.h>
+
+#include "../macros/struct.h"
 
 #define DEFAULT "\033[0m"
 #define RED     "\033[0;31m"
@@ -13,13 +14,15 @@
 #define MAGENTA "\033[0;35m"
 #define CYAN    "\033[0;36m"
 
-#define FCPRINT(POINTER,CODE,ARGS...)   \
-    {                                   \
-        fprintf(POINTER,CODE);          \
-        fprintf(POINTER,ARGS);          \
-        fprintf(POINTER,DEFAULT);       \
+#define FCPRINT(FP,CODE,ARGS...)    \
+    {                               \
+        fprintf(FP, CODE);          \
+        fprintf(FP, ARGS);          \
+        fprintf(FP, DEFAULT);       \
     }
-#define PRINT(ARGS...) fprintf(stdout,ARGS)
-#define CPRINT(CODE,ARGS...) FCPRINT(stdout,CODE,ARGS)
+#define PRINT(...) fprintf(stdout, __VA_ARGS__)
+#define CPRINT(CODE, ...) FCPRINT(stdout,CODE, __VA_ARGS__)
+
+bool handler_display(char tag[], handler_p h);
 
 #endif
