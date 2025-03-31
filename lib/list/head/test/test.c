@@ -38,14 +38,13 @@ void test_list_head_create_body(bool show)
     free(lh);
 
     if(show) printf("\n\t\t%s 3\t\t", __func__);
-    TEST_REVERT_OPEN
-    list_head_create_body(NULL, ELSE, NULL);
-    TEST_REVERT_CLOSE
+    lh = list_head_create_body(NULL, ELSE, NULL);
+    assert(lh == NULL);
 
     if(show) printf("\n\t\t%s 4\t\t", __func__);
     lb = list_body_create(NULL, NULL);
     TEST_REVERT_OPEN
-    list_head_create_body(NULL, ELSE, NULL);
+    list_head_create_body(lb, ELSE, NULL);
     TEST_REVERT_CLOSE
     free(lb);
 

@@ -259,6 +259,7 @@ list_head_p node_reduce(node_p node_0)
         list_head_p lh = list_head_reduce(node_0, lh_root);
         if(*lh_root == NULL)
             return NULL;
+
         lh_res = list_head_merge(lh_res, lh);
     }
     return lh_res;

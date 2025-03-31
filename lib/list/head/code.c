@@ -197,10 +197,11 @@ bool list_head_immed(list_head_p lh, int n, ...)
 list_head_p list_head_create_body(list_body_p lb, int side, list_head_p next)
 {
     CLU_HANDLER_VALIDATE(lb);
-    CLU_HANDLER_VALIDATE(lb->node);
     CLU_HANDLER_VALIDATE(next);
 
-    assert(lb);
+    if(lb == NULL)
+        return NULL;
+
     assert(lb->node);
 
     list_head_p lh = malloc(sizeof(list_head_t));
