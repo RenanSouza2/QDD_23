@@ -168,7 +168,7 @@ bool list_head_inner(list_head_p lh_1, list_head_p lh_2)
 
 bool list_head(list_head_p lh_1, list_head_p lh_2)
 {
-    if(!list_head_inner(lh_1, lh_2)) // TODO reevaluate
+    if(!list_head_inner(lh_1, lh_2))
     {
         printf("\n\nLIST HEAD 1");
         list_head_display(lh_1);

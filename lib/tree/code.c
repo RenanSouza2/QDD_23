@@ -18,10 +18,6 @@
 #include "../list/head/debug.h"
 #include "../utils/debug.h"
 
-#include "../list/body/debug.h" // TODO remove
-#include "../node/debug.h" // TODO remove
-#include <unistd.h>
-
 
 
 void tree_display(node_p node)
