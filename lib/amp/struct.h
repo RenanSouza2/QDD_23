@@ -5,8 +5,6 @@
 
 typedef double number_t;
 
-typedef double number_t;
-
 STRUCT(amp)
 {
     number_t re, im;

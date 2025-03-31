@@ -3,13 +3,6 @@
 
 #ifdef DEBUG
 
-void amp_display(amp_t amp)
-{
-    PRINT("%.1e, %.1e", amp.re, amp.im);
-}
-
-
-
 bool amplitude(amp_t amp_1, amp_t amp_2)
 {
     if(!amp_eq(amp_1, amp_2))
