@@ -200,7 +200,7 @@ qdd_p qdd_create(node_p node, list_body_p lb, int qbits)
     {
         .node = node,
         .lb = lb,
-        qbits = qbits
+        .qbits = qbits
     };
     return q;
 }
