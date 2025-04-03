@@ -9,6 +9,8 @@
 #include "./assert.h"
 #include "../../mods/clu/header.h"
 
+#define TEST_LIB printf("\n%s\t\t", __func__);
+
 #define TEST_FN printf("\n\t%s\t\t", __func__);
 
 #define TEST_CASE_OPEN(TAG)                                             \

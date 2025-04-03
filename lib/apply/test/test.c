@@ -1,41 +1,52 @@
-#include <stdio.h>
-#include <assert.h>
-
 #include "../debug.h"
 #include "../../node/debug.h"
+#include "../../macros/test.h"
 #include "../../../mods/clu/header.h"
 
-void test_apply_create()
-{
-    printf("\n\t%s\t\t", __func__);
 
-    apply_p a = apply_create(ND(1), ND(2));
-    assert(a->n  == NULL);
-    assert(a->n1 == ND(1));
-    assert(a->n2 == ND(2));
-    assert(a->el == NULL);
-    assert(a->th == NULL);
-    assert(a->a1 == NULL);
-    assert(a->a2 == NULL);
-    free(a);
+
+void test_apply_create(bool show)
+{
+    TEST_FN
+
+    TEST_CASE_OPEN(1)
+    {
+        apply_p a = apply_create(ND(1), ND(2));
+        assert(a->n  == NULL);
+        assert(a->n1 == ND(1));
+        assert(a->n2 == ND(2));
+        assert(a->el == NULL);
+        assert(a->th == NULL);
+        assert(a->a1 == NULL);
+        assert(a->a2 == NULL);
+        free(a);
+    }
+    TEST_CASE_CLOSE
 
     assert(clu_mem_is_empty());
 }
+
+
 
 void test_apply()
 {
-    printf("\n%s\t\t", __func__);
+    TEST_LIB
 
-    test_apply_create();
+    bool show = true;
+
+    test_apply_create(show);
 
     assert(clu_mem_is_empty());
 }
+
 
 
 int main() 
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_apply();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }

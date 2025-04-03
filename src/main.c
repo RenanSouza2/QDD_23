@@ -13,7 +13,7 @@ amp_t amp_fn(int)
 int main()
 {
     setbuf(stdout, NULL);
-    for(int i=1; i<30; i++)
+    for(int i=26; i<30; i++)
     {
         printf("\ni: %d", i);
         qdd_p q = qdd_create_fn(i, 0, amp_fn);

@@ -198,9 +198,6 @@ void test_qdd_reduce(bool show)
 
     label_t amp = LAB(0, 0);
     label_t v1 = LAB(V, 1);
-    // label_t V2 = LAB(V, 2);
-
-    if(show) printf("\no caceta");
 
     #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)       \
     {                                                   \
@@ -234,6 +231,52 @@ void test_qdd_reduce(bool show)
     assert(clu_mem_is_empty());
 }
 
+void test_qdd_copy(bool show)
+{
+    TEST_FN
+
+    #define TEST_QDD_COPY(TAG, QBITS, QDD, ...)         \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, QDD);       \
+            qdd_reduce(q);                              \
+            qdd_p q_res = qdd_copy(q);                  \
+            assert(qdd(q_res, q));                      \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
+    }
+
+    TEST_QDD_COPY(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)})
+    );
+    TEST_QDD_COPY(2, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 0)})
+    );
+    TEST_QDD_COPY(3, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3)})
+    );
+    TEST_QDD_COPY(4, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 3)})
+    );
+    TEST_QDD_COPY(5, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 1)})
+    );
+    TEST_QDD_COPY(6, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 1), AMPI(0, 0)})
+    );
+    TEST_QDD_COPY(7, 3,
+        ((amp_t[]){
+            AMPI(0, 0), AMPI(0, 1), AMPI(0, 1), AMPI(0, 0),
+            AMPI(0, 1), AMPI(0, 0), AMPI(0, 0), AMPI(0, 1)
+        })
+    );
+
+    #undef TEST_QDD_COPY
+
+    assert(clu_mem_is_empty());
+}
+
 
 
 void test_qdd()
@@ -246,6 +289,7 @@ void test_qdd()
     test_qdd_create_immed(show);
     test_qdd_arr(show);
     test_qdd_reduce(show);
+    test_qdd_copy(show);
 
     assert(clu_mem_is_empty());
 }

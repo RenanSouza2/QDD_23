@@ -106,40 +106,6 @@ bool qdd_inner(qdd_p q_1, qdd_p q_2)
         return false;
     }
 
-    list_body_p lb_1 = q_1->lb;
-    list_body_p lb_2 = q_2->lb;
-    for(int i=0; lb_1 && lb_2; i++)
-    {
-        CLU_HANDLER_VALIDATE(lb_1);
-
-        if(!label_is_amp(&lb_1->node->lab))
-        {
-            printf("\n\n\tQDD ASSERT ERROR\t| NODE IM AMPLITUDE LIST IS NOT AMP | %d", i);
-            return false;
-        }
-
-        if(!amplitude(AMP(lb_1->node), AMP(lb_2->node)))
-        {
-            printf("\n\tQDD ASSERT ERROR\t| AMPLITUDE MISMATCH | %d", i);
-            return false;
-        }
-
-        lb_1 = lb_1->next;
-        lb_2 = lb_2->next;
-    }
-
-    if(lb_1)
-    {
-        printf("\n\n\tQDD ASSERT ERROR\t| LB AMPLITUDE LONGER");
-        return false;
-    }
-
-    if(lb_2)
-    {
-        printf("\n\n\tQDD ASSERT ERROR\t| LB AMPLITUDE SHORTER");
-        return false;
-    }
-
     if(!tree(q_1->node, q_2->node))
     {
         printf("\n\tQDD ASSERT ERROR\t| LB AMPLITUDE SHORTER");

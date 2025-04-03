@@ -20,13 +20,23 @@ apply_p apply_create(node_p n1, node_p n2)
     apply_p a = malloc(sizeof(apply_t));
     assert(a);
 
-    *a = (apply_t){NULL, n1, n2, NULL, NULL, NULL, NULL};
+    *a = (apply_t)
+    {
+        .n  = NULL,
+        .n1 = n1,
+        .n2 = n2,
+        .el = NULL,
+        .th = NULL,
+        .a1 = NULL,
+        .a2 = NULL
+    };
     return a;
 }
 
 void apply_free(apply_p a)
 {
-    if(a == NULL) return;
+    if(a == NULL)
+    return;
 
     apply_free(a->a1);
     apply_free(a->a2);
@@ -61,9 +71,9 @@ apply_p apply_insert(apply_p *a_root, node_p n1, node_p n2)
 
 apply_p apply_tree_fit_rec(apply_p *a_root, node_p n)
 {
-    label_t lab = n->lab;
     apply_p a = apply_insert(a_root, n, NULL);
-    if(label_is_amp(&lab) || a->el) return a;
+    if(label_is_amp(&n->lab) || a->el)
+        return a;
 
     a->el = apply_tree_fit_rec(a_root, BRANCH(n)[ELSE]);
     a->th = apply_tree_fit_rec(a_root, BRANCH(n)[THEN]);
@@ -79,16 +89,12 @@ apply_p apply_tree_fit(node_p n)
 
 void apply_copy(apply_p a)
 {
-    if(a == NULL) return;
+    if(a == NULL)
+        return;
+
     a->n = node_copy(a->n1);
     apply_copy(a->a1);
     apply_copy(a->a2);
-}
-
-apply_p apply_qdd_fit(qdd_p q)
-{
-    apply_p a = NULL;
-    return apply_tree_fit_rec(&a, q->node);
 }
 
 node_p apply_tree_build(apply_p a)

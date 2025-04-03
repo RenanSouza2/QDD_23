@@ -12,5 +12,6 @@ void qdd_free(qdd_p q);
 void qdd_display(qdd_p q);
 
 void qdd_reduce(qdd_p q);
+qdd_p qdd_copy(qdd_p q);
 
 #endif
