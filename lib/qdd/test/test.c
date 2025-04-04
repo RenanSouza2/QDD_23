@@ -283,7 +283,7 @@ void test_qdd()
 {
     printf("\n%s\t\t", __func__);
 
-    bool show = false;
+    bool show = true;
 
     test_qdd_create(show);
     test_qdd_create_immed(show);

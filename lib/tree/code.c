@@ -28,6 +28,7 @@ void tree_display(node_p node)
 
     list_head_p lh = tree_enlist(node);
     list_head_display_full(lh);
+    list_head_free(lh);
 }
 
 
@@ -159,10 +160,15 @@ list_body_p tree_enlist_amplitude(node_p n) // TODO test
 
 node_p tree_copy(node_p n) // TODO test
 {
+    printf("\ntree_copy a\t\t");
     apply_p a = apply_tree_fit(n);
+    printf("\ntree_copy b\t\t");
     apply_copy(a);
+    printf("\ntree_copy c\t\t");
     n = apply_tree_build(a);
+    printf("\ntree_copy d\t\t");
     apply_free(a);
+    printf("\ntree_copy e\t\t");
     return n;
 }
 

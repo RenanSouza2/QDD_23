@@ -248,6 +248,12 @@ void qdd_reduce(qdd_p q)
 
 qdd_p qdd_copy(qdd_p q)
 {
+    printf("\nqdd_copy a\t\t");
     node_p n = tree_copy(q->node);
-    return qdd_encapsulate_tree(q->qbits, n);
+    printf("\nqdd_copy b\t\t");
+    node_display(n);
+    node_display(BRANCH(n)[ELSE]);
+    qdd_p q_res = qdd_encapsulate_tree(q->qbits, n);
+    printf("\nqdd_copy c\t\t");
+    return q_res;
 }

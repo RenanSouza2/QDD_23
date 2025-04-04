@@ -26,6 +26,35 @@ void test_apply_create(bool show)
     assert(clu_mem_is_empty());
 }
 
+void test_apply_insert(bool show)
+{
+    TEST_FN
+
+    TEST_CASE_OPEN(1)
+    {
+        apply_p a = NULL;
+        apply_insert(&a, ND(1), ND(2));
+        assert(a != NULL);
+        assert(a->n1 == ND(1));
+        assert(a->n2 == ND(2));
+        apply_free(a);
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(2)
+    {
+        apply_p a = NULL;
+        apply_insert(&a, ND(1), ND(2));
+        assert(a != NULL);
+        assert(a->n1 == ND(1));
+        assert(a->n2 == ND(2));
+        apply_free(a);
+    }
+    TEST_CASE_CLOSE
+
+    assert(clu_mem_is_empty());
+}
+
 
 
 void test_apply()
@@ -35,6 +64,7 @@ void test_apply()
     bool show = true;
 
     test_apply_create(show);
+    test_apply_insert(show);
 
     assert(clu_mem_is_empty());
 }
