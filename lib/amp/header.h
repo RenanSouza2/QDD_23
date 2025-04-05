@@ -1,12 +1,12 @@
 #ifndef __AMP_H__
 #define __AMP_H__
 
-#include "../../static_utils/struct.h"
+#include <stdbool.h>
 
-typedef double number_t;
+#include "struct.h"
 
-PLACEHOLDER(amp);
+void amp_display(amp_t amp);
 
-bool amp_eq(amp_p amp_1, amp_p amp_2);
+bool amp_eq(amp_t amp_1, amp_t amp_2);
 
 #endif

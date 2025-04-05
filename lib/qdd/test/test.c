@@ -1,299 +1,307 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <assert.h>
-
 #include "../debug.h"
 #include "../../amp/debug.h"
 #include "../../label/debug.h"
 #include "../../node/debug.h"
 #include "../../tree/debug.h"
-#include "../../list/list_head/debug.h"
-#include "../../../static_utils/mem_report/bin/header.h"
+#include "../../macros/test.h"
+#include "../../list/body/debug.h"
 
-qdd_p qdd_create_variadic(int qbits, ...)
+
+
+void test_qdd_create(bool show)
 {
-    node_p *N[qbits+1][3];
-    memset(N, 0, sizeof(N));
+    TEST_FN
 
-    va_list args;
-    va_start(args, qbits);
-
-    node_p n;
-    int size = va_arg(args, int);
-
-    N[0][0] = malloc(size * sizeof(node_p));
-    for(int i=0; i<size; i++)
+    TEST_CASE_OPEN(1)
     {
-        amp_t amp = va_arg(args, amp_t);
-        N[0][0][i] = n = node_amp_create(&amp);
+        CLU_HANDLER_REGISTER(ND(1));
+        CLU_HANDLER_REGISTER(LB(2));
+
+        qdd_p q = qdd_create(ND(1), LB(2), 3);
+        assert(q->node == ND(1));
+        assert(q->lb == LB(2));
+        assert(q->qbits == 3);
+        free(q);
+
+        CLU_HANDLER_UNREGISTER(ND(1));
+        CLU_HANDLER_UNREGISTER(LB(2));
     }
-    list_body_p lb = list_body_create_vector(size, N[0][0]);
+    TEST_CASE_CLOSE
 
-    int max = va_arg(args, int);
-    for(int i=0; i<max; i++)
-    {
-        label_t lab = va_arg(args, label_t);
-        int size = va_arg(args, int);
-
-        node_p *N_1 = N[IDX(lab)] = malloc(size * sizeof(node_p));
-        for(int j=0; j<size; j++)
-        {
-            N_1[j] = n = node_str_create(&lab);
-            
-            for(int side=0; side<2; side++)
-            {
-                label_t lab_0 = va_arg(args, label_t);
-                node_p *N_0 = N[IDX(lab_0)];
-                assert(N_0);
-
-                int index = va_arg(args, int);
-                node_connect(n, N_0[index], side);
-            }
-        }
-    }
-
-    for(int i=0; i<=qbits; i++)
-    for(int j=0; j<3; j++)
-    if(N[i][j]) free(N[i][j]);
-
-    return qdd_create(n, lb, qbits);
+    assert(clu_mem_is_empty());
 }
 
-
-
-void test_qdd_create()
+void test_qdd_create_immed(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
-    
-    qdd_p q = qdd_create(ND(1), LB(2), 3);
-    assert(q->n  == ND(1));
-    assert(q->lb == LB(2));
-    assert(q->qbits == 3);
-    free(q);
-
-    assert(mem_empty());
-}
-
-void test_qdd_create_variadic()
-{
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
     label_t amp, V1, V2;
     amp = LAB(0, 0);
     V1 = LAB(V, 1);
     V2 = LAB(V, 2);
 
-    printf("\n\t\t%s 1\t\t", __func__);
-    qdd_p q = qdd_create_variadic(1, 
-        2, AMP(0, 0), AMP(0, 1), 
-        1,
-        V1, 1, amp, 0, amp, 1
-    );
-
-    node_p n, n0, n1;
-    n  = node_str_create(&V1);
-    n0 = node_amp_create(&AMP(0, 0));
-    n1 = node_amp_create(&AMP(0, 1));
-    node_connect_both(n, n0, n1);
-    
-    assert(tree(q->n, n));
-    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
-    assert(amp_eq(node_amp(q->lb->lb->n), &AMP(0, 1)));
-    qdd_free(q);
-    tree_free(n);
-
-    printf("\n\t\t%s 2\t\t", __func__);
-    q = qdd_create_variadic(1, 
-        1, AMP(0, 0), 
-        0
-    );
-    n = node_amp_create(&AMP(0, 0));
-    assert(tree(q->n, n));
-    assert(amp_eq(node_amp(q->lb->n), &AMP(0, 0)));
-    qdd_free(q);
-    tree_free(n);
-
-    printf("\n\t\t%s 3\t\t", __func__);
-    q = qdd_create_variadic(2, 
-        4, AMP(0, 0), AMP(0, 1), AMP(0, 2), AMP(0, 3),
-        2,
-        V1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
-        V2, 1, V1, 0, V1, 1
-    );
-    n = node_str_create(&V2);
-    for(int i=0; i<2; i++)
+    TEST_CASE_OPEN(1)
     {
-        n1 = node_str_create(&V1);
-        node_connect(n, n1, i);
-
-        for(int j=0; j<2; j++)
-        {
-            n0 = node_amp_create(&AMP(0, (i << 1) | j));
-            node_connect(n1, n0, j);
-        }
+        qdd_p q_res = qdd_create_immed(1,
+            2, AMPI(0, 0), AMPI(0, 1),
+            1,  V1, 1, amp, 0, amp, 1
+        );
+        node_p node_amp[] = {
+            node_amp_create(AMPI(0, 0)),
+            node_amp_create(AMPI(0, 1))
+        };
+        node_p node_v1 = node_branch_create(V1);
+        node_connect_both(node_v1, node_amp[0], node_amp[1]);
+        list_body_p lb = list_body_create_immed(2, node_amp[0], node_amp[1]);
+        qdd_p q = qdd_create(node_v1, lb, 1);
+        assert(qdd(q_res, q));
     }
-    assert(tree(q->n, n));
-    qdd_free(q);
-    tree_free(n);
+    TEST_CASE_CLOSE
 
-    assert(mem_empty());
+    TEST_CASE_OPEN(2)
+    {
+        qdd_p q_res = qdd_create_immed(1,
+            1, AMPI(0, 0),
+            0
+        );
+        node_p node_amp = node_amp_create(AMPI(0, 0));
+        list_body_p lb = list_body_create_immed(1, node_amp);
+        qdd_p q = qdd_create(node_amp, lb, 1);
+        assert(qdd(q_res, q));
+    }
+    TEST_CASE_CLOSE
+
+    TEST_CASE_OPEN(3)
+    {
+        qdd_p q_res = qdd_create_immed(2,
+            4, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3),
+            2,  V1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
+                V2, 1, V1, 0, V1, 1
+        );
+        node_p node_amp[] = {
+            node_amp_create(AMPI(0, 0)),
+            node_amp_create(AMPI(0, 1)),
+            node_amp_create(AMPI(0, 2)),
+            node_amp_create(AMPI(0, 3))
+        };
+        node_p node_v1[] = {
+            node_branch_create(V1),
+            node_branch_create(V1),
+        };
+        node_p node_v2 = node_branch_create(V2);
+        node_connect_both(node_v2, node_v1[0], node_v1[1]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[1]);
+        node_connect_both(node_v1[1], node_amp[2], node_amp[3]);
+        list_body_p lb = list_body_create_immed(4,
+            node_amp[0],
+            node_amp[1],
+            node_amp[2],
+            node_amp[3]
+        );
+        qdd_p q = qdd_create(node_v2, lb, 2);
+        assert(qdd(q_res, q));
+    }
+    TEST_CASE_CLOSE
     
-    printf("\n\t\t%s 4\t\t", __func__);
-    q = qdd_create_variadic(2, 
-        2, AMP(0, 0), AMP(0, 1),
-        2,
-        V1, 1, amp, 0, amp, 1,
-        V2, 1, amp, 0, V1, 0
-    );
-    
-    node_p n2;
-    n1 = node_amp_create(&AMP(0, 0));
-    n2 = node_amp_create(&AMP(0, 1));
-    n = node_str_create(&V1);
-    node_connect_both(n, n1, n2);
-    
-    n2 = n;
-    n = node_str_create(&V2);
-    node_connect_both(n, n1, n2);
-    
-    assert(tree(q->n, n));
-    qdd_free(q);
-    tree_free(n);
+    TEST_CASE_OPEN(4)
+    {
+        qdd_p q_res = qdd_create_immed(2,
+            2, AMPI(0, 0), AMPI(0, 1),
+            2,  V1, 1, amp, 0, amp, 1,
+                V2, 1, amp, 0, V1, 0
+        );
+        node_p node_amp[] = {
+            node_amp_create(AMPI(0, 0)),
+            node_amp_create(AMPI(0, 1))
+        };
+        node_p node_v1 = node_branch_create(V1);
+        node_p node_v2 = node_branch_create(V2);
+        node_connect_both(node_v2, node_amp[0], node_v1);
+        node_connect_both(node_v1, node_amp[0], node_amp[1]);
+        list_body_p lb = list_body_create_immed(2, node_amp[0], node_amp[1]);
+        qdd_p q = qdd_create(node_v2, lb, 2);
+        assert(qdd(q_res, q));
+    }
+    TEST_CASE_CLOSE
 
-    printf("\n\t\t%s 5\t\t", __func__);
-    q = qdd_create_variadic(2,
-        3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
-        2,
-        V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
-        V2, 1, V1, 0, V1, 1
-    );
+    TEST_CASE_OPEN(5)
+    {
+        qdd_p q_res = qdd_create_immed(2,
+            3, AMPI(0, 0), AMPI(0, 1), AMPI(0, 2),
+            2,  V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
+                V2, 1, V1, 0, V1, 1
+        );
+        node_p node_amp[] = {
+            node_amp_create(AMPI(0, 0)),
+            node_amp_create(AMPI(0, 1)),
+            node_amp_create(AMPI(0, 2))
+        };
+        node_p node_v1[] = {
+            node_branch_create(V1),
+            node_branch_create(V1),
+        };
+        node_p node_v2 = node_branch_create(V2);
+        node_connect_both(node_v2, node_v1[0], node_v1[1]);
+        node_connect_both(node_v1[0], node_amp[0], node_amp[1]);
+        node_connect_both(node_v1[1], node_amp[0], node_amp[2]);
+        list_body_p lb = list_body_create_immed(3,
+            node_amp[0],
+            node_amp[1],
+            node_amp[2]
+        );
+        qdd_p q = qdd_create(node_v2, lb, 2);
+        assert(qdd(q_res, q));
+    }
+    TEST_CASE_CLOSE
 
-    n0 = node_amp_create(&AMP(0, 0));
-    n1 = node_amp_create(&AMP(0, 1));
-    n2 = node_str_create(&V1);
-    node_connect_both(n2, n0, n1);
-    
-    node_p n3;
-    n1 = node_amp_create(&AMP(0, 2));
-    n3 = node_str_create(&V1);
-    node_connect_both(n3, n0, n1);
-
-    n = node_str_create(&V2);
-    node_connect_both(n, n2, n3);
-
-    assert(tree(q->n, n)); 
-    qdd_free(q);
-    tree_free(n);
-
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
-void test_qdd_vector()
+void test_qdd_arr(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
-    label_t amp, V1;
-    amp = LAB(0, 0);
-    V1 = LAB(V, 1);
-    
-    qdd_p q0 = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
-    qdd_p q1 = qdd_create_variadic(1,
-        2, AMP(0, 0), AMP(0, 1),
-        1,
-        V1, 1, amp, 0, amp, 1
+    label_t amp = LAB(0, 0);
+    label_t v1 = LAB(V, 1);
+    label_t v2 = LAB(V, 2);
+
+    #define TEST_QDD_ARR(TAG, QBITS, ARR, ...)          \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, ARR);       \
+            assert(qdd_immed(q, QBITS, __VA_ARGS__));   \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
+    }
+
+    TEST_QDD_ARR(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)}),
+        2,  AMPI(0, 0), AMPI(0, 1),
+        1,  v1, 1, amp, 0, amp, 1
     );
-    assert(tree(q0->n, q1->n));
+    TEST_QDD_ARR(2, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3)}),
+        4,  AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3),
+        2,  v1, 2, amp, 0, amp, 1, amp, 2, amp, 3,
+            v2, 1, v1, 0, v1, 1
+    );
 
-    qdd_free(q0);
-    qdd_free(q1);
+    #undef TEST_QDD_ARR
 
-    assert(mem_empty());
+    assert(clu_mem_is_empty());
 }
 
-
-
-void test_qdd_reduce()
+void test_qdd_reduce(bool show)
 {
-    printf("\n\t%s\t\t", __func__);
+    TEST_FN
 
-    printf("\n\t\t%s 1\t\t", __func__);
-    qdd_p q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 2}});
-    qdd_reduce(q);
+    label_t amp = LAB(0, 0);
+    label_t v1 = LAB(V, 1);
 
-    label_t amp, V1, V2;
-    amp = LAB(0, 0);
-    V1 = LAB(V, 1);
-    V2 = LAB(V, 2);
+    #define TEST_QDD_REDUCE(TAG, QBITS, QDD, ...)       \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, QDD);       \
+            qdd_reduce(q);                              \
+            assert(qdd_immed(q, QBITS, __VA_ARGS__));   \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
+    }
 
-    qdd_p q_exp = qdd_create_variadic(2,
-        3, AMP(0, 0), AMP(0, 1), AMP(0, 2),
-        2,
-        V1, 2, amp, 0, amp, 1, amp, 0, amp, 2,
-        V2, 1, V1, 0, V1, 1
+    TEST_QDD_REDUCE(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)}),
+        2, AMPI(0, 0), AMPI(0, 1),
+        1, v1, 1, amp, 0, amp, 1
     );
-    assert(tree(q->n, q_exp->n));
-    qdd_free(q);
-    qdd_free(q_exp);
-
-    printf("\n\t\t%s 2\t\t", __func__);
-    q = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 0}});
-    qdd_reduce(q);
-
-    q_exp = qdd_create_variadic(1,
-        1, AMP(0, 0),
+    TEST_QDD_REDUCE(2, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 0)}),
+        1, AMPI(0, 0),
         0
     );
-    assert(tree(q->n, q_exp->n));
-    qdd_free(q);
-    qdd_free(q_exp);
-
-    printf("\n\t\t%s 3\t\t", __func__);
-    q = qdd_create_vector(2, (amp_t[]){{0, 0}, {0, 1}, {0, 0}, {0, 1}});
-    qdd_reduce(q);
-
-    q_exp = qdd_create_vector(1, (amp_t[]){{0, 0}, {0, 1}});
-    assert(tree(q->n, q_exp->n));
-    qdd_free(q);
-    qdd_free(q_exp);
-
-    printf("\n\t\t%s 4\t\t", __func__);
-    q = qdd_create_vector(3, (amp_t[]){
-        {0, 0}, {0, 1}, {0, 1}, {0, 0},
-        {0, 0}, {0, 1}, {0, 1}, {0, 0}
-    });
-    qdd_reduce(q);
-    q_exp = qdd_create_variadic(3, 
-        2, AMP(0, 0), AMP(0, 1),
-        2,
-        V1, 2, amp, 0, amp, 1, amp, 1, amp, 0,
-        V2, 1, V1, 0, V1, 1
+    TEST_QDD_REDUCE(3, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 1)}),
+        2, AMPI(0, 0), AMPI(0, 1),
+        1,  v1, 1, amp, 0, amp, 1
     );
-    assert(tree(q->n, q_exp->n));
-    qdd_free(q);
-    qdd_free(q_exp);
-    
-    assert(mem_empty());
+
+    #undef TEST_QDD_REDUCE
+
+    assert(clu_mem_is_empty());
 }
+
+void test_qdd_copy(bool show)
+{
+    TEST_FN
+
+    #define TEST_QDD_COPY(TAG, QBITS, QDD, ...)         \
+    {                                                   \
+        TEST_CASE_OPEN(TAG)                             \
+        {                                               \
+            qdd_p q = qdd_create_arr(QBITS, QDD);       \
+            qdd_reduce(q);                              \
+            qdd_p q_res = qdd_copy(q);                  \
+            assert(qdd(q_res, q));                      \
+        }                                               \
+        TEST_CASE_CLOSE                                 \
+    }
+
+    TEST_QDD_COPY(1, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1)})
+    );
+    TEST_QDD_COPY(2, 1,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 0)})
+    );
+    TEST_QDD_COPY(3, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 2), AMPI(0, 3)})
+    );
+    TEST_QDD_COPY(4, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 3)})
+    );
+    TEST_QDD_COPY(5, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 0), AMPI(0, 1)})
+    );
+    TEST_QDD_COPY(6, 2,
+        ((amp_t[]){AMPI(0, 0), AMPI(0, 1), AMPI(0, 1), AMPI(0, 0)})
+    );
+    TEST_QDD_COPY(7, 3,
+        ((amp_t[]){
+            AMPI(0, 0), AMPI(0, 1), AMPI(0, 1), AMPI(0, 0),
+            AMPI(0, 1), AMPI(0, 0), AMPI(0, 0), AMPI(0, 1)
+        })
+    );
+
+    #undef TEST_QDD_COPY
+
+    assert(clu_mem_is_empty());
+}
+
+
 
 void test_qdd()
 {
     printf("\n%s\t\t", __func__);
 
-    test_qdd_create();
-    test_qdd_create_variadic();
-    test_qdd_vector();
-    test_qdd_reduce();
+    bool show = true;
 
-    assert(mem_empty());
+    test_qdd_create(show);
+    test_qdd_create_immed(show);
+    test_qdd_arr(show);
+    test_qdd_reduce(show);
+    test_qdd_copy(show);
+
+    assert(clu_mem_is_empty());
 }
 
 
 
-int main() 
+int main()
 {
     setbuf(stdout, NULL);
+    TEST_TIMEOUT_OPEN(TEST_TIMEOUT_DEFAULT)
     test_qdd();
+    TEST_TIMEOUT_CLOSE
     printf("\n\n\tTest successful\n\n");
     return 0;
 }
