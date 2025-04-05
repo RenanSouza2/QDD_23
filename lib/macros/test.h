@@ -72,6 +72,11 @@
         {                                               \
             pid_t pid_timeout = fork();                 \
             assert(pid_timeout >= 0);                   \
+            if(pid_timeout < 0)                         \
+            {                                           \
+                kill(pid_test, SIGKILL);                \
+                exit(EXIT_FAILURE);                     \
+            }                                           \
             if(pid_timeout == 0)                        \
             {                                           \
                 sleep(TIMEOUT);                         \

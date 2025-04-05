@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 bool int_str(int a, int b);
+bool handler(handler_p a, handler_p b);
 
 #endif
 

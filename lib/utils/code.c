@@ -16,6 +16,17 @@ bool int_str(int a, int b)
     return true;
 }
 
+bool handler(handler_p a, handler_p b)
+{
+    if(a != b)
+    {
+        printf("\n\n\tHANDLER ASSERTION ERROR\t| VALUE MISMATH\t| %p %p", a, b);
+        return false;
+    }
+
+    return true;
+}
+
 #endif
 
 

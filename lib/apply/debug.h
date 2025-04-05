@@ -5,9 +5,18 @@
 #include "struct.h"
 
 #ifdef DEBUG
-#endif
 
-#define AP(POINTER) ((apply_p)(POINTER))
+#include <stdbool.h>
+
+#define AP(HANDLER) ((apply_p)(HANDLER))
+
+apply_p apply_create_immed(int N, ...);
+
+void apply_display(apply_p a);
+
+bool apply(apply_p a_1, apply_p a_2);
+
+#endif
 
 apply_p apply_create(node_p n1, node_p n2);
 
